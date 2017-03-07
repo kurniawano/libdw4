@@ -1,4 +1,8 @@
 import form.main
 import soar
 import soar.application
-form.main.Application(soar.application.application)
+
+def start():
+    form.main.Application(soar.application.application)
+
+start()
