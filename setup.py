@@ -10,7 +10,7 @@ with open(path.join(here,'README.rst'), encoding='utf-8') as f:
     long_description=f.read()
 
 setup(name='libdw',
-      version='3.1.3',
+      version='3.1.6',
       description='The Digital World Code Distribution',
       long_description=long_description,
       author='Oka Kurniawan',
@@ -33,7 +33,7 @@ setup(name='libdw',
       install_requires=['numpy'],
       entry_points={
         'console_scripts':[
-            'soar=soar.runsoar:start',
+            'soar=soar.runsoar:main',
         ],
       },
       )
