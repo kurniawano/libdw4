@@ -1,10 +1,10 @@
 """Just like se, but a more efficient implementation"""
 
-import sm
-import ssm
+from . import sm
+from . import ssm
 
-import dist
-import util
+from . import dist
+from . import util
 
 class StateEstimator(sm.SM):
     """

@@ -1,5 +1,5 @@
-import sm
-import util
+from . import sm
+from . import util
 
 ###  Use the second line for testing outside of soar
 from soar.io import io

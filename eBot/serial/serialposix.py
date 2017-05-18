@@ -10,7 +10,7 @@
 # references: http://www.easysw.com/~mike/serial/serial.htm
 ####################################Imports#####################################
 import sys, os, fcntl, termios, struct, select, errno
-from serialutil import *
+from .serialutil import *
 ################################################################################
 
 VERSION = "$Revision: 1.27 $".split()[1]     #extract CVS version
@@ -70,7 +70,7 @@ elif plat[:3] == 'aix':      #aix
 
 else:
     #platform detection has failed...
-    print """don't know how to number ttys on this system.
+    print(("""don't know how to number ttys on this system.
 ! Use an explicit path (eg /dev/ttyS1) or send this information to
 ! the author of this module:
 
@@ -82,7 +82,7 @@ also add the device name of the serial port and where the
 counting starts for the first serial port.
 e.g. 'first serial port: /dev/ttyS0'
 and with a bit luck you can get this module running...
-""" % (sys.platform, os.name, VERSION)
+""" % (sys.platform, os.name, VERSION)))
     #no exception, just continue with a brave attempt to build a device name
     #even if the device name is not correct for the platform it has chances
     #to work using a string with the real device name as port paramter.
@@ -136,7 +136,7 @@ class Serial(SerialBase):
         #open
         try:
             self.fd = os.open(self.portstr, os.O_RDWR|os.O_NOCTTY|os.O_NONBLOCK)
-        except Exception, msg:
+        except Exception as msg:
             self.fd = None
             raise SerialException("Could not open port: %s" % msg)
         #~ fcntl.fcntl(self.fd, FCNTL.F_SETFL, 0)  #set blocking
@@ -154,7 +154,7 @@ class Serial(SerialBase):
         vmin = vtime = 0                #timeout is done via select
         try:
             iflag, oflag, cflag, lflag, ispeed, ospeed, cc = termios.tcgetattr(self.fd)
-        except termios.error, msg:      #if a port is nonexistent but has a /dev file, it'll fail here
+        except termios.error as msg:      #if a port is nonexistent but has a /dev file, it'll fail here
             raise SerialException("Could not configure port: %s" % msg)
         #set up raw mode / no echo / binary
         cflag |=  (TERMIOS.CLOCAL|TERMIOS.CREAD)
@@ -299,7 +299,7 @@ class Serial(SerialBase):
                         raise writeTimeoutError
                 d = d[n:]
                 t = t - n
-            except OSError,v:
+            except OSError as v:
                 if v.errno != errno.EAGAIN:
                     raise
 
@@ -401,6 +401,6 @@ if __name__ == '__main__':
     s.flushInput()
     s.flushOutput()
     s.write('hello')
-    print repr(s.read(5))
-    print s.inWaiting()
+    print((repr(s.read(5))))
+    print((s.inWaiting()))
     del s

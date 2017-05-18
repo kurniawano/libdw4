@@ -4,9 +4,9 @@ Signals, represented implicitly, with plotting and combinations.
 
 import pickle
 import math
-import util
+from . import util
 
-import gw
+from . import gw
 reload(gw)
 
 # define size of graphing window 
@@ -56,7 +56,7 @@ class Signal:
         """
         samples = [self.sample(i) for i in range(start, end)]
         if len(samples) == 0:
-            raise Exception, 'Plot range is empty'
+            raise Exception('Plot range is empty')
         if yOrigin == None:
             minY = min(samples)
         else:
@@ -194,7 +194,7 @@ def polyR(s, p):
     """
     # range(10, -1, -1) counts down from 10 to 0, inclusive
     return util.sum([c * Rn(s, k) \
-                 for (c, k) in zip(p.coeffs, range(p.order, -1, -1))])
+                 for (c, k) in zip(p.coeffs, list(range(p.order, -1, -1)))])
 
 def polyR(s, p):
     """
@@ -360,7 +360,7 @@ def makeSignalFromPickle(pathName):
     f = open(pathName, 'r')
     data = pickle.load(f)
     f.close()
-    print 'Loaded signal with', len(data), 'points'
+    print(('Loaded signal with', len(data), 'points'))
     return ListSignal(data)
 
 # modified to return last valid sample if asked for sample beyond end

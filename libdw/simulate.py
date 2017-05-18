@@ -9,17 +9,18 @@
 #    import cc
 #else:
 #    import nlcc as cc
-import nlcc as cc
-import sm
-import sig
-import ts
-import util
+from . import nlcc as cc
+from . import sm
+from . import sig
+from . import ts
+from . import util
 
 import re
 import operator
 import types
 import sys
 import math
+from functools import reduce
 
 # nodes on protoboard
 # 't+', 't-', 'b+', 'b-', 'tX', 'bX' for X in [1,64]
@@ -74,7 +75,7 @@ def readCircuit(lines):
         if match:
             (x0,y0,x1,y1) = match.groups()
             if not (nodeNameForPin(int(x0),int(y0)) and nodeNameForPin(int(x1),int(y1))):
-                print 'Op Amp is not in valid holes, ignoring! '+line
+                print('Op Amp is not in valid holes, ignoring! '+line)
             else:
                 componentList.extend(opAmpsFromPins((int(x0),int(y0)),
                                                     (int(x1),int(y1))))
@@ -82,7 +83,7 @@ def readCircuit(lines):
         if match:
             (c1,c2,c3,x0,y0,x1,y1) = match.groups()
             if not (nodeNameForPin(int(x0),int(y0)) and nodeNameForPin(int(x1),int(y1))):
-                print 'Resistor is not in valid holes, ignoring! '+line
+                print('Resistor is not in valid holes, ignoring! '+line)
             else:
                 componentList.extend(resistorFromPins((int(c1),int(c2),int(c3)),
                                                       (int(x0),int(y0)),
@@ -91,7 +92,7 @@ def readCircuit(lines):
         if match:
             (x0,y0,x1,y1) = match.groups()
             if not (nodeNameForPin(int(x0),int(y0)) and nodeNameForPin(int(x1),int(y1))):
-                print 'Wire is not in valid holes, ignoring! '+line
+                print('Wire is not in valid holes, ignoring! '+line)
             else:
                 componentList.extend(wireFromPins((int(x0),int(y0)),
                                                   (int(x1),int(y1))))
@@ -101,7 +102,7 @@ def readCircuit(lines):
             if not (nodeNameForPin(int(x0),int(y0)) and \
                     nodeNameForPin(int(x1),int(y1)) and \
                     nodeNameForPin(int(x2),int(y2))):
-                print 'Pot is not in valid holes, ignoring! '+line
+                print('Pot is not in valid holes, ignoring! '+line)
             else:
                 componentList.extend(potFromPins((int(x0),int(y0)),
                                                  (int(x1),int(y1)),
@@ -110,7 +111,7 @@ def readCircuit(lines):
         if match:
             (x0,y0,x1,y1) = match.groups()
             if not (nodeNameForPin(int(x0),int(y0)) and nodeNameForPin(int(x1),int(y1))):
-                print 'Robot connector is not in valid holes, ignoring! '+line
+                print('Robot connector is not in valid holes, ignoring! '+line)
             else:
                 componentList.extend(robotFromPins((int(x0),int(y0)),
                                                    (int(x1),int(y1))))
@@ -118,7 +119,7 @@ def readCircuit(lines):
         if match:
             (x0,y0,x1,y1) = match.groups()
             if not (nodeNameForPin(int(x0),int(y0)) and nodeNameForPin(int(x1),int(y1))):
-                print 'Motor connector is not in valid holes, ignoring! '+line
+                print('Motor connector is not in valid holes, ignoring! '+line)
             else:
                 componentList.extend(motorFromPins((int(x0),int(y0)),
                                                    (int(x1),int(y1))))
@@ -126,7 +127,7 @@ def readCircuit(lines):
         if match:
             (x0,y0,x1,y1) = match.groups()
             if not (nodeNameForPin(int(x0),int(y0)) and nodeNameForPin(int(x1),int(y1))):
-                print 'Head connector is not in valid holes, ignoring! '+line
+                print('Head connector is not in valid holes, ignoring! '+line)
             else:
                 componentList.extend(headFromPins((int(x0),int(y0)),
                                                   (int(x1),int(y1))))
@@ -134,28 +135,28 @@ def readCircuit(lines):
         if match:
             (x0,y0) = match.groups()
             if not nodeNameForPin(int(x0),int(y0)):
-                print 'Positive probe is not in valid hole, ignoring! '+line
+                print('Positive probe is not in valid hole, ignoring! '+line)
             else:
                 componentList.extend(probeFromPins('Pos', (int(x0),int(y0))))
         match = re.match(negprobePattern,line)
         if match:
             (x0,y0) = match.groups()
             if not nodeNameForPin(int(x0),int(y0)):
-                print 'Negative probe is not in valid hole, ignoring! '+line
+                print('Negative probe is not in valid hole, ignoring! '+line)
             else:
                 componentList.extend(probeFromPins('Neg', (int(x0),int(y0))))
         match = re.match(powerPattern,line)
         if match:
             (x0,y0) = match.groups()
             if not nodeNameForPin(int(x0),int(y0)):
-                print 'Power connector is not in valid hole, ignoring! '+line
+                print('Power connector is not in valid hole, ignoring! '+line)
             else:
                 componentList.extend(powerFromPins((int(x0),int(y0))))
         match = re.match(groundPattern,line)
         if match:
             (x0,y0) = match.groups()
             if not nodeNameForPin(int(x0),int(y0)):
-                print 'Ground connector is not in valid hole, ignoring! '+line
+                print('Ground connector is not in valid hole, ignoring! '+line)
             else:
                 componentList.extend(groundFromPins((int(x0),int(y0))))
     return componentList
@@ -216,15 +217,15 @@ def potFromPins(pin0, pin1, pin2):
 def robotFromPins(pin0, pin1):
     (x0, y) = pin0
     (x1, y) = pin1
-    print 'robotFromPins', pin0, pin1
+    print('robotFromPins', pin0, pin1)
     # Pins start at pin0 and increase number until pin1
     if x0 < x1:
-        print 'x0 < x1'
+        print('x0 < x1')
         return [Connector('Robot', [nodeNameForPin(x0+i,y) for i in range(8)]),
                 Power(nodeNameForPin(x0+1,y)),
                 Ground(nodeNameForPin(x0+3,y))]
     else:
-        print 'x1 <= x0'
+        print('x1 <= x0')
         return [Connector('Robot', [nodeNameForPin(x0-i,y) for i in range(8)]),
                 Power(nodeNameForPin(x0-1,y)),
                 Ground(nodeNameForPin(x0-3,y))]
@@ -285,8 +286,8 @@ def verifyCircuit(componentList):
     groundSrc = []
     probePos = []
     probeNeg = []
-    print 'powerNodes=', powerNodes
-    print 'groundNodes=', groundNodes
+    print('powerNodes=', powerNodes)
+    print('groundNodes=', groundNodes)
     for element in componentList:
         name = element.__class__.__name__
         if name == 'GroundInput':
@@ -705,7 +706,7 @@ class CircuitSM(sm.SM):
         for f in self.inComponents:
             components.extend(f(inpDict)) # add new components
         sol = circuitSolve(components, self.groundNode)
-        print '.',                      # progress indicator
+        print('.', end=' ')                      # progress indicator
         sys.stdout.flush()
         return (state, sol)
 
@@ -718,7 +719,7 @@ def reduceToDict(inp):
             new.update(reduceToDict(d))
         return new
     else:
-        raise Exception, '%s is neither a list or dict'%inp
+        raise Exception('%s is neither a list or dict'%inp)
 
 def circuitSolve(components, groundNode):
     ckt = cc.Circuit(components).makeEquationSet(groundNode)
@@ -728,7 +729,7 @@ def circuitSolve(components, groundNode):
     except Exception:
         sol = None
         warn('Failed to solve equations!  Check for short circuit or redundant wire.')
-        raise Exception, 'Circuit solver failed'
+        raise Exception('Circuit solver failed')
     return sol
 
 def systemSM(circuit, inComponents, motorNodes, initState):
@@ -1151,9 +1152,9 @@ def runRealCircuit(icircuit, sigIn, parent = None, nsteps = 50):
 
     plotno = plotno + 1           # increment for next time
 
-    print '\n'                    # newline after sequence of dots
+    print('\n')                    # newline after sequence of dots
     warn('Done')
 
 def warn (message):
-    print message
+    print(message)
     sys.stdout.flush() # force out

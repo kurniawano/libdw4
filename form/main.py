@@ -11,7 +11,7 @@
 ################################################################################
 
 ####################################Imports#####################################
-from Tkinter import *
+from tkinter import *
 from time import time, sleep
 from collections import deque
 import sys
@@ -77,7 +77,7 @@ def tk_update():
         try:
           task()
         except:
-          print common.formerror()
+          print((common.formerror()))
       size -= 1
   # Not sure if I want to force these through unless I'm keeping the interface
   # held down myself.
@@ -96,7 +96,7 @@ import form.formulae as formulae
 class Application(object):
 
   def alert(self, str):
-    print "Alert: ", str
+    print(("Alert: ", str))
  
   def __init__(self, startup = common.skip):
     """The main hook to start the form GUI. This doesn't exit until the end of the program since it calls Tk's mainloop, but it's ok, since we are in a class, we just assign self to a __builtin__ name. This becomes app."""

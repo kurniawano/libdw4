@@ -3,7 +3,7 @@ Very simple behavior for following the boundary of an obstacle in the
 world, with the robot's 'right hand' on the wall. 
 """
 
-import sm
+from . import sm
 from soar.io import io
 
 ######################################################################

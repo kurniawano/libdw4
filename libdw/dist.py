@@ -6,7 +6,8 @@ import random
 import operator
 import copy
 
-import util
+from . import util
+from functools import reduce
 
 class DDist:
     """
@@ -33,7 +34,7 @@ class DDist:
          probability 0 without error.)
         :returns: the probability associated with ``elt``
         """
-        if self.d.has_key(elt):
+        if elt in self.d:
             return self.d[elt]
         else:
             return 0
@@ -43,16 +44,16 @@ class DDist:
         :returns: A list (in arbitrary order) of the elements of this
          distribution with non-zero probabability.
         """
-        return [k for k in self.d.keys() if self.prob(k) > 0]
+        return [k for k in list(self.d.keys()) if self.prob(k) > 0]
 
     def __repr__(self):
-        if len(self.d.items()) == 0:
+        if len(list(self.d.items())) == 0:
             return "Empty DDist"
         else:
             dictRepr = reduce(operator.add,
                               [util.prettyString(k)+": "+\
                                util.prettyString(p)+", " \
-                               for (k, p) in self.d.items()])
+                               for (k, p) in list(self.d.items())])
             return "DDist(" + dictRepr[:-2] + ")"
     __str__ = __repr__
 #!
@@ -213,7 +214,7 @@ def triangleDist(peak, halfWidth, lo = None, hi = None):
         incrDictEntry(d, util.clip(peak + offset, lo, hi), p)
         incrDictEntry(d, util.clip(peak - offset, lo, hi), p)
         total += 2 * p
-    for (elt, value) in d.items():
+    for (elt, value) in list(d.items()):
         d[elt] = value / total
     return DDist(d)
 
@@ -267,7 +268,7 @@ def incrDictEntry(d, k, v):
     :param k: legal dictionary key (doesn't have to be in ``d``)
     :param v: numeric value
     """
-    if d.has_key(k):
+    if k in d:
         d[k] += v
     else:
         d[k] = v

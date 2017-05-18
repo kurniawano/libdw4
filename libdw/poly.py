@@ -84,7 +84,7 @@ class Polynomial:
             # The last [3:] gets rid of the initial ' + ' characters.
             return reduce(operator.add,
                           [" + " + prettyTerm(c, self.order - p, var) \
-                           for (c,p) in zip(self.coeffs, range(self.order+1)) \
+                           for (c,p) in zip(self.coeffs, list(range(self.order+1))) \
                            if not c == 0.0],
                       "")[3:]
     __repr__ = __str__

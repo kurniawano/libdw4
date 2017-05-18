@@ -1,4 +1,4 @@
-import Tkinter
+import tkinter
 import form.main
 import math
 import soar.util as util
@@ -55,10 +55,11 @@ class SonarMonitor():
         self.windowWidth = 450 # 350
         self.robotScale = 200 #Changed from 100 for Amigobot
         self.robotPos = (self.windowWidth/2.0, self.windowHeight*3.0/6.0)
-        def mapPoints((x,y)):
+        def mapPoints(xxx_todo_changeme):
+            (x,y) = xxx_todo_changeme
             return (x*self.robotScale + self.robotPos[0],
                     -y*self.robotScale + self.robotPos[1])
-        self.points = map(mapPoints, robotPoints)
+        self.points = list(map(mapPoints, robotPoints))
 #        self.robotPose = Pose(self.windowWidth/2.0, self.windowWidth/2.0,
 #                              math.pi)
         self.robotPose = Pose(0.0, 0.0, -math.pi/2.0)
@@ -77,12 +78,12 @@ class SonarMonitor():
         # already open, don't open again
         if self.window:
             return
-        self.window = Tkinter.Toplevel()
+        self.window = tkinter.Toplevel()
         self.window.wm_title("Sonar Monitor")
         self.window.protocol("WM_DELETE_WINDOW", self.closeWindow)
         if self.geom:
             self.window.geometry(self.geom)
-        self.canvas = Tkinter.Canvas(self.window,
+        self.canvas = tkinter.Canvas(self.window,
                                      width = self.windowWidth,
                                      height = self.windowHeight, 
                                      background="white")

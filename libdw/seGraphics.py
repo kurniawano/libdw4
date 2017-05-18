@@ -1,6 +1,6 @@
 """State estimator that calls procedures for visualization or debugging"""
 
-import seFast
+from . import seFast
 reload(seFast)
 
 observationHook = None

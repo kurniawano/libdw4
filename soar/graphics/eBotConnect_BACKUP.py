@@ -3,12 +3,12 @@ import glob
 import sys
 from time import *
 import serial
-from Tkinter import *
-import Tkinter
-import tkMessageBox
+from tkinter import *
+import tkinter
+import tkinter.messagebox
 if os.name == 'nt':
     try:
-        import _winreg as winreg
+        import winreg as winreg
 
     except:
         pass
@@ -23,12 +23,12 @@ class eBotConnect:
         if os.name == "posix":
             if sys.platform == "linux2":
                 #usbSerial = glob.glob('/dev/ttyUSB*')
-                print "Support for this OS is under development."
+                print("Support for this OS is under development.")
             elif sys.platform == "darwin":
                 ports = glob.glob('/dev/tty.eBot*')
                 #usbSerial = glob.glob('/dev/tty.usbserial*')
             else:
-                print "Unknown posix OS."
+                print("Unknown posix OS.")
                 sys.exit()
         elif os.name == "nt":
             ports = self.getOpenPorts()
@@ -57,7 +57,7 @@ class eBotConnect:
         if (len(ebot_ports) == 0):
             # RAISE RAISE EXCEPTION
             sys.stderr.write("Could not find eBot.  Is robot turned on and connected?\n")
-            tkMessageBox.showinfo("Connection Error", "No eBot connected. Please make sure eBot is on and paired.")
+            tkinter.messagebox.showinfo("Connection Error", "No eBot connected. Please make sure eBot is on and paired.")
         else:
             bPressed = 0
             top = Tk()

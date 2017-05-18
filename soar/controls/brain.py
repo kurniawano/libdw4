@@ -11,9 +11,9 @@
 ################################################################################
 
 ####################################Imports#####################################
-from Tkinter import *
+from tkinter import *
 import os, sys
-from thread import start_new_thread
+from _thread import start_new_thread
 
 from form.common import formerror, formerrorfile, skip, Container, parseFile, CancelGUIAction
 
@@ -37,7 +37,7 @@ class Brain(object):
     # pop off the functions that are defined in the brain file
     # (in case we're loading a new brain file that doesn't define them all)
     for name in ["setup", "brainStart", "step", "brainStop", "shutdown"]:
-      if envin.has_key(name): envin.pop(name)
+      if name in envin: envin.pop(name)
     if not reload:
       self.clearmodules(envin)
     try:
@@ -88,9 +88,9 @@ class Brain(object):
       envstep = self.makewrapper(envin["step"],
                                  "\nError running step function.\n",
                                  beforefunc=checkStarted)
-      if envstep.func_code.co_argcount == 0:
+      if envstep.__code__.co_argcount == 0:
         self.step = lambda dt: envstep()
-      elif envstep.func_code.co_argcount == 1:
+      elif envstep.__code__.co_argcount == 1:
         self.step = envstep
     else:
       self.step = checkStarted
@@ -115,7 +115,7 @@ class Brain(object):
         beforefunc()
       try:
         brainfunc()
-      except Exception, e:
+      except Exception as e:
         formerrorfile(self.file)
         sys.stderr.write(message)
         raise
@@ -138,7 +138,7 @@ class Brain(object):
         modpath = modpath.replace('/','.')
         modpath = modpath.replace('\\','.')
         # set the module path directories to point here
-        if sys.modules.has_key(modpath):
+        if modpath in sys.modules:
           sys.modules[modpath].__path__[0] = os.path.abspath(root)
         # pop any modules that were already imported
         submods = [modpath+"."+name for (name,suffix) in \
@@ -146,5 +146,5 @@ class Brain(object):
                         len(s) == 2]
                    if (suffix == 'py' or suffix == 'pyc') and name[0]!='_']
         for m in submods:
-          if sys.modules.has_key(m): sys.modules.pop(m)
+          if m in sys.modules: sys.modules.pop(m)
         

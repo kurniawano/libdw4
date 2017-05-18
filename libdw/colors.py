@@ -3,7 +3,7 @@ Utility procedures for manipulating colors
 """
 
 from math import log, floor
-import util
+from . import util
 
 # h in [0, 360]
 # s in [0, 1]

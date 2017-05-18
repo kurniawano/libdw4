@@ -1,8 +1,8 @@
-import Tkinter
+import tkinter
 import form.main
 from soar.io import io
 import sys
-from scopeConfig import ScopeConfigWindow
+from .scopeConfig import ScopeConfigWindow
 
 class Probe():
     def __init__(self, name, func, functext, numelems, samplesPerElem, initVal):
@@ -74,18 +74,18 @@ class Oscilloscope():
         # already open; don't open again
         if self.window:
             return
-        self.window = Tkinter.Toplevel()
+        self.window = tkinter.Toplevel()
         self.window.wm_title("Soar Oscilloscope")
         self.window.protocol("WM_DELETE_WINDOW", self.closeWindow)
         if self.geom:
             self.window.geometry(self.geom)
         self.canvWidth, self.canvHeight = 600, 400
-        self.canvas = Tkinter.Canvas(self.window,
+        self.canvas = tkinter.Canvas(self.window,
                                      width = self.canvWidth, 
                                      height = self.canvHeight,
                                      background = "white")
         self.canvas.pack()
-        self.button = Tkinter.Button(self.window, 
+        self.button = tkinter.Button(self.window, 
                                      text="Configure Oscilloscope",
                                      command = self.configure)
         self.button.pack()
@@ -204,10 +204,10 @@ class Oscilloscope():
         self.ymin, self.ymax = None, None
 
     def makeFunc(self, func, i=None):
-        if func.func_code.co_argcount == 0:
+        if func.__code__.co_argcount == 0:
             if i is not None: return lambda inp: func()[i]
             else: return lambda inp: func()
-        elif func.func_code.co_argcount == 1:
+        elif func.__code__.co_argcount == 1:
             if i is not None: return lambda inp: func(inp)[i]
             else: return lambda inp: func(inp)
         else:
@@ -245,7 +245,8 @@ class Oscilloscope():
                                  self.samplesPerElem, initVal))
         self.setStaticObjects()
                                       
-    def setExtremes(self, (minv, maxv)):
+    def setExtremes(self, xxx_todo_changeme):
+        (minv, maxv) = xxx_todo_changeme
         self.ymin = minv if self.ymin==None else min(self.ymin, minv)
         self.ymax = maxv if self.ymax==None else max(self.ymax, maxv)
 

@@ -17,9 +17,9 @@ import os
 ################################################################################
 
 if os.name == "posix":
-  from serialposix import Serial
+  from .serialposix import Serial
 elif os.name == "nt":
-  from serialwin32 import Serial
+  from .serialwin32 import Serial
 else:
   raise ImportError("Can't use serial in a non win32/posix friendly environment")
 

@@ -1,11 +1,11 @@
 import math
-import sonarDist
-import sm
-import util
-import gridMap
-import dynamicGridMap
-import dynamicCountingGridMap
-import bayesMap
+from . import sonarDist
+from . import sm
+from . import util
+from . import gridMap
+from . import dynamicGridMap
+from . import dynamicCountingGridMap
+from . import bayesMap
 reload(bayesMap)
 
 class MapMaker(sm.SM):
@@ -28,7 +28,7 @@ class MapMaker(sm.SM):
                                                gridSquareSize)
         self.startState = gm
         self.useClearInfo = useClearInfo or useBayesMap
-        if useClearInfo: print 'Using clear info'
+        if useClearInfo: print('Using clear info')
 #!
 #!         self.startState = None   # change this
 #!

@@ -11,7 +11,7 @@
 ################################################################################
 
 ####################################Imports#####################################
-import Tkinter
+import tkinter
 from types import NoneType
 import os
 import platform
@@ -58,7 +58,7 @@ lambda w, g: Color(w, ["blue", "red"], g) #bluered
 #return a number in a string  (guaranteed max length of 4 + length of appropriate power of 10) 
 #representation of its value in scientific notation
 def scinot(num):
-    string=`num`
+    string=repr(num)
     power = 0
     i = 0
     j = string[i]
@@ -72,7 +72,7 @@ def scinot(num):
     if i < 5:
         str = string[:5]
     if i >= 5 and power > 0:
-        str= string[:4] + 'e' + `power`
+        str= string[:4] + 'e' + repr(power)
     return str
 
 #call apply() on every possible composition of one element from each list
@@ -84,14 +84,14 @@ def argFor(vec, apply, current = []):
             next = current + [i]
             argFor(vec[1:], apply, next)
 
-class GraphingWindow(Tkinter.Toplevel):
+class GraphingWindow(tkinter.Toplevel):
         
     def __init__(self, width, height, xmin, xmax, ymin, ymax, title):
-        Tkinter.Toplevel.__init__(self, form.main.tk)
+        tkinter.Toplevel.__init__(self, form.main.tk)
 	self.wm_title(title)
         # Can't call this self.title, that overwrites something important
         self.window_title = title
-        self.choice = Tkinter.IntVar(0)
+        self.choice = tkinter.IntVar(0)
         self.initToolbarTop()
 	self.canvas = GraphCanvas(self, width, height, xmin, xmax, ymin, ymax)
 	self.canvas.bind("<ButtonRelease-1>", self.updateBoxes)
@@ -129,8 +129,8 @@ class GraphingWindow(Tkinter.Toplevel):
         if ext is not ".ps":
             try:
                 import Image
-                print "reading from:", filename+".ps"
-                print "writing to:", filename+ext
+                print("reading from:", filename+".ps")
+                print("writing to:", filename+ext)
                 im = Image.open(filename+".ps")
                 im.save(filename+ext)
 #                os.system("rm "+filename+".ps")
@@ -176,51 +176,53 @@ class GraphingWindow(Tkinter.Toplevel):
     def updateBoxes(self, event = None):
         if not event == None:
             self.canvas.canvas_left_clicked_up(event)
-        self.xmintext.set(`self.canvas.xmin`)
-        self.xmaxtext.set(`self.canvas.xmax`)
-        self.ymintext.set(`self.canvas.ymin`)
-        self.ymaxtext.set(`self.canvas.ymax`)
+        self.xmintext.set(repr(self.canvas.xmin))
+        self.xmaxtext.set(repr(self.canvas.xmax))
+        self.ymintext.set(repr(self.canvas.ymin))
+        self.ymaxtext.set(repr(self.canvas.ymax))
         
     def initToolbarTop(self):
-	self.topframe = Tkinter.Frame(self)
+	self.topframe = tkinter.Frame(self)
 	frame = self.topframe
-        self.xmintext = Tkinter.StringVar()
-        self.xmaxtext = Tkinter.StringVar()
-        self.ymintext = Tkinter.StringVar()
-        self.ymaxtext = Tkinter.StringVar()
-        Tkinter.Label(frame, text = "X:[").pack(side = "left")                                   
-        frame.xminbox = Tkinter.Entry(frame, width = 6, textvariable = self.xmintext)
+        self.xmintext = tkinter.StringVar()
+        self.xmaxtext = tkinter.StringVar()
+        self.ymintext = tkinter.StringVar()
+        self.ymaxtext = tkinter.StringVar()
+        tkinter.Label(frame, text = "X:[").pack(side = "left")                                   
+        frame.xminbox = tkinter.Entry(frame, width = 6, textvariable = self.xmintext)
         frame.xminbox.bind("<Return>", self.resizeit)
         frame.xminbox.pack(side = "left")
-        Tkinter.Label(frame, text = ",").pack(side = "left")        
-        frame.xmaxbox = Tkinter.Entry(frame, width = 6, textvariable = self.xmaxtext)
+        tkinter.Label(frame, text = ",").pack(side = "left")        
+        frame.xmaxbox = tkinter.Entry(frame, width = 6, textvariable = self.xmaxtext)
         frame.xmaxbox.bind("<Return>", self.resizeit)
         frame.xmaxbox.pack(side = "left")
-        Tkinter.Label(frame, text = "] Y:[").pack(side = "left")        
-        frame.yminbox = Tkinter.Entry(frame, width = 6, textvariable = self.ymintext)
+        tkinter.Label(frame, text = "] Y:[").pack(side = "left")        
+        frame.yminbox = tkinter.Entry(frame, width = 6, textvariable = self.ymintext)
         frame.yminbox.bind("<Return>", self.resizeit)
         frame.yminbox.pack(side = "left")
-        Tkinter.Label(frame, text = ",").pack(side = "left")        
-        frame.ymaxbox = Tkinter.Entry(frame, width = 6, textvariable = self.ymaxtext)
+        tkinter.Label(frame, text = ",").pack(side = "left")        
+        frame.ymaxbox = tkinter.Entry(frame, width = 6, textvariable = self.ymaxtext)
         frame.ymaxbox.bind("<Return>", self.resizeit)
         frame.ymaxbox.pack(side = "left")
-        Tkinter.Label(frame, text = "]").pack(side = "left")        
-        frame.resizebutton = Tkinter.Button(frame, text = "Resize", command = lambda: self.resizeit(frame))
+        tkinter.Label(frame, text = "]").pack(side = "left")        
+        frame.resizebutton = tkinter.Button(frame, text = "Resize", command = lambda: self.resizeit(frame))
         frame.resizebutton.pack(side = "right")
 
 	self.ps_dir_default = "~"
-	frame.savebutton = Tkinter.Button(frame, text = "Save", command = lambda: self.save())
+	frame.savebutton = tkinter.Button(frame, text = "Save", command = lambda: self.save())
 	frame.savebutton.pack(side="right")
 	frame.pack()
     
     def getDomain(self):
         return ((self.canvas.xmin, self.canvas.xmax), (self.canvas.ymin, self.canvas.ymax))
 
-    def setDomain(self, (xmin, xmax), (ymin,ymax)):
-	self.xmintext.set(`xmin`)
-	self.xmaxtext.set(`xmax`)
-	self.ymintext.set(`ymin`)
-	self.ymaxtext.set(`ymax`)
+    def setDomain(self, xxx_todo_changeme, xxx_todo_changeme1):
+	(xmin, xmax) = xxx_todo_changeme
+	(ymin,ymax) = xxx_todo_changeme1
+	self.xmintext.set(repr(xmin))
+	self.xmaxtext.set(repr(xmax))
+	self.ymintext.set(repr(ymin))
+	self.ymaxtext.set(repr(ymax))
 	self.resizeit()
 
     def resizeit(self, event = None):
@@ -312,7 +314,7 @@ class Function:
         	if self.max == GARBAGE or trial > self.max:
             		self.max = trial
 	except:
-		print "There was a problem with the function you passed"
+		print("There was a problem with the function you passed")
 class Continuous(Function):
     
     def type(self):
@@ -377,10 +379,10 @@ class Discrete(Function):
         except:
             return GARBAGE
 
-class GraphCanvas(Tkinter.Canvas):
+class GraphCanvas(tkinter.Canvas):
 
     def __init__(self, parent, w = 300, h = 300, xmin = 0, xmax = 100, ymin = 0, ymax = 100, axeson = True, labelson = True):
-        Tkinter.Canvas.__init__(self, parent, width = w, height = h, bg = 'white') 
+        tkinter.Canvas.__init__(self, parent, width = w, height = h, bg = 'white') 
         self.parent = parent
         self.width = w
         self.height = h
@@ -390,8 +392,8 @@ class GraphCanvas(Tkinter.Canvas):
         self.ymax = ymax
         self.axeson = axeson
         self.labelson = labelson
-        self.img = Tkinter.PhotoImage(width = w, height = h)
-	self.create_image(0, 0, image = self.img, anchor=Tkinter.NW)
+        self.img = tkinter.PhotoImage(width = w, height = h)
+	self.create_image(0, 0, image = self.img, anchor=tkinter.NW)
         self.functions = []
         self.initCBounds()
         self.initObjects()
@@ -434,12 +436,12 @@ class GraphCanvas(Tkinter.Canvas):
         self.objects[AXES] = []
     
     def clear(self):
-	for k in self.objects.keys():
+	for k in list(self.objects.keys()):
 		for j in self.objects[k]:
 			self.delete(j)
 		self.objects[k]= []        
-	self.img = Tkinter.PhotoImage(width = self.width, height = self.height)
-	self.create_image(0, 0, image = self.img, anchor=Tkinter.NW)
+	self.img = tkinter.PhotoImage(width = self.width, height = self.height)
+	self.create_image(0, 0, image = self.img, anchor=tkinter.NW)
 
     def graphFunc(self, f, mode, color):
 	if mode == CONTINUOUS:
@@ -548,7 +550,7 @@ class GraphCanvas(Tkinter.Canvas):
     
     def canvas_right_clicked_down(self, event):
         points = []
-        for f in filter(lambda o: o.type() == SLOPE_FIELD, self.functions):
+        for f in [o for o in self.functions if o.type() == SLOPE_FIELD]:
             stepsize=float(self.xmax-self.xmin)/float(self.usablewidth)
             x = self.getPx(event.x)
             y = self.getPy(event.y)
@@ -656,7 +658,7 @@ class GraphCanvas(Tkinter.Canvas):
 
     def drawLabels(self, xshift = 0, yshift = 0):
         def round(fl):
-            string = `fl`
+            string = repr(fl)
             if not len(string) < 5:
                 string = scinot(fl)
             return string
@@ -664,17 +666,17 @@ class GraphCanvas(Tkinter.Canvas):
         self.objects[LABELS].append(self.create_rectangle(xshift, self.height-Y_LABEL_HEIGHT+yshift+1, self.width+xshift, self.height+yshift, fill = "white", outline = "white"))
         self.objects[LABELS].append(self.create_line(X_LABEL_WIDTH+xshift, yshift, X_LABEL_WIDTH+xshift, self.height-Y_LABEL_HEIGHT+yshift, width = 1, fill = "black"))
         self.objects[LABELS].append(self.create_line(X_LABEL_WIDTH+xshift, self.height-Y_LABEL_HEIGHT+yshift, self.width+xshift, self.height-Y_LABEL_HEIGHT+yshift, width = 1, fill = "black"))
-        self.objects[LABELS].append(self.create_text(2+xshift, yshift, text = round(self.ymax), font = LABEL_FONT, fill = "black", anchor = Tkinter.NW))
-        self.objects[LABELS].append(self.create_text(2+xshift, self.height-Y_LABEL_HEIGHT+yshift, text = round(self.ymin), font = LABEL_FONT, fill = "black", anchor = Tkinter.SW))
-        self.objects[LABELS].append(self.create_text(X_LABEL_WIDTH+xshift, self.height+yshift, text = round(self.xmin), font = LABEL_FONT, fill = "black", anchor = Tkinter.SW))
-        self.objects[LABELS].append(self.create_text(self.width+xshift, self.height+yshift, text = round(self.xmax), font = LABEL_FONT, fill = "black", anchor = Tkinter.SE))
+        self.objects[LABELS].append(self.create_text(2+xshift, yshift, text = round(self.ymax), font = LABEL_FONT, fill = "black", anchor = tkinter.NW))
+        self.objects[LABELS].append(self.create_text(2+xshift, self.height-Y_LABEL_HEIGHT+yshift, text = round(self.ymin), font = LABEL_FONT, fill = "black", anchor = tkinter.SW))
+        self.objects[LABELS].append(self.create_text(X_LABEL_WIDTH+xshift, self.height+yshift, text = round(self.xmin), font = LABEL_FONT, fill = "black", anchor = tkinter.SW))
+        self.objects[LABELS].append(self.create_text(self.width+xshift, self.height+yshift, text = round(self.xmax), font = LABEL_FONT, fill = "black", anchor = tkinter.SE))
         if self.axeson:
             xaxis = self.getCy(0)
             yaxis = self.getCx(0)
             if xaxis > (2*LABEL_FONT[1])+yshift and xaxis < self.height-Y_LABEL_HEIGHT-(2*LABEL_FONT[1])+yshift:
-                self.objects[LABELS].append(self.create_text(2+xshift, xaxis+yshift, text = round(0), font = LABEL_FONT, fill = "black", anchor = Tkinter.W))
+                self.objects[LABELS].append(self.create_text(2+xshift, xaxis+yshift, text = round(0), font = LABEL_FONT, fill = "black", anchor = tkinter.W))
             if yaxis > X_LABEL_WIDTH+(6*LABEL_FONT[1])+xshift and yaxis < self.width-(6*LABEL_FONT[1])+xshift:
-                self.objects[LABELS].append(self.create_text(yaxis+xshift, self.height+yshift, text = round(0), font = LABEL_FONT, fill = "black", anchor = Tkinter.S))
+                self.objects[LABELS].append(self.create_text(yaxis+xshift, self.height+yshift, text = round(0), font = LABEL_FONT, fill = "black", anchor = tkinter.S))
             
     def drawAxes(self):
         xaxis = self.getCy(0)

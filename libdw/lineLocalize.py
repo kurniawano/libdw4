@@ -1,12 +1,12 @@
-import util
-import dist
-import distPlot
-import sm
-import ssm
-import sonarDist
-import move
-import seGraphics
-import idealReadings
+from . import util
+from . import dist
+from . import distPlot
+from . import sm
+from . import ssm
+from . import sonarDist
+from . import move
+from . import seGraphics
+from . import idealReadings
 
 # For testing your preprocessor
 class SensorInput:
@@ -61,7 +61,7 @@ class PreProcess(sm.SM):
         else:
             action = discreteAction(lastUpdatePose, currentPose,
                                     self.stateWidth)
-            print (lastUpdateSonar, action)
+            print((lastUpdateSonar, action))
             return ((currentPose, currentSonar), (lastUpdateSonar, action))
 
 # Only works when headed to the right
@@ -94,7 +94,7 @@ def makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations):
      dynamics of the world
     """
     # make initial distribution over states
-    startDistribution = dist.UniformDist(range(numStates))
+    startDistribution = dist.UniformDist(list(range(numStates)))
 
     ######################################################################
     ###  Define observation model
@@ -107,7 +107,7 @@ def makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations):
                                    (numObservations / sonarDist.sonarMax)))
     
     # Part of distribution common to all observations
-    obsBackground = dist.MixtureDist(dist.UniformDist(range(numObservations)),
+    obsBackground = dist.MixtureDist(dist.UniformDist(list(range(numObservations))),
                                      dist.DeltaDist(numObservations-1),
                                      0.5)
 #!
@@ -143,7 +143,7 @@ def makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations):
 #!        pass        
         def transitionGivenState(s):
             # A uniform distribution we mix in to handle teleportation
-            transUniform = dist.UniformDist(range(numStates))
+            transUniform = dist.UniformDist(list(range(numStates)))
             return dist.MixtureDist(dist.triangleDist(\
                                         util.clip(s+a, 0, numStates-1),
                                         transDiscTriangleWidth,

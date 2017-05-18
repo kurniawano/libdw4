@@ -1,8 +1,8 @@
 """
 State machine to add random noise to sonar and odometry
 """
-import util
-import sm
+from . import util
+from . import sm
 import random
 
 class CorruptedSensorInput:

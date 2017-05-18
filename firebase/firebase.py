@@ -1,4 +1,4 @@
-import json, urllib2
+import json, urllib.request, urllib.error, urllib.parse
 
 class FirebaseApplication():
 	def __init__(self, url, token):
@@ -7,8 +7,8 @@ class FirebaseApplication():
 
 	def put(self, root,node, data):
 		json_url=self.url+root+node
-		opener = urllib2.build_opener(urllib2.HTTPHandler)
-		request = urllib2.Request(json_url+'.json?auth='+self.firebaseToken, 
+		opener = urllib.request.build_opener(urllib.request.HTTPHandler)
+		request = urllib.request.Request(json_url+'.json?auth='+self.firebaseToken, 
 			data=json.dumps(data))
 
 		request.add_header('Content-Type', 'your/contenttype')
@@ -21,8 +21,8 @@ class FirebaseApplication():
 
 	def post(self, newnode, data):
 		json_url=self.url+newnode		
-		opener = urllib2.build_opener(urllib2.HTTPHandler)
-		request = urllib2.Request(json_url+'.json?auth='+self.firebaseToken, 
+		opener = urllib.request.build_opener(urllib.request.HTTPHandler)
+		request = urllib.request.Request(json_url+'.json?auth='+self.firebaseToken, 
 			data=json.dumps(data))
 
 		request.add_header('Content-Type', 'your/contenttype')
@@ -35,8 +35,8 @@ class FirebaseApplication():
 
 	def get(self, node):
 		json_url=self.url+node
-		opener = urllib2.build_opener(urllib2.HTTPHandler)
-		request = urllib2.Request(json_url+'.json?auth='+self.firebaseToken)
+		opener = urllib.request.build_opener(urllib.request.HTTPHandler)
+		request = urllib.request.Request(json_url+'.json?auth='+self.firebaseToken)
 		request.get_method = lambda: 'GET'
 		result = opener.open(request)
 		return json.loads(result.read())

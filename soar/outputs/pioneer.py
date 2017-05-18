@@ -24,9 +24,10 @@ import math
 from math import pi
 
 import traceback
+from functools import reduce
 
 if os.name == 'nt':
-    try: import _winreg as winreg
+    try: import winreg as winreg
     except: pass
 
 from form.parallel import Stepper, SharedVar
@@ -71,7 +72,7 @@ def getAmigoPorts():
 ##### end of windows functions to open ports #########
 
 #serial port can be regular tty port or usb tty port
-print "sys.platform =", sys.platform
+print("sys.platform =", sys.platform)
 if os.name == "posix":
   if sys.platform == "linux2":
     usbSerial = glob.glob('/dev/ttyUSB*')
@@ -80,13 +81,13 @@ if os.name == "posix":
     usbSerial = glob.glob('/dev/tty.usbserial*')
     settings.SERIAL_PORT_NAME = usbSerial[0]
   else:
-    print "unknown posix OS"
+    print("unknown posix OS")
     sys.exit()
 elif os.name == "nt":
   AMIGO_PORTS = getAmigoPorts()
   settings.SERIAL_PORT_NAME = AMIGO_PORTS[0]
 
-print 'Port name: ', settings.SERIAL_PORT_NAME
+print('Port name: ', settings.SERIAL_PORT_NAME)
   #settings.SERIAL_PORT_NAME = "com0"
 ################################################################################
 
@@ -107,14 +108,14 @@ Enum = Struct
   STATE_FIRST_SYNC, 
   STATE_SECOND_SYNC, 
   STATE_READY
-) = range(4)
+) = list(range(4))
 
 # P2OS Connection Setup commands
 (
   CMD_SYNC0,
   CMD_SYNC1,
   CMD_SYNC2
-) = range(3)
+) = list(range(3))
 
 # P2OS Command Argument Types
 ArgType  = Enum(
@@ -188,7 +189,7 @@ class Pioneer:
     try:
       from soar.serial import Serial
     except ImportError:
-      print "You are missing some serial support libraries. Probably you are on windows and you need to get pywin32. Check out http://sourceforge.net/projects/pywin32/ for details."
+      print("You are missing some serial support libraries. Probably you are on windows and you need to get pywin32. Check out http://sourceforge.net/projects/pywin32/ for details.")
       raise CancelGUIAction
     self.portName = settings.SERIAL_PORT_NAME
     self.sonarsChanged = [0,0,0,0,0,0,0,0]
@@ -293,7 +294,7 @@ class Pioneer:
           if (curBaudRate<len(baudRates)):
             self.port.close()
             self.port = Serial(self.portName,baudRates[curBaudRate])
-            debug("Changing to baud rate: "+`baudRates[curBaudRate]`, 1)
+            debug("Changing to baud rate: "+repr(baudRates[curBaudRate]), 1)
             self.port.flushInput()
             self.port.flushOutput()
           else:
@@ -329,8 +330,8 @@ class Pioneer:
       botSubType += chr(pkt[i])
       i += 1
     self.sendPacket([ArcosCmd.OPEN])
-    debug("P2OS Interface Ready - connected to "+`botName`+" "+`botType`+" "+`botSubType`,1)
-    print "P2OS Interface Ready - connected to "+`botType`+`botName`
+    debug("P2OS Interface Ready - connected to "+repr(botName)+" "+repr(botType)+" "+repr(botSubType),1)
+    print("P2OS Interface Ready - connected to "+repr(botType)+repr(botName))
     changed = [0,0,0,0,0,0,0,0]
     while 0 in changed:
       self.cmdPulse()
@@ -517,7 +518,7 @@ class Pioneer:
       try:
         recv = self.recvPacket()
       except:
-        print 'no recv packet'
+        print('no recv packet')
         #continue
         break
       iters += 1

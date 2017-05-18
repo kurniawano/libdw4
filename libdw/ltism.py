@@ -2,13 +2,13 @@
 State machines that are representable as LTI systems.
 """
 
-import poly
+from . import poly
 reload(poly)
 
-import sm
+from . import sm
 reload(sm)
 
-import util
+from . import util
 reload(util)
 
 class LTISM (sm.SM):

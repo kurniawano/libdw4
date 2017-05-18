@@ -1,4 +1,4 @@
-import sm
+from . import sm
 import math
 
 class GridDynamics(sm.SM):
@@ -107,8 +107,10 @@ class GridCostDynamicsSM(sm.SM):
 # minimize sum (- log pfree)
 # Good:  costs are positive
 
-    def probCost(self, (ix, iy), (newX, newY)):
+    def probCost(self, xxx_todo_changeme, xxx_todo_changeme1):
         # max occ prob of squares we have to traverse
+        (ix, iy) = xxx_todo_changeme
+        (newX, newY) = xxx_todo_changeme1
         cost = 0
         for x in range(min(ix, newX), max(ix, newX) + 1):
             for y in range(min(iy, newY), max(iy, newY) + 1):

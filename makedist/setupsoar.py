@@ -16,14 +16,14 @@ def getProgramsMenuPath():
 
 if argv[1] == '-install':
     try:
-        print "Installing shortcut"
+        print("Installing shortcut")
         exec_dir=sysconfig.get_config_var("exec_prefix")
-        print "Python in "+exec_dir
+        print("Python in "+exec_dir)
         menu_path=getProgramsMenuPath()
-        print "Programs menu in "+menu_path
+        print("Programs menu in "+menu_path)
         #soar_shortcut_path="SoaR.lnk"
         soar_shortcut_path=os.path.join(menu_path, "soar.lnk")
-        print "soar shortcut installing to "+soar_shortcut_path
+        print("soar shortcut installing to "+soar_shortcut_path)
         soar_shortcut_path=os.path.join(menu_path, "soar.lnk") 
         
         create_shortcut(os.path.join(exec_dir, "pythonw.exe"),
@@ -33,9 +33,9 @@ if argv[1] == '-install':
                         import soar.application;form.main.Application(\
                         soar.application.application)"')
 
-        print "Done"
+        print("Done")
     except:
-        print sys.exc_info()
+        print(sys.exc_info())
 else:
-    print "This script is designed to be run from the Windows installer."
+    print("This script is designed to be run from the Windows installer.")
 

@@ -12,7 +12,7 @@
 
 ####################################Imports#####################################
 # This is a sign that theme code needs to be moved somewhere else.. I guess widgets
-from Tkinter import TclError
+from tkinter import TclError
 
 import form.common as common
 
@@ -58,5 +58,5 @@ def apply_theme(widget = 0, exclude = ['canvas'], childrenlambda = 0):
       if not child.widgetName in exclude:
         apply_theme(child, exclude)
   except TclError:
-    print "uh oh, tclerrrror"
+    print("uh oh, tclerrrror")
   return widget

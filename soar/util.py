@@ -111,7 +111,7 @@ def valueListToPose(values):
     :param values: a list or tuple of three values: x, y, theta
     :returns: a corresponding ``util.Pose``
     """
-    return apply(Pose, values)
+    return Pose(*values)
 
 class Point:
     """

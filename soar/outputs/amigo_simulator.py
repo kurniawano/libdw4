@@ -12,7 +12,7 @@
 
 ####################################Imports#####################################
 from time import time, sleep
-from Tkinter import *
+from tkinter import *
 from math import sin, cos, acos, tan, atan2, sqrt, pi
 from random import gauss, uniform, random
 from threading import Lock 
@@ -47,7 +47,7 @@ SONAR_NO_RESPONSE_COLOR="red" #color for when it does
 # TODO: Add/replace eBot ROBOT_POINTS
 ROBOT_POINTS = [(-0.1905, 0.09525), (-0.0889, 0.180975), (0.0, 0.200025), (0.0889, 0.180975), (0.1905, 0.09525), (0.1905, -0.0635), (0.1651, -0.0635), (0.1651, -0.1651), (0.0889, -0.23495), (-0.0889, -0.23495), (-0.1651, -0.1651), (-0.1651, -0.0635), (-0.1905, -0.0635)]
 DRAG_ROT_SPEED = -pi/100 #ratio controlling speed the robot rotates when you right-click to drag
-ROBOT_RADIUS = max(map(lambda (x,y): ((x)**2+(y)**2)**(0.5), ROBOT_POINTS))
+ROBOT_RADIUS = max([((x_y[0])**2+(x_y[1])**2)**(0.5) for x_y in ROBOT_POINTS])
 SIMULATOR_FPS = 10#12
 SIMULATOR_PERIOD = 1000/SIMULATOR_FPS
 
@@ -62,7 +62,7 @@ def sq(x):
   return x*x
 def norm(vec):
   div = sqrt(float(sum(map(sq, vec))))
-  return tuple(map(lambda x: x/div, vec))
+  return tuple([x/div for x in vec])
 def dot(veca, vecb):
   return sum([veca[i]*vecb[i] for i in range(len(veca))])
 def vec(line):
@@ -78,7 +78,9 @@ def sonarangleok(angle):
   #if angle < 30: return 1-(angle**6)/(2*(30.**6)) > uniform(0,1)
   #else: return ((angle-90)**6)/(2*(60.**6)) > uniform(0,1)
 
-def intersectionhelper(((xa, ya),(xb,yb)),((xc,yc),(xd,yd))):
+def intersectionhelper(xxx_todo_changeme4, xxx_todo_changeme5):
+  ((xa, ya),(xb,yb)) = xxx_todo_changeme4
+  ((xc,yc),(xd,yd)) = xxx_todo_changeme5
   try:
     s = ((xb-xa)*(ya-yc)+(yb-ya)*(xc-xa))/((xb-xa)*(yd-yc)-(yb-ya)*(xd-xc)) 
     t = ((xc-xa)+(xd-xc)*s)/(xb-xa)
@@ -104,7 +106,8 @@ CIRCLE_SCALE_FACTOR = 2**(0.5)
 
 class Obstacle(object):
   # dr(dt) --> (dx, dy, th)
-  def __init__(self, (vertices, r, dr)):
+  def __init__(self, xxx_todo_changeme):
+    (vertices, r, dr) = xxx_todo_changeme
     self.d = dr
     self.x, self.y = r
     self.th = 0
@@ -308,13 +311,15 @@ class amigo_simulator(object):
   # The next two functions are inverses of each other
 
   # A mapping from the space the robot lives in to the space that is displayed onto the computer screen 
-  def PtoC(self, (px, py)):
+  def PtoC(self, xxx_todo_changeme1):
+    (px, py) = xxx_todo_changeme1
     cx = px*self.pxtocx+self.pxcxconstant
     cy = py*self.pytocy+self.cymin-self.pymin*self.pytocy
     return (cx, cy)
 
   # A mapping from the space that is displayed onto the computer screen to the space the robot lives in 
-  def CtoP(self, (cx, cy)):
+  def CtoP(self, xxx_todo_changeme2):
+    (cx, cy) = xxx_todo_changeme2
     px = cx*self.cxtopx+self.pxmin-self.cxmin*self.cxtopx
     py = cy*self.cytopy+self.pymin-self.cymin*self.cytopy
     return (px, py)
@@ -345,12 +350,12 @@ class amigo_simulator(object):
     for obstacle in self.obstacles:
       obstacle.step(dt)
       for wall in obstacle.current_walls():
-        newlines.append(map(self.PtoC, wall))
+        newlines.append(list(map(self.PtoC, wall)))
     def tk_update_obstacles():
       for item in self.canvas.find_withtag("obstacle"):
         self.canvas.delete(item)
       for line in newlines:
-        apply(self.canvas.create_line, line[0]+line[1], {'fill':'brown', 'width':2, 'tags':'obstacle'})
+        self.canvas.create_line(*line[0]+line[1], **{'fill':'brown', 'width':2, 'tags':'obstacle'})
     form.main.tk_enqueue(tk_update_obstacles)
 
   def map_robot_point(self, robot_point):
@@ -363,7 +368,7 @@ class amigo_simulator(object):
          
   # Draw the Pioneer robot at its current position
   def drawRobot(self):
-    points = map(self.map_robot_point, ROBOT_POINTS)
+    points = list(map(self.map_robot_point, ROBOT_POINTS))
     def tk_update_robot():
       for item in self.canvas.find_withtag("robot"):
         self.canvas.delete(item)
@@ -420,14 +425,14 @@ class amigo_simulator(object):
     global TELEPORT_PROB, TELEPORT_DIST
     TELEPORT_PROB = perStepProbability
     TELEPORT_DIST = poseDist
-    print 'Enabling teleportation with probability', TELEPORT_PROB
+    print('Enabling teleportation with probability', TELEPORT_PROB)
 
   # Set translational and rotational velocities
   def motorOutput(self, v, w):
     if TELEPORT_PROB > 0:
       if random() < TELEPORT_PROB:
         newPose = TELEPORT_DIST.draw()
-        print 'Teleporting to', newPose
+        print('Teleporting to', newPose)
         self.abspose.set(newPose)
     if CAP_ACC:
       (oldTrans, oldRot) = (self.v.get(), self.w.get())
@@ -537,7 +542,8 @@ class amigo_simulator(object):
     self.drawRobot()
     self.updateSonars() 
 
-  def perp(self, ((x0, y0),(x1, y1))):
+  def perp(self, xxx_todo_changeme3):
+    ((x0, y0),(x1, y1)) = xxx_todo_changeme3
     x,y = self.abspose.get()[:2]
     try:
       a = tan(-(x1-x0)/(y1-y0))
@@ -580,7 +586,7 @@ class amigo_simulator(object):
     ody+=odystep
     odth+=thstep
     odth%=2*pi
-    form.main.tk_enqueue(lambda: self.odometrytext.set("POSE - X: " + `odx`[:7] + ", Y: " + `ody`[:7] + ", TH: " + `odth`[:7]))
+    form.main.tk_enqueue(lambda: self.odometrytext.set("POSE - X: " + repr(odx)[:7] + ", Y: " + repr(ody)[:7] + ", TH: " + repr(odth)[:7]))
     self.odpose.set((odx, ody, odth))
     self.abspose.set((absx, absy, absth))
 

@@ -3,10 +3,10 @@ State machine that acts as a state estimator, given a world model
 expressed as a c{ssm.StochasticSM}.
 """
 
-import sm
-import ssm
-import dist
-import util
+from . import sm
+from . import ssm
+from . import dist
+from . import util
 
 class StateEstimator(sm.SM):
     """
@@ -45,12 +45,12 @@ class StateEstimator(sm.SM):
         sGo = dist.bayesEvidence(state, self.model.observationDistribution, o)
 
         if self.verbose: 
-            print 'after obs', o, sGo
+            print(('after obs', o, sGo))
 
         dSPrime = dist.totalProbability(sGo, 
                                         self.model.transitionDistribution(i))
         if self.verbose:
-            print 'after trans', i, dSPrime
+            print(('after trans', i, dSPrime))
         if self.model.beliefDisplayFun:
             self.model.beliefDisplayFun(dSPrime)
             

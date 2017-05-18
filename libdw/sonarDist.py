@@ -3,7 +3,7 @@ Useful constants and utilities for dealing with sonar readings in soar.
 """
 
 import math
-import util
+from . import util
 
 #CHANGED: commented out two sonar poses
 ##sonarPoses = [util.Pose(0.08, 0.134, math.pi/2),

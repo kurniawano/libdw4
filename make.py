@@ -10,6 +10,6 @@ for dir in ["libdw", "form", "soar", "soar/controls",\
   pyfiles = [file for file in os.listdir(dir) if file.endswith(".py")]
 
   for file in pyfiles:
-    print 'compiling: ', dir+'/'+file
+    print(('compiling: ', dir+'/'+file))
     py_compile.compile(dir+'/'+file)
 

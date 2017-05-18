@@ -1,10 +1,10 @@
 import math
-import sig
-import simulate
+from . import sig
+from . import simulate
 
 def testSignal(dist = 1.0, simTime = 3.0):
    nsteps = int(simTime/simulate.Tsim)
-   print __name__, 'nsteps ', nsteps
+   print((__name__, 'nsteps ', nsteps))
    ninter=nsteps/4
    return (nsteps,
            sig.ListSignal(ninter*[{'lightAngle':1.57, 'lightDist':dist}]+\

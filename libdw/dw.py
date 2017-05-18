@@ -24,10 +24,10 @@
 
 ### Hacked by LPK to be independent of SoaR
 
-import Tkinter
-import tkFileDialog
+import tkinter
+import tkinter.filedialog
 import math
-import tk
+from . import tk
 
 class DrawingWindow:
 
@@ -37,12 +37,12 @@ class DrawingWindow:
         tk.init()
 	self.title = title
         # Make a window to draw on
-        self.top=Tkinter.Toplevel()
+        self.top=tkinter.Toplevel()
         self.top.wm_title(title)
         self.top.protocol('WM_DELETE_WINDOW', self.destroy)
 	self.windowWidth = windowWidth
         self.windowHeight = windowHeight
-        self.canvas = Tkinter.Canvas(self.top, width=self.windowWidth,
+        self.canvas = tkinter.Canvas(self.top, width=self.windowWidth,
                                      height=self.windowHeight, 
                                      background="white")
         self.canvas.pack()
@@ -63,7 +63,7 @@ class DrawingWindow:
 
     def save(self):
         filename = \
-            tkFileDialog.asksaveasfilename(filetypes=[("PS", "*.ps")],
+            tkinter.filedialog.asksaveasfilename(filetypes=[("PS", "*.ps")],
                                            defaultextension=".ps",
                                            title="Save Window to ...")
         if len(filename) == 0:
@@ -125,7 +125,9 @@ class DrawingWindow:
         # font="Arial 20",fill="#ff0000"
 
 
-    def drawRect(self, (x1,y1), (x2,y2), color = "black"):
+    def drawRect(self, xxx_todo_changeme, xxx_todo_changeme1, color = "black"):
+        (x1,y1) = xxx_todo_changeme
+        (x2,y2) = xxx_todo_changeme1
         return self.canvas.create_rectangle(self.scaleX(x1), self.scaleY(y1),
                                             self.scaleX(x2), self.scaleY(y2),
                                             fill = color)
@@ -150,7 +152,8 @@ class DrawingWindow:
                                             self.scaleY(y1)-yproj,
                                             fill = color)
             
-    def drawLine(self, (a,b,c), color = "black"):
+    def drawLine(self, xxx_todo_changeme2, color = "black"):
+        (a,b,c) = xxx_todo_changeme2
         if abs(b) < 0.001:
             startX = self.scaleX(-c/a)
             endX = self.scaleX(-c/a)

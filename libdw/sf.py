@@ -3,11 +3,11 @@ Class and some supporting functions for representing and manipulating system fun
 """
 
 import math
-import poly
+from . import poly
 reload(poly)
-import util
+from . import util
 reload(util)
-import ltism
+from . import ltism
 reload(ltism)
 
 class SystemFunction:
@@ -294,7 +294,7 @@ def periodOfPole(p):
     """
     (r, phase) = complexPolar(p)
     if phase == 0:
-        print "Pole", p, "does not generate periodic behavior."
+        print(("Pole", p, "does not generate periodic behavior."))
         return None    
     else:
         return 2*math.pi / phase

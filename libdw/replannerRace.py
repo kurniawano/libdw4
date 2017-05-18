@@ -1,11 +1,11 @@
 """
 State machine classes for planning paths in a grid map.
 """
-import util
-import sm
+from . import util
+from . import sm
 import math
-import ucSearch
-import gridDynamics
+from . import ucSearch
+from . import gridDynamics
 reload(gridDynamics)
 
 class ReplannerWithDynamicMap(sm.SM):
@@ -55,7 +55,7 @@ class ReplannerWithDynamicMap(sm.SM):
                 # The call to the planner succeeded;  extract the list
                 # of subgoals
                 state = [s[:2] for (a, s) in plan]
-                print 'New plan', state
+                print(('New plan', state))
                 # Draw the plan
                 map.drawPath(state)
             else:
@@ -108,6 +108,6 @@ def planInvalidInMap(map, plan, currentIndices):
     wayPoint = plan[0]
     for p in util.lineIndicesConservative(currentIndices, wayPoint)[1:]:
         if not map.robotCanOccupy(p):
-            print 'plan invalid', currentIndices, p, wayPoint, '-- replanning'
+            print(('plan invalid', currentIndices, p, wayPoint, '-- replanning'))
             return True
     return False

@@ -10,14 +10,14 @@ class name2num:
         
     def __call__(self, x):
         if type(x) == type([]):
-            return map(self,x)
+            return list(map(self,x))
         else:  
-            if not self.names2nums.has_key(x):
+            if x not in self.names2nums:
                 self.names2nums[x] = self.next_int
                 self.next_int = self.next_int + 1
             return self.names2nums[x]
     def names(self):
-        return self.names2nums.keys()
+        return list(self.names2nums.keys())
     def max_num(self):
         return max(self.names2nums.values())
 
@@ -49,9 +49,9 @@ def resolveConstraints(fdf, maxiters = 100):
     # Find out size of arrays and initialize
     vars,fs = fdf([],[], [])
     if not(vars == fs):
-        print 'Number of variables = ', vars
-        print 'Does not match number of eqns = ', fs
-        print 'Did you forget a conservation law or to set a ground?'
+        print(('Number of variables = ', vars))
+        print(('Does not match number of eqns = ', fs))
+        print('Did you forget a conservation law or to set a ground?')
     assert vars == fs, 'equation/variable mismatch error'
     
     x = array([0.0]*vars)
@@ -67,7 +67,7 @@ def resolveConstraints(fdf, maxiters = 100):
         if err < 1.0e-10 :
             break
     if err > 1.0e-10 :
-        print 'error exceeds ', err, ' in ', maxiters, ' iterations'
+        print(('error exceeds ', err, ' in ', maxiters, ' iterations'))
     return x
         
 class ConstraintSet:
@@ -97,7 +97,7 @@ class ConstraintSet:
         for f_v in self.constraints: 
 
             # Indices of elments of x associated with constraint's variables
-            index_list =  map(self.n2n, f_v[1])
+            index_list =  list(map(self.n2n, f_v[1]))
 
             # Compute the constraint function and derivatives for given values
             f,df = compute_fdf(f_v[0], [x[i] for i in index_list])
@@ -118,7 +118,7 @@ class ConstraintSet:
         varlist = self.listVariables()
         varlist.sort()
         for var in varlist:
-            print var, ' = ', self.translate(var, solution)
+            print((var, ' = ', self.translate(var, solution)))
 
     def __call__(self):  # Returns constraint evaluation function for the list
         return self.FdF

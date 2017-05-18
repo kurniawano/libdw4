@@ -2,14 +2,14 @@
 State estimation example: localization in a colored hallway
 """
 
-import util
-import sm
-import ssm
-import se
-import colors
-import dist
-import dw
-from dw import DrawingWindow
+from . import util
+from . import sm
+from . import ssm
+from . import se
+from . import colors
+from . import dist
+from . import dw
+from .dw import DrawingWindow
 reload(dw)
 
 possibleColors = ('black', 'white', 'red', 'green', 'blue', 'purple', 'orange',
@@ -151,7 +151,7 @@ def leftSlipTransNoiseModel(nominalLoc, hallwayLength):
 ######################################################################
 
 def textOutput(result):
-    print 'Machine output:', result
+    print(('Machine output:', result))
 
 class TextInputSM(sm.SM):
     """
@@ -166,10 +166,10 @@ class TextInputSM(sm.SM):
         out = None
         first = True
         while not out in self.legalInputs:
-            if not first: print 'Illegal input:', out
-            out = raw_input('Type an input (' + \
+            if not first: print(('Illegal input:', out))
+            out = eval(input('Type an input (' + \
                             util.prettyString(self.legalInputs) + \
-                            ' ): ')
+                            ' ): '))
             if not out == 'quit': out = int(out)
             first = False
         return (out == 'quit', out)
@@ -213,14 +213,14 @@ def wrapWindowUI(m, worldColors, legalInputs, windowName = 'Belief',
 
     def processInput(stuff):
         if stuff == 'quit':
-            print 'Taking action 0 before quitting'
+            print('Taking action 0 before quitting')
             return 0
         else:
             return int(stuff)
         
     dim = len(worldColors)
     if not initBelief:
-        initBelief = dist.UniformDist(range(dim))
+        initBelief = dist.UniformDist(list(range(dim)))
     ydim = 1
     window = DrawingWindow(dim*50, ydim*50+10, -0.2, dim+0.2, -0.2,
                            ydim+0.2, windowName)
@@ -290,7 +290,7 @@ def makeSim(hallwayColors, legalInputs, obsNoise, dynamics, transNoise,
     """
     n = len(hallwayColors)
     if not initialDist:
-        initialDist = dist.UniformDist(range(n))
+        initialDist = dist.UniformDist(list(range(n)))
     worldSM = ssm.StochasticSM(initialDist,
                                makeTransitionModel(dynamics, transNoise, n),
                                makeObservationModel(hallwayColors, obsNoise))
@@ -302,7 +302,7 @@ def hallSE(hallwayColors, legalInputs, obsNoise, dynamics, transNoise,
            initialDist = None, verbose = True):
     n = len(hallwayColors)
     if not initialDist:
-        initialDist = dist.UniformDist(range(n))
+        initialDist = dist.UniformDist(list(range(n)))
     worldSM = ssm.StochasticSM(initialDist,
                                makeTransitionModel(dynamics, transNoise, n),
                                makeObservationModel(hallwayColors, obsNoise))

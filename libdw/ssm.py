@@ -1,8 +1,8 @@
 """
 Class for representing stochastic state machines.
 """
-import dist
-import sm
+from . import dist
+from . import sm
 
 class StochasticSM(sm.SM):
     """

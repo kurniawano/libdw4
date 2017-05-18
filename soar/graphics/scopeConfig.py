@@ -1,5 +1,5 @@
-import Tkinter
-from Tkinter import *
+import tkinter
+from tkinter import *
 import sys
 
 # quick and dirty EntryField to avoid needing Pmw package for this one
@@ -33,7 +33,7 @@ class ScopeConfigWindow():
   def __init__(self, scope, allowGUIToAddProbes=False):
       self.scope = scope
       self.allowGUIToAddProbes = allowGUIToAddProbes
-      self.window = Tkinter.Toplevel()
+      self.window = tkinter.Toplevel()
       self.window.wm_title("Configuration Panel")
       self.window.protocol("WM_DELETE_WINDOW", self.closeWindow)
       #self.grp = Pmw.Group(self.window)
@@ -62,13 +62,13 @@ class ScopeConfigWindow():
       #self.buttonGrp = Pmw.Group(self.window)
       self.buttonGrp = Frame(self.window)
       self.buttonGrp.pack(expand=0, padx=10, pady=10, fill='x')
-      self.applyButton = Tkinter.Button(self.buttonGrp,
+      self.applyButton = tkinter.Button(self.buttonGrp,
                                        text="Apply", command = self.apply)
       self.applyButton.pack(side=LEFT, fill='x', padx = 50)
-      self.closeButton = Tkinter.Button(self.buttonGrp,
+      self.closeButton = tkinter.Button(self.buttonGrp,
                                         text="Close", command = self.done)
       self.closeButton.pack(side=LEFT, fill='x', padx=50)
-      self.cancelButton = Tkinter.Button(self.buttonGrp,
+      self.cancelButton = tkinter.Button(self.buttonGrp,
                                          text="Cancel", 
                                          command = self.closeWindow)
       self.cancelButton.pack(side=LEFT, fill='x', padx = 50)
@@ -158,7 +158,7 @@ class ScopeConfigWindow():
     parse = xscale.split(',')
     if len(parse) == 1:
       if int(parse[0]) != self.oldxscale:
-        print 'changing x scale from ', self.oldxscale, ' to ', int(parse[0])
+        print('changing x scale from ', self.oldxscale, ' to ', int(parse[0]))
         self.oldxscale = int(parse[0])
         self.scope.opts['X Scale'] = self.oldxscale
         self.scope.setTimeAxis()
@@ -188,6 +188,6 @@ class ScopeConfigWindow():
         self.scope.setStaticObjects()
         self.scope.draw()
         # otherwise don't do anything
-    except Exception, e:
-      print e
+    except Exception as e:
+      print(e)
       sys.stderr.write('Invalid y scale entered.\n')

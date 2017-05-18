@@ -2,11 +2,11 @@ import linearCircuitEquations
 reload(linearCircuitEquations)
 from linearCircuitEquations import *
 
-import le
+from . import le
 reload(le)
-from le import *
+from .le import *
 
-from util import *
+from .util import *
 
 ############
 # The top-level Circuit class
@@ -41,19 +41,19 @@ class Circuit:
         for c in self.components:
             c.addKCLToNodes(self.nodeDict)
         # from each node (except ground) construct one kcl equation
-        for name in self.nodeDict.keys():
+        for name in list(self.nodeDict.keys()):
             if name != groundVoltage:
                 node = self.nodeDict[name]
                 nodeEq = node.kclEquation()
                 if nodeEq.coeffs is []:
-                    raise Exception, "Error: Empty kcl equation - unconnected node?"
+                    raise Exception("Error: Empty kcl equation - unconnected node?")
                 equationSet.addEquation(nodeEq)
 #!!
     def displaySolution(self, groundNode):
         # build the EquationSet and call its solve method
         ckt = self.makeEquationSet(groundNode)
         print('Solving the following equations:')
-        for e in  ckt.equations: print e
+        for e in  ckt.equations: print(e)
         print('The solution is:')
         ckt.display(ckt.solve())
 

@@ -108,22 +108,22 @@ def search(initialState, goalTest, actions, successor,
     if DP: visited = {initialState: True}
     count = 1
     while not agenda.isEmpty() and maxNodes > count:
-        if verbose: print "agenda: ", agenda
+        if verbose: print(("agenda: ", agenda))
         n = agenda.pop()
-        if somewhatVerbose or verbose: print "   expanding: ",  n
+        if somewhatVerbose or verbose: print(("   expanding: ",  n))
         newStates = []
         for a in actions:
             newS = successor(n.state, a)
             newN = SearchNode(a, newS, n)
             if goalTest(newS):
                 # We're done!
-                print count, " states visited"
+                print((count, " states visited"))
                 return newN.path()
             elif newS in newStates:
                 # We've already gone from s to newS
                 pass
             elif ((not DP) and n.inPath(newS)) or \
-                  (DP and visited.has_key(newS)):
+                  (DP and newS in visited):
                 # We already know a path to newS
                 pass
             elif newS is None:
@@ -134,8 +134,8 @@ def search(initialState, goalTest, actions, successor,
                 if DP: visited[newS] = True
                 newStates.append(newS)
                 agenda.push(newN)
-    print "Search failed after visiting ", count, " states."
-    if DP: print 'Using DP', len(visited)
+    print(("Search failed after visiting ", count, " states."))
+    if DP: print(('Using DP', len(visited)))
     return None
 
 def depthFirst (initialState, goalTest, actions, successor):

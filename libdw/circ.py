@@ -3,9 +3,9 @@ Describe a circuit in terms of its components; generates equations and
 solves them.
 """
 
-import le
+from . import le
 reload(le)
-import util
+from . import util
 #!
 
 class Circuit:
@@ -33,10 +33,10 @@ class Circuit:
         # Add KCL constraints
         es.addEquations(n2c.getKCLEquations(gnd))
 
-        print 'Solving equations'
-        print '*****************'
-        for e in es.equations: print e
-        print '*****************'
+        print('Solving equations')
+        print('*****************')
+        for e in es.equations: print(e)
+        print('*****************')
 
         # Solve
         return es.solve()
@@ -95,7 +95,7 @@ class NodeToCurrents:
         Adds an entry for ``node``, if doesn't already exist in the
         dictionary.
         """
-        if not self.d.has_key(node):
+        if node not in self.d:
             self.d[node] = []
         self.d[node].append([current, sign])
 #!!
@@ -121,9 +121,9 @@ class NodeToCurrents:
          out of the node is equal to zero.
         """
         result = []
-        for node in self.d.keys():
+        for node in list(self.d.keys()):
            if not node == gnd:
-               (currents, signs) = apply(zip, self.d[node])
+               (currents, signs) = list(zip(*self.d[node]))
                result.append(le.Equation(signs, currents, 0.0))
         result.append(le.Equation([1], [gnd], 0))
         return result

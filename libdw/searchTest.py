@@ -1,7 +1,7 @@
-import search
-import util
-import sm
-import ucSearch
+from . import search
+from . import util
+from . import sm
+from . import ucSearch
 reload(ucSearch)
 
 import pdb
@@ -13,7 +13,7 @@ import pdb
 ######################################################################
 
 def mapTest(map, start, goal, searchFn = search.breadthFirstDP):
-    actions = range(max([len(map[s]) for s in map]))
+    actions = list(range(max([len(map[s]) for s in map])))
 
     def succFn(s, a):
         if a < len(map[s]):
@@ -58,10 +58,10 @@ map2 = {'S' : ['A', 'B'],
         'G' : ['F']}
 
 def mapTestAll(map, start, goal):
-    print "BreadthFirst: ", mapTest(map, start, goal, search.breadthFirst)
-    print "BreadthFirstDP: ", mapTest(map, start, goal, search.breadthFirstDP)
-    print "DepthFirst: ", mapTest(map, start, goal, search.depthFirst)
-    print "DepthFirstDP: ", mapTest(map, start, goal, search.depthFirstDP)
+    print(("BreadthFirst: ", mapTest(map, start, goal, search.breadthFirst)))
+    print(("BreadthFirstDP: ", mapTest(map, start, goal, search.breadthFirstDP)))
+    print(("DepthFirst: ", mapTest(map, start, goal, search.depthFirst)))
+    print(("DepthFirstDP: ", mapTest(map, start, goal, search.depthFirstDP)))
 
 ######################################################################
 ###
@@ -71,7 +71,7 @@ def mapTestAll(map, start, goal):
 
 def mapDistTest(map, start, goal, searchFn = ucSearch.search,
                 h = lambda x: 0):
-    actions = range(max([len(map[s]) for s in map]))
+    actions = list(range(max([len(map[s]) for s in map])))
 
     def succFn(s, a):
         if a < len(map[s]):
@@ -172,8 +172,8 @@ def mapD(s, g):
     return math.sqrt((sx - gx)**2 + (sy - gy)**2)
 
 def bigTest(s, g):
-    print mapDistTest(bigMap, s, g)
-    print mapDistTest(bigMap, s, g, h = lambda x: mapD(x, g))
+    print((mapDistTest(bigMap, s, g)))
+    print((mapDistTest(bigMap, s, g, h = lambda x: mapD(x, g))))
 
 ######################################################################
 ###
@@ -240,12 +240,12 @@ class NumberTestFiniteSM(NumberTestSM):
             return (state, state)
     
 def searchTestSM(goal):
-    print "BreadthFirstDP: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1)
-    print "BreadthFirst: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1, DP=False)
-    print "DepthFirstDP: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1,
-                                            depthFirst=True)
-    print "DepthFirst: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1,
-                                          depthFirst=True, DP=False)
+    print(("BreadthFirstDP: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1)))
+    print(("BreadthFirst: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1, DP=False)))
+    print(("DepthFirstDP: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1,
+                                            depthFirst=True)))
+    print(("DepthFirst: ", search.smSearch(NumberTestFiniteSM(goal, goal+1), 1,
+                                          depthFirst=True, DP=False)))
 
 import math
 
@@ -286,8 +286,8 @@ def bar(s, g):
     return math.log(abs(g)+1, abs(s)+2)
 
 def numberCostCompare(s, g, h):
-    print numberCostTest(s, g, lambda x: 0)
-    print numberCostTest(s, g, lambda x: h(x, g))
+    print((numberCostTest(s, g, lambda x: 0)))
+    print((numberCostTest(s, g, lambda x: h(x, g))))
 
 def numberCostTest(s, g, h):
     return ucSearch.smSearch(NumberTestCostSM(g), s, heuristic = h)
@@ -318,7 +318,9 @@ class EightPuzzleSM(sm.SM):
     def done(self, state):
         return state == self.goal
 
-def swap(board, (ox, oy), (nx, ny)):
+def swap(board, xxx_todo_changeme, xxx_todo_changeme1):
+    (ox, oy) = xxx_todo_changeme
+    (nx, ny) = xxx_todo_changeme1
     if (ox, oy) == (nx, ny):
         return board
     else:
@@ -348,8 +350,8 @@ def big8():
     for g in [g1, g2, g3]:
         for s in [s1, s2, s3]:
             for h in [h0, h1, h2]:
-                print g, s, h
-                print eightTest(s, g, h)
+                print((g, s, h))
+                print((eightTest(s, g, h)))
 
 def h0(s, g): return 0
 
@@ -376,7 +378,7 @@ def h2(s, g):
             for j in range(3):
                 if b[i][j] == v:
                     return (i, j)
-        print 'failed to find', v, b
+        print(('failed to find', v, b))
     
     return sum([distInBoards(i) for i in range(1, 9)])
 

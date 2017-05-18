@@ -1,5 +1,6 @@
-import util
+from . import util
 import numpy
+from functools import reduce
 
 class NameToIndex:
     """
@@ -28,7 +29,7 @@ class NameToIndex:
         If ``name`` has been inserted before, do nothing.  Otherwise,
         assign it the next index.
         """
-        if not self.namesToNums.has_key(name):
+        if name not in self.namesToNums:
             self.namesToNums[name] = self.nextIndex
             self.nextIndex = self.nextIndex + 1
             
@@ -43,7 +44,7 @@ class NameToIndex:
         """
         Returns list of names that have been inserted so far.
         """
-        return self.namesToNums.keys()
+        return list(self.namesToNums.keys())
         
 
 

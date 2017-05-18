@@ -1,4 +1,4 @@
-from eBot import *
+from .eBot import *
 import time
 import random
 import string
@@ -14,7 +14,7 @@ class eBotWs(object):
     def connect(self):
         if self.mybot is not None:
             self.mybot.connect()
-            print self.mybot.power()
+            print((self.mybot.power()))
             return '''Success Connect.'''
 
     @cherrypy.expose
@@ -28,7 +28,7 @@ class eBotWs(object):
         self.mybot.wheels(wheel_speed, wheel_speed)
         now_time = time.time()
         while (time.time() < now_time + r_time ):
-            print (self.mybot.robot_uS()).__str__().replace('[',' ').replace(']',' ')
+            print(((self.mybot.robot_uS()).__str__().replace('[',' ').replace(']',' ')))
             sleep(0.05)
         self.mybot.halt()
 

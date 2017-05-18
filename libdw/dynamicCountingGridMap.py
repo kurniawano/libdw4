@@ -1,7 +1,7 @@
-import gridMap
+from . import gridMap
 import math
-import util
-import colors
+from . import util
+from . import colors
 
 class DynamicCountingGridMap(gridMap.GridMap):
     """
@@ -56,20 +56,24 @@ class DynamicCountingGridMap(gridMap.GridMap):
             hue = colors.redHue
         return colors.RGBToPyColor(colors.HSVtoRGB(hue, 0.2 + 0.8 * s, v))
 
-    def setCell(self, (xIndex, yIndex)):
+    def setCell(self, xxx_todo_changeme):
+        (xIndex, yIndex) = xxx_todo_changeme
         self.grid[xIndex][yIndex] += 2
         self.drawSquare((xIndex, yIndex))
         
-    def clearCell(self, (xIndex, yIndex)):
+    def clearCell(self, xxx_todo_changeme1):
+        (xIndex, yIndex) = xxx_todo_changeme1
         self.grid[xIndex][yIndex] -= 0.25
         self.drawSquare((xIndex, yIndex))
 
-    def occupied(self, (xIndex, yIndex)):
+    def occupied(self, xxx_todo_changeme2):
+        (xIndex, yIndex) = xxx_todo_changeme2
         return self.grid[xIndex][yIndex] > 2
 
-    def robotCanOccupy(self, (xIndex, yIndex)):
+    def robotCanOccupy(self, xxx_todo_changeme3):
         # Really inefficient.  Should cache this in another array and
         # update it when we update grid cells.
+        (xIndex, yIndex) = xxx_todo_changeme3
         for dx in range(0, self.growRadiusInCells + 1):
             for dy in range(0, self.growRadiusInCells + 1):
                 xPlus = util.clip(xIndex+dx, 0, self.xN-1)

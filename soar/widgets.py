@@ -11,7 +11,7 @@
 ################################################################################
 
 ####################################Imports#####################################
-from Tkinter import *
+from tkinter import *
 
 import form.parallel as parallel
 import form.common as common
@@ -65,12 +65,12 @@ class DrawingFrame(Frame):
     return self.height_px - self.y_scale*(y - self.y_min)
 
   def tagpair(self):
-    returnid, nexttag = self.next_id, "t:"+`self.next_id`
+    returnid, nexttag = self.next_id, "t:"+repr(self.next_id)
     self.next_id += 1
     return returnid, nexttag
 
   def delete(self, item):
-    self.wrap_and_add_task(lambda: self.canvas.delete("t:"+`item`))
+    self.wrap_and_add_task(lambda: self.canvas.delete("t:"+repr(item)))
 
   def clear(self):
     def tryClear():
@@ -100,7 +100,9 @@ class DrawingFrame(Frame):
     self.wrap_and_add_task(make)
     return returnid
 
-  def drawRect(self, (x1,y1), (x2,y2), color = "black"):
+  def drawRect(self, xxx_todo_changeme, xxx_todo_changeme1, color = "black"):
+    (x1,y1) = xxx_todo_changeme
+    (x2,y2) = xxx_todo_changeme1
     returnid, nexttag = self.tagpair()
     cx1, cy1 = int(self.px_to_cx(x1)), int(self.py_to_cy(y1))
     cx2, cy2 = int(self.px_to_cx(x2)), int(self.py_to_cy(y2))
@@ -110,7 +112,8 @@ class DrawingFrame(Frame):
     self.wrap_and_add_task(make)
     return returnid
 
-  def drawLine(self, (a,b,c), color = "black"):
+  def drawLine(self, xxx_todo_changeme2, color = "black"):
+    (a,b,c) = xxx_todo_changeme2
     if abs(b) < 0.001:
       startX = int(self.px_to_cx(-c/a))
       endX = int(self.px_to_cx(-c/a))

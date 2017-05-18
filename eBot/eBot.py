@@ -1,20 +1,20 @@
 from time import *
 import os
 import sys
-from serial import Serial
+from .serial import Serial
 from math import degrees, pi
 import glob
-from Tkinter import *
-import tkMessageBox
-import Tkinter
+from tkinter import *
+import tkinter.messagebox
+import tkinter
 from threading import Thread
-from Locator_EKF import Locator_EKF
-import util
+from .Locator_EKF import Locator_EKF
+from . import util
 
 
 if os.name == 'nt':
     try:
-        import _winreg as winreg
+        import winreg as winreg
     except:
         pass
 
@@ -97,7 +97,7 @@ class eBot():
                 ports = glob.glob('/dev/tty.eBo*')
                 #usbSerial = glob.glob('/dev/tty.usbserial*')
             else:
-                print "Unknown posix OS."
+                print("Unknown posix OS.")
                 sys.exit()
         elif os.name == "nt":
             ports = self.getOpenPorts()
@@ -108,10 +108,10 @@ class eBot():
         ebot_ports = []
         ebot_names = []
         line = "a"
-        print "connecting",
+        print("connecting", end=' ')
         for port in ports:
             try:
-                print ".",
+                print(".", end=' ')
                 if (line[:2] == "eB"):
                     break
                 s = Serial(port, baudRate, timeout=5.0, writeTimeout=5.0)
@@ -154,7 +154,7 @@ class eBot():
             except:
                 pass
             #sys.stderr.write("Could not open serial port.  Is robot turned on and connected?\n")
-            print "Connection Error", "No eBot found. Please reconnect and try again.",
+            print("Connection Error", "No eBot found. Please reconnect and try again.", end=' ')
             #import ctypes  # An included library with Python install.
             #ctypes.windll.user32.MessageBoxA(0, "Your text", "Your title", 1)
             raise Exception("No eBot found")
@@ -172,7 +172,7 @@ class eBot():
             sleep(0.2)
             self.port.flushInput()
             self.port.flushOutput()
-            print "connected"
+            print("connected")
             self.receive_thread = Thread(target= self.recieve_background)
             self.thread_flag =1
             self.receive_thread.start()
@@ -180,7 +180,7 @@ class eBot():
 
 
         except:
-            print "COM Error", "Robot connection lost..."
+            print("COM Error", "Robot connection lost...")
             sys.stderr.write("Could not write to serial port.\n")
             self.serialReady = False
             sys.stderr.write("Robot turned off or no longer connected.\n")
@@ -293,7 +293,7 @@ class eBot():
         if self.serialReady:
             try:
                 self.port.close()
-                print "Successful", "eBot successfully disconnected."
+                print("Successful", "eBot successfully disconnected.")
             except:
                 self.lostConnection()
 
@@ -602,6 +602,6 @@ class eBot():
         except:
             pass
         self.serialReady = False
-        print "COM Error", "Robot connection lost..."
+        print("COM Error", "Robot connection lost...")
         raise Exception("Robot Connection Lost")
         ################################################################################

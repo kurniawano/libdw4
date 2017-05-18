@@ -2,7 +2,7 @@
 A class of signals that is created by putting another signal through a transducer (state machine).
 """
 
-import sig
+from . import sig
 reload(sig)
 
 class TransducedSignalSlow(sig.Signal):

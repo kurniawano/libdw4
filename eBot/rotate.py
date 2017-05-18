@@ -1,4 +1,4 @@
-from eBot import *
+from .eBot import *
 import time
 
 myBot = eBot()

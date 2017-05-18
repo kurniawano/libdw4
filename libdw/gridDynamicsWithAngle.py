@@ -1,7 +1,7 @@
-import sm
-import util
+from . import sm
+from . import util
 import math
-import gridMap
+from . import gridMap
 
 class GridDynamics(sm.SM):
     """

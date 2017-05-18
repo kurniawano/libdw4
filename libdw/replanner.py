@@ -2,10 +2,10 @@
 State machine classes for planning paths in a grid map.
 """
 
-import sm
+from . import sm
 import math
-import ucSearch
-import gridDynamics
+from . import ucSearch
+from . import gridDynamics
 
 class Replanner(sm.SM):
     """
@@ -97,7 +97,7 @@ def newPathAndSubgoal(worldMap, sensorInput, goalPoint, dynamicsModel, path,
         if plan:
             path = [s for (a, s) in plan]
             worldMap.drawPath(path)
-            print 'New plan', path
+            print(('New plan', path))
         else:
             worldMap.drawPath([currentIndices, goalIndices])
             worldMap.drawWorld()
@@ -120,7 +120,9 @@ def timeToReplanStaticMap(plan, currentIndices, worldMap, goalIndices):
     """
     return plan == None or not adjacent(currentIndices, plan[0])
 
-def adjacent((x1, y1), (x2, y2)):
+def adjacent(xxx_todo_changeme, xxx_todo_changeme1):
+    (x1, y1) = xxx_todo_changeme
+    (x2, y2) = xxx_todo_changeme1
     return abs(x1 - x2) < 2 and abs(y1 - y2) < 2
 
 class ReplannerWithDynamicMap(sm.SM):

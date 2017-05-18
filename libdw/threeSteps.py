@@ -1,9 +1,9 @@
-import sig
-import simulate
+from . import sig
+from . import simulate
 
 def testSignal(simTime = 2.5):
     nsteps = int(simTime/simulate.Tsim)
-    print __name__, 'nsteps ', nsteps
+    print((__name__, 'nsteps ', nsteps))
     ninter = nsteps/3
     return (nsteps,
 	    sig.ListSignal(ninter*[{'pot1':.25}]+\

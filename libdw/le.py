@@ -2,8 +2,9 @@
 Specify and solve systems of linear equations.
 """
 
-import util
-import gauss
+from . import util
+from . import gauss
+from functools import reduce
 
 class NameToIndex:
     """
@@ -34,7 +35,7 @@ class NameToIndex:
         If ``name`` has been inserted before, do nothing.  Otherwise,
         assign it the next index.
         """
-        if not self.namesToNums.has_key(name):
+        if name not in self.namesToNums:
             self.namesToNums[name] = self.nextIndex
             self.namesList.append(name)
             self.nextIndex = self.nextIndex + 1
@@ -63,7 +64,7 @@ class Equation:
     """
     def __init__(self, coeffs, variableNames, constant):
         if len(variableNames) != len(coeffs):
-            raise Exception, "Number of coefficients %s and names %s do not match"%(str(coeffs),str(variableNames))
+            raise Exception("Number of coefficients %s and names %s do not match"%(str(coeffs),str(variableNames)))
         self.variableNames = variableNames
         """List of variable names"""
         self.coeffs = coeffs

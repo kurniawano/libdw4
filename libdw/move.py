@@ -2,8 +2,8 @@
 Drive robot to goal specified as odometry pose.
 """
 from soar.io import io
-import sm
-import util
+from . import sm
+from . import util
 
 class MoveToDynamicPoint(sm.SM):
     """

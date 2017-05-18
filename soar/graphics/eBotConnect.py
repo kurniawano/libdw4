@@ -3,9 +3,9 @@ import glob
 import sys
 from time import *
 import serial
-from Tkinter import *
-import Tkinter
-import tkMessageBox
+from tkinter import *
+import tkinter
+import tkinter.messagebox
 
 
 top = Tk()
@@ -30,11 +30,11 @@ def okCallBack():
     t = Lb1.curselection()
     s = "Selected eBot: #"
     s += str(int(t[0])+1)
-    tkMessageBox.showinfo("eBot", s)
+    tkinter.messagebox.showinfo("eBot", s)
     top.destroy()
 
 #B = Tkinter.Button(top, width=20, text="Ok", command=okCallBack, variable=bPressed, onClick=1)
-B = Tkinter.Button(top, width=20, text="Ok", command=okCallBack)
+B = tkinter.Button(top, width=20, text="Ok", command=okCallBack)
 B.pack(side="bottom", pady=15)
 
 if __name__ == '__main__':

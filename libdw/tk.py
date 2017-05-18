@@ -1,13 +1,13 @@
-import Tkinter
+import tkinter
 
-if not globals().has_key('__tk_inited'):
+if '__tk_inited' not in globals():
     global __tk_inited
     __tk_inited = False
 
 def init():
     global __tk_inited
     if not __tk_inited:
-        w = Tkinter.Tk()
+        w = tkinter.Tk()
         w.withdraw()
     
 def setInited():

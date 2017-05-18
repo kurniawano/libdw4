@@ -1,4 +1,4 @@
-import util
+from . import util
 
 class FakeSensorInput:
     """
@@ -44,7 +44,7 @@ class Action:
         self.voltage = voltage
 
     def execute(self):
-        print 'Not connected to soar, change your import io statement.'
+        print('Not connected to soar, change your import io statement.')
 
     def __str__(self):
         return 'Act: ' + '(fvel = ' + util.prettyString(self.fvel) + \

@@ -11,7 +11,7 @@
 ################################################################################
 
 ####################################Imports#####################################
-from Tkinter import *
+from tkinter import *
 from time import time, sleep
 import platform
 
@@ -207,18 +207,18 @@ class application(object):
     vars = {}
     for line in f.readlines():
       if '=' in line:
-        key,value = map(str.strip, line.split('=',1))
+        key,value = list(map(str.strip, line.split('=',1)))
         vars[key] = value
     f.close()
-    if vars.has_key('OPEN_PATH') and os.path.exists(vars['OPEN_PATH']):
+    if 'OPEN_PATH' in vars and os.path.exists(vars['OPEN_PATH']):
       self.brain_dir_default = vars['OPEN_PATH']
-    if vars.has_key('WORLD_PATH') and os.path.exists(vars['WORLD_PATH']):
+    if 'WORLD_PATH' in vars and os.path.exists(vars['WORLD_PATH']):
       self.simulator_dir_default = vars['WORLD_PATH']
     # get geometry for the windows for each standard widget
-    if vars.has_key('MAIN_GEOM'): self.main_geom = vars['MAIN_GEOM']
-    if vars.has_key('SIM_GEOM'): self.simulator_geom = vars['SIM_GEOM']
-    if vars.has_key('SCOPE_GEOM'): self.scope_geom = vars['SCOPE_GEOM']
-    if vars.has_key('SONAR_MON_GEOM'):
+    if 'MAIN_GEOM' in vars: self.main_geom = vars['MAIN_GEOM']
+    if 'SIM_GEOM' in vars: self.simulator_geom = vars['SIM_GEOM']
+    if 'SCOPE_GEOM' in vars: self.scope_geom = vars['SCOPE_GEOM']
+    if 'SONAR_MON_GEOM' in vars:
       self.sonarmon_geom = vars['SONAR_MON_GEOM']
 
   def writeConfigFile(self):
@@ -268,7 +268,7 @@ class application(object):
 
   def clearOutput(self):
     self.stdoutbuffer.clear()
-    print "Ordinary output will appear in this window."
+    print("Ordinary output will appear in this window.")
 
   def openSimulator(self, world):
     import soar.outputs.simulator
@@ -397,10 +397,10 @@ class application(object):
       self.clearOutput()
       self.clearErrors()
       if ( reload ):
-        print "***Reloading Brain***"
+        print("***Reloading Brain***")
       else:
-        print "***Loading Brain***"
-      print "'" + brainfile + "'"
+        print("***Loading Brain***")
+      print("'" + brainfile + "'")
       self.setControl(lambda: soar.controls.brain.Brain(brainfile, reload),
                       not reload)
       if self.control:
@@ -411,11 +411,11 @@ class application(object):
           #CHANGED commented out
           #self.unpushToolbarButton('joystick')
           self.enableButton(self.reloadAllButton)
-        print "Successfully loaded brain file"
-        print "'" + brainfile + "'"
+        print("Successfully loaded brain file")
+        print("'" + brainfile + "'")
       else:
         #self.disableButton(self.reloadBrainButton)
-        print "Failed to load brain file '" + brainfile + "'"
+        print("Failed to load brain file '" + brainfile + "'")
 
   def reloadAll(self):
     self.reloadWorld()
@@ -602,7 +602,7 @@ class application(object):
     # try to read in the brain file.  if it fails, unload the module
     try:
       self.control = lazy_control()
-    except Exception, e:
+    except Exception as e:
       self.disableStartStop()
       self.unloadModule(self.control)
       self.control = None
@@ -725,8 +725,7 @@ class application(object):
         except:
           common.formerror()
     if self.writefile:
-      pickle.dump(map(lambda k: (k,self.cachedvalues[k].get()),
-                      self.cachedvalues[k]),
+      pickle.dump([(k,self.cachedvalues[k].get()) for k in self.cachedvalues[k]],
                   self.writefile)
 
   def step(self, dt):

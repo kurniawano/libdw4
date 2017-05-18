@@ -1,7 +1,8 @@
 import math
-from nleNumpy import *
+from .nleNumpy import *
+from functools import reduce
 
-print 'Loading', __name__
+print(('Loading', __name__))
 
 class Circuit:
     def __init__(self, components):
@@ -30,7 +31,7 @@ class Circuit:
     def addKCLConstraints(self, constraintSet, groundNode):
         for c in self.components:
             c.addKCLToNodes(self.nodeDict)
-        for name in self.nodeDict.keys():
+        for name in list(self.nodeDict.keys()):
             if name != groundNode:
                 c = self.nodeDict[name]
                 constraintSet.addConstraint(kcl(c.signs), c.currents)
@@ -114,7 +115,7 @@ class OpAmp():
         # n1 is V+, n2 is V-, n3 is Vout
         self.K = K
         if (Vcc or Vss) and not(Vcc == -Vss or Vss == 0):
-            print 'Error: Vss must be -Vcc or 0'
+            print('Error: Vss must be -Vcc or 0')
         self.Vcc = Vcc
         self.Vss = Vss
         self.nodeNames = [n1, n2, n3]

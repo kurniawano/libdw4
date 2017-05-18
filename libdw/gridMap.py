@@ -2,9 +2,9 @@
 Abstract superclass for various grid maps.
 """
 
-import util
-import dw
-import windows
+from . import util
+from . import dw
+from . import windows
 import math
 reload(dw)
 
@@ -115,12 +115,13 @@ class GridMap:
         """
         return (self.xToIndex(point.x),self.yToIndex(point.y))
 
-    def indicesToPoint(self, (ix,iy)):
+    def indicesToPoint(self, xxx_todo_changeme):
         """
         :param ix: x index of grid cell
         :param iy: y index of grid cell
         :return: c{Point} in real world coordinates of center of cell
         """
+        (ix,iy) = xxx_todo_changeme
         return util.Point(self.indexToX(ix), self.indexToY(iy))
 
 

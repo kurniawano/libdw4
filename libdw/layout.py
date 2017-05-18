@@ -1,10 +1,10 @@
-from Tkinter import *
-import tkFileDialog
+from tkinter import *
+import tkinter.filedialog
 import math
 import re
-from tkMessageBox import *
-import sig # new
-import simulate
+from tkinter.messagebox import *
+from . import sig # new
+from . import simulate
 reload(simulate) # new
 
 black = '#000000'
@@ -81,7 +81,7 @@ def isDuplicate(c, clist):
 def addComponent(c, canvas):
     global lastAction, lastComponent
     if isDuplicate(c, componentList):
-        print 'Duplicated component %s.'%(c)
+        print('Duplicated component %s.'%(c))
     else:
         lastComponent = c  # remember for Undo
         lastAction = 'add'
@@ -1058,11 +1058,11 @@ def save():
     global filename,oldfilename
     if filename == '':
         if oldfilename == '':
-            filename = tkFileDialog.asksaveasfilename(title="Save As")
+            filename = tkinter.filedialog.asksaveasfilename(title="Save As")
         else:
 #           print 'filename ', filenameonly(oldfilename)
 #           print 'directory ', directoryonly(oldfilename)
-            filename = tkFileDialog.asksaveasfilename(title="Save",
+            filename = tkinter.filedialog.asksaveasfilename(title="Save",
                                 initialfile=filenameonly(oldfilename),
                                 initialdir=directoryonly(oldfilename)) 
         if filename == '':
@@ -1071,7 +1071,7 @@ def save():
     oldfilename = filename
     file = open(filename,'w')
     for c in componentList:
-        print >>file,c
+        print(c, file=file)
     file.close()
     setChanged(False)
 
@@ -1103,9 +1103,9 @@ def openFile():
 #    filename = tkFileDialog.askopenfilename(filetypes=[('text files','.txt'),('all files','.*')],
 #        title="Open File",initialfile=filenameonly(oldfilename),initialdir=directoryonly(filename))
     if filename == '':
-        filename = tkFileDialog.askopenfilename(filetypes=filetypes)
+        filename = tkinter.filedialog.askopenfilename(filetypes=filetypes)
     else:
-        filename = tkFileDialog.askopenfilename(filetypes=filetypes,
+        filename = tkinter.filedialog.askopenfilename(filetypes=filetypes,
                                                 title="Open File",
                                                 initialfile=filenameonly(oldfilename),
                                                 initialdir=directoryonly(filename))
@@ -1197,7 +1197,7 @@ def quit():
     if len(componentList)!=0 and getChanged():
         if askquestion("OK","Current circuit not saved -- save?")=='yes':
             save()
-    print 'Quitting'
+    print('Quitting')
     workCanvas.quit()
 
 # def runTest():
@@ -1215,23 +1215,23 @@ def Simulate():
     if shiftDown or simfilename == '':
         filetypes = [('Python files','.py'),('all files','.*')]
         if simfilename:
-            newsimfilename = tkFileDialog.askopenfilename(filetypes=filetypes,
+            newsimfilename = tkinter.filedialog.askopenfilename(filetypes=filetypes,
                                                           initialfile=filenameonly(simfilename),
                                                           initialdir=directoryonly(simfilename))
         else:
-            newsimfilename = tkFileDialog.askopenfilename(filetypes=filetypes)
+            newsimfilename = tkinter.filedialog.askopenfilename(filetypes=filetypes)
         if not newsimfilename:
             showwarning('Open Simulate File','Cancelled: file not opened')
         else:
             simfilename = newsimfilename
 
     if simfilename:
-        execfile(simfilename, globals())
-        print runTest
+        exec(compile(open(simfilename).read(), simfilename, 'exec'), globals())
+        print(runTest)
         if len(componentList)!=0 and getChanged():
             if askquestion("OK","Current circuit not saved -- save?")=='yes':
                 save()
-        print 'Running test'
+        print('Running test')
         runTest([str(c) for c in componentList], parent=root)
 
 # Move parts within delimited range --- bkph
@@ -1274,7 +1274,7 @@ def CoordinateRangeX(clist):
                 elif xright == -1:
                     xright = igrid(cl.x) # second delimiter
                 else:
-                    print "Too many delimiters"
+                    print("Too many delimiters")
     if xleft != -1 and xright == -1:
         xright = xleft  # move single column
     if (xleft > xright):
@@ -1293,7 +1293,7 @@ def ShiftRight(): # bkph
 #   check coordinate range before doing anything
     (xmin, xmax, xleft, xright) = CoordinateRangeX(componentList)
     if xmin < 2 and xright < 2:
-        print 'Unable to shift right. Remove components on right edge.'
+        print('Unable to shift right. Remove components on right edge.')
         sys.stdout.flush()
         return
 #   now actually move
@@ -1311,7 +1311,7 @@ def ShiftLeft(): # bkph
 #   check coordinate range before doing anything
     (xmin, xmax, xleft, xright) = CoordinateRangeX(componentList)
     if xmax > 62 and xleft >= 62:
-        print 'Unable to shift left.  Remove components on left edge.'
+        print('Unable to shift left.  Remove components on left edge.')
         sys.stdout.flush()
         return
 #   now actually move

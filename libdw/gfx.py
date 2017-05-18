@@ -1,13 +1,13 @@
-import util
+from . import util
 from soar.io import io
-import colors
+from . import colors
 import time
 
 import sys
-import gw
-import dw
+from . import gw
+from . import dw
 reload(dw)
-import tk
+from . import tk
 # this file is for integrating graphics with soar, so we know tk has
 # been inited.
 tk.setInited()
@@ -26,9 +26,9 @@ class PlotJob():
         self.ybounds = ybounds
         self.connectPoints = connectPoints
     def callFunc(self, func, inp):
-        if func.func_code.co_argcount == 0:
+        if func.__code__.co_argcount == 0:
             return func()
-        elif func.func_code.co_argcount == 1:
+        elif func.__code__.co_argcount == 1:
             return func(inp)
         else:
             sys.stderr.write('Static plot function takes too many arguments')
@@ -71,9 +71,9 @@ class RobotGraphics():
     def clearPlotData(self):
         # Added by lpk
         self.step = 0
-        print 'clearing plot data'
-        for k in self.plotData.keys():
-            print '   key', k, len(self.plotData[k])
+        print('clearing plot data')
+        for k in list(self.plotData.keys()):
+            print(('   key', k, len(self.plotData[k])))
             self.plotData[k] = []
 
     def closePlotWindows(self):
@@ -97,8 +97,8 @@ class RobotGraphics():
         """
         (xname, xfunc)= x
         (yname, yfunc)= y
-        if self.plotData.has_key(yname): yfunc = None
-        if self.plotData.has_key(xname): xfunc = None
+        if yname in self.plotData: yfunc = None
+        if xname in self.plotData: xfunc = None
         if xfunc or yfunc:
             self.plotJobs.append(PlotJob(xname, yname, 
                                          connectPoints, 
@@ -171,7 +171,7 @@ class RobotGraphics():
     def addProbe(self, probe):
         (streamName, machineName, mode, valueFun) = probe
         stream = []
-        if not self.plotData.has_key(streamName):
+        if streamName not in self.plotData:
             self.plotData[streamName] = stream
         else:
             sys.stderr.write("Trying to add multiple probes w/ name:"+\
@@ -214,10 +214,10 @@ class RobotGraphics():
                            connectPoints, windowSize = None):
         if not windowSize: windowSize = self.windowSize
         if len(xData) == 0:
-            print 'X Data stream', name, 'empty:  skipping plot'
+            print(('X Data stream', name, 'empty:  skipping plot'))
             return
         if len(yData) == 0:
-            print 'Y Data stream', name, 'empty:  skipping plot'
+            print(('Y Data stream', name, 'empty:  skipping plot'))
             return
 
         (xLower, xUpper) = self.getBounds(xData, xBounds)
@@ -240,7 +240,7 @@ class RobotGraphics():
     def plotSlime(self):
         maxT = len(self.slimeData)
         if maxT == 0:
-            print 'No slime to plot'
+            print('No slime to plot')
             return
 
         slimeX = [p[0] for p in self.slimeData]

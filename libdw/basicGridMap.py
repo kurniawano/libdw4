@@ -3,11 +3,11 @@ Simple grid map with values equal to ``True`` and ``False``.
 Initialized by reading in a soar world file.
 """
 
-import gridMap
+from . import gridMap
 reload(gridMap)
-import soarWorld
+from . import soarWorld
 import math
-import util
+from . import util
 
 class BasicGridMap(gridMap.GridMap):
     """
@@ -48,11 +48,12 @@ class BasicGridMap(gridMap.GridMap):
                             g[i][j] = True
         return g
 
-    def robotCanOccupy(self, (xIndex, yIndex)):
+    def robotCanOccupy(self, xxx_todo_changeme):
         """
         Returns ``True`` if the robot's center can be at any location
         within this cell and not cause a collision.
         """
+        (xIndex, yIndex) = xxx_todo_changeme
         return not self.grid[xIndex][yIndex]
 
     def indicesToBoxSegs(self, indices):

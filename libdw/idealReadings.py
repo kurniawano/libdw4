@@ -2,9 +2,9 @@
 Utility for computing ideal sonar readings
 """
 
-import util
-import sonarDist
-import soarWorld
+from . import util
+from . import sonarDist
+from . import soarWorld
 
 ######################################################################
 ###      Compute ideal readings

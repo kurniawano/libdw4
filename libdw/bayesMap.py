@@ -1,9 +1,9 @@
-import dist
-import util
-import colors
-import ssm
-import seFast
-import dynamicGridMap
+from . import dist
+from . import util
+from . import colors
+from . import ssm
+from . import seFast
+from . import dynamicGridMap
 
 falsePos = 0.3
 falseNeg = 0.3
@@ -35,7 +35,8 @@ cellSSM = ssm.StochasticSM(dist.DDist({'occ': initPOcc, 'empty': 1 - initPOcc}),
 
 class BayesGridMap(dynamicGridMap.DynamicGridMap):
 
-    def squareColor(self, (xIndex, yIndex)):
+    def squareColor(self, xxx_todo_changeme):
+        (xIndex, yIndex) = xxx_todo_changeme
         p = self.occProb((xIndex, yIndex))
         if self.robotCanOccupy((xIndex,yIndex)):
             return colors.probToMapColor(p, colors.greenHue)
@@ -44,8 +45,9 @@ class BayesGridMap(dynamicGridMap.DynamicGridMap):
         else:
             return 'red'
         
-    def occProb(self, (xIndex, yIndex)):
+    def occProb(self, xxx_todo_changeme1):
 #!        pass        
+        (xIndex, yIndex) = xxx_todo_changeme1
         return self.grid[xIndex][yIndex].state.prob('occ')
 #!
     def makeStartingGrid(self):
@@ -56,26 +58,31 @@ class BayesGridMap(dynamicGridMap.DynamicGridMap):
             return m
         return util.make2DArrayFill(self.xN, self.yN, makeEstimator)
 #!
-    def setCell(self, (xIndex, yIndex)):
+    def setCell(self, xxx_todo_changeme2):
 #!        pass        
         
+        (xIndex, yIndex) = xxx_todo_changeme2
         self.grid[xIndex][yIndex].step(('hit', None))
         self.drawSquare((xIndex, yIndex))
 #!        
-    def clearCell(self, (xIndex, yIndex)):
+    def clearCell(self, xxx_todo_changeme3):
 #!        pass        
+        (xIndex, yIndex) = xxx_todo_changeme3
         self.grid[xIndex][yIndex].step(('free', None))
         self.drawSquare((xIndex, yIndex))
 #!
-    def occupied(self, (xIndex, yIndex)):
+    def occupied(self, xxx_todo_changeme4):
 #!        pass        
+        (xIndex, yIndex) = xxx_todo_changeme4
         return self.occProb((xIndex, yIndex)) > occThreshold
 
-    def explored(self, (xIndex, yIndex)):
+    def explored(self, xxx_todo_changeme5):
+        (xIndex, yIndex) = xxx_todo_changeme5
         p = self.grid[xIndex][yIndex].state.prob('occ')
         return p > 0.8 or p < 0.1
 
-    def cost(self, (xIndex, yIndex)):
+    def cost(self, xxx_todo_changeme6):
+        (xIndex, yIndex) = xxx_todo_changeme6
         cost = 0
         for dx in range(0, self.growRadiusInCells + 1):
             for dy in range(0, self.growRadiusInCells + 1):
@@ -89,7 +96,8 @@ class BayesGridMap(dynamicGridMap.DynamicGridMap):
                            self.cost1((xMinus, yMinus)))
         return cost
 
-    def cost1(self, (xIndex, yIndex)):
+    def cost1(self, xxx_todo_changeme7):
+        (xIndex, yIndex) = xxx_todo_changeme7
         return self.grid[xIndex][yIndex].state.prob('occ')
 #!
 

@@ -1,4 +1,4 @@
-import sig
+from . import sig
 
 class IntDistSignal(sig.Signal):
     def __init__(self, d):

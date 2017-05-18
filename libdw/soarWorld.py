@@ -3,7 +3,7 @@ Read in a soar simulated world file and represent its walls as lists
 of line segments.
 """
 
-import util
+from . import util
 reload(util)
 
 class SoarWorld:
@@ -26,7 +26,7 @@ class SoarWorld:
         global world
         world = self
         # execute the file for side effect on world
-        execfile(path)
+        exec(compile(open(path).read(), path, 'exec'))
         # put in the boundary walls
         (dx, dy) = self.dimensions
         wall((0,0), (0,dy))
@@ -40,8 +40,10 @@ class SoarWorld:
     def dims(self, dx, dy):
         # x and y dimensions
         self.dimensions = (dx, dy)
-    def addWall(self, (xlo, ylo), (xhi, yhi)):
+    def addWall(self, xxx_todo_changeme, xxx_todo_changeme1):
         # walls are defined by two points
+        (xlo, ylo) = xxx_todo_changeme
+        (xhi, yhi) = xxx_todo_changeme1
         self.walls.append((util.Point(xlo, ylo), util.Point(xhi, yhi)))
         # also store representation as line segments
         self.wallSegs.append(util.LineSeg(util.Point(xlo, ylo),

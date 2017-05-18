@@ -10,11 +10,12 @@ import os
 import sys
 import math
 from math import degrees, pi
-from Tkinter import *
-from Locator_EKF import Locator_EKF
+from tkinter import *
+from .Locator_EKF import Locator_EKF
+from functools import reduce
 if os.name == 'nt':
     try:
-        import _winreg as winreg
+        import winreg as winreg
 
     except:
         pass
@@ -74,7 +75,7 @@ Enum = Struct
     #STATE_FIRST_SYNC,
     #STATE_SECOND_SYNC,
     STATE_READY
-) = range(3)
+) = list(range(3))
 
 # eBot Connection Setup commands
 # E, O
@@ -167,7 +168,7 @@ class eBot:
         try:
             from soar.serial import Serial
         except ImportError:
-            print "You are missing some serial support libraries. Probably you are on windows and you need to get pywin32. Check out http://sourceforge.net/projects/pywin32/ for details."
+            print("You are missing some serial support libraries. Probably you are on windows and you need to get pywin32. Check out http://sourceforge.net/projects/pywin32/ for details.")
             raise CancelGUIAction
         self.sonarValues = [0, 0, 0, 0, 0, 0]
         self.all_Values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -225,13 +226,13 @@ class eBot:
             self.connect(Serial)
             self.open()
             debug("Serial Connection started", 2)
-            print "eBot connection successful"
+            print("eBot connection successful")
         except:
             sys.stderr.write("Couldn't connect to eBot.\n")
             sys.stderr.write("- Check if eBot is on, paired and connected. If not, power up and try again. \n")
             #sys.stderr.write("- Check to see if COM port below is eBot. If not, remove device and try again. \n")
             debug("Could not open the serial port", 0)
-            print 5
+            print(5)
             raise CancelGUIAction("Error opening serial port")
 
         app.soar.addFlowTriplet((self.startmoving, self.update, self.stopmoving))
@@ -308,7 +309,7 @@ class eBot:
                 ports = glob.glob('/dev/tty.eBot*')
                 #usbSerial = glob.glob('/dev/tty.usbserial*')
             else:
-                print "Unknown posix OS."
+                print("Unknown posix OS.")
                 sys.exit()
         elif os.name == "nt":
             ports = self.getOpenPorts()
@@ -717,7 +718,7 @@ class eBot:
                 try:
                     recv = self.recvPacket()
                 except:
-                    print 'no recv packet'
+                    print('no recv packet')
                     #continue
                     break
                 iters += 1

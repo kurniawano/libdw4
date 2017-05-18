@@ -25,7 +25,7 @@ class Pusher(threading.Thread):
         # The easiest way to get te sample rate is simply to execute /tmp/NIDAQserver/log
         settings = {}
         log = open('/tmp/NIDAQserver/log', 'r')
-        exec log.read() in settings
+        exec(log.read(), settings)
         self.SAMPLES_PER_CHANNEL = settings['samplesperchan']
         self.NUM_OF_CHAN = len(settings['channels'].split(', '))
         log.close()
@@ -191,7 +191,7 @@ class OscillFrame(wx.Frame):
 
     def _OnTogglePopupMenuChannel(self, evt):
         item = self.popupMenu.FindItemById(evt.GetId())
-        for i in xrange(len(self.channels)):
+        for i in range(len(self.channels)):
             if self.channels[i][0] == item.GetText():
                 self.channels[i][2] = not self.channels[i][2] # Toggle the item
                 self.buildPopupMenu()   # Rebuild the menu accordingly
@@ -223,7 +223,7 @@ class OscillFrame(wx.Frame):
         """
         self.oscill.push(measurement)
         statusText = ""
-        for i in xrange(len(self.channels)):
+        for i in range(len(self.channels)):
             if(self.channels[i][2]):
                 statusText += "%s: %04.2fV " %(self.channels[i][0], measurement[i])
         self.statusbar.SetStatusText(statusText, 1)
@@ -245,7 +245,7 @@ class CustomizeDialog(wx.Dialog):
     def _layoutDialog(self):
         gridSizer = wx.GridSizer(rows=0, cols=2, vgap=8, hgap=8)
 
-        for i in xrange(len(self.channels)):
+        for i in range(len(self.channels)):
             vSizer = wx.BoxSizer(wx.HORIZONTAL)
             
             checkbox = wx.CheckBox(self)
@@ -392,11 +392,11 @@ class OscillView(wx.Panel):
         def DrawChannel(channelNumber):
             if(len(self.data[channelNumber]) > 1):
                 dc.SetPen(wx.Pen(self.channels[channelNumber][1], 1, wx.SOLID))
-                for i in xrange(len(self.data[channelNumber]) - 1):
+                for i in range(len(self.data[channelNumber]) - 1):
                     dc.DrawLine( -i * hspacing + w, voltageToClient(self.data[channelNumber][i],h),
                                  - (i + 1) * hspacing + w, voltageToClient(self.data[channelNumber][i+1],h))
 
-        for i in xrange(len(self.data)):
+        for i in range(len(self.data)):
             if(self.channels[i][2] == True):    # Draw only active channels
                 DrawChannel(i)
     
@@ -413,9 +413,9 @@ class OscillView(wx.Panel):
         (removing data older than measuresNum samples away if needed) and adds a new set of sample to the right
         of the display.
         """
-        for i in xrange(len(measurements)):
+        for i in range(len(measurements)):
             self.data[i].insert(0, measurements[i])
-        for i in xrange(len(self.data)):
+        for i in range(len(self.data)):
             if(len(self.data[i]) > self.measuresNum):
                 self.data[i] = self.data[i][:self.measuresNum]
         self._DrawGraph(wx.BufferedDC(wx.ClientDC(self),self.buffer))

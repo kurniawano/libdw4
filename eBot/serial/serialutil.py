@@ -73,7 +73,7 @@ class FileLike(object):
         """read a list of lines, until timeout
         sizehint is ignored"""
         if self.timeout is None:
-            raise ValueError, "Serial port MUST have enabled timeout for this function!"
+            raise ValueError("Serial port MUST have enabled timeout for this function!")
         lines = []
         while 1:
             line = self.readline(eol=eol)
@@ -186,7 +186,7 @@ class SerialBase(FileLike):
         was_open = self._isOpen
         if was_open: self.close()
         if port is not None:
-            if type(port) in [type(''), type(u'')]:       #strings are taken directly
+            if type(port) in [type(''), type('')]:       #strings are taken directly
                 self.portstr = port
             else:
                 self.portstr = self.makeDeviceName(port)
@@ -359,9 +359,9 @@ class SerialBase(FileLike):
 
 if __name__ == '__main__':
     s = SerialBase()
-    print s.portstr
-    print s.getSupportedBaudrates()
-    print s.getSupportedByteSizes()
-    print s.getSupportedParities()
-    print s.getSupportedStopbits()
-    print s
+    print((s.portstr))
+    print((s.getSupportedBaudrates()))
+    print((s.getSupportedByteSizes()))
+    print((s.getSupportedParities()))
+    print((s.getSupportedStopbits()))
+    print(s)

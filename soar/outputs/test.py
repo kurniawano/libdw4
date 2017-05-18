@@ -19,7 +19,7 @@ class MySMClass(sm.SM):
         rvel=0
         if state[0]=='SX':
             if inp.sonars[2]>0.3:
-                print frontsensor,rightsensor,leftsensor
+                print(frontsensor,rightsensor,leftsensor)
                 nextstate=['SX',state[1],state[2],state[3]]
                 if 1.5>inp.sonars[0]>0.7 and 1.5>inp.sonars[4]>0.7:
                     fvel=0.1
@@ -44,17 +44,17 @@ class MySMClass(sm.SM):
                     rvel=0
             else:
                 fvel=0.0
-                print "XA,stop"
+                print("XA,stop")
                 nextstate=['XA',state[1],inp.odometry.theta,state[3]]
         if state[0]=='XA':
             if state[1]==0:
                 if inp.odometry.theta-state[2]<math.pi:
                     rvel=0.5
-                    print inp.odometry.theta-state[2]
+                    print(inp.odometry.theta-state[2])
                     nextstate=['XA',state[1],state[2],state[3]]
                 else:
                     rvel=0.0
-                    print "XA,Uturn done"
+                    print("XA,Uturn done")
                     nextstate=['XA',1,state[2],rightsensor]
 
             if state[1]==1:
@@ -64,17 +64,17 @@ class MySMClass(sm.SM):
                         k2=-9.97
                         e1=1.1-rightsensor
                         e0=state[3]
-                        print rvel
+                        print(rvel)
                         nextstate=['XA',1,state[2],e1]
                         rvel=k1*e1+k2*e0
                         fvel=0.3
                     else:
                         fvel=0.0
-                        print "XA,right,stop",rightsensor
+                        print("XA,right,stop",rightsensor)
                         nextstate=['XA',2,inp.odometry.theta,state[3]]
                 else:
                     fvel=0
-                    print "XA,stop"
+                    print("XA,stop")
                     nextstate=['XA',3,state[2],state[3]]
 
             if state[1]==2:
@@ -86,17 +86,17 @@ class MySMClass(sm.SM):
                     if (inp.odometry.theta-state[2])*-1<math.pi/2:
                         rvel=-0.3
                         fvel=0.25
-                        print "XA,turn right 90 degrees"
+                        print("XA,turn right 90 degrees")
                         nextstate=['XA',2,state[2],state[3]]
                     else:
                         rvel=0
                         fvel=0
-                        print "XA,stop"
+                        print("XA,stop")
                         nextstate=['XA',1,state[2],state[3]]
                 
             if state[1]==3:
                 time.sleep(3)
-                print "XA,sleep"
+                print("XA,sleep")
                 nextstate=['AX',0,inp.odometry.theta,0]    
 
 
@@ -105,11 +105,11 @@ class MySMClass(sm.SM):
             if state[1]==0:
                 if inp.odometry.theta-state[2]<math.pi:
                     rvel=0.5
-                    print "AX,Uturn"
+                    print("AX,Uturn")
                     nextstate=['AX',state[1],state[2],state[3]]
                 else:
                     rvel=0.0
-                    print "AX,stop"
+                    print("AX,stop")
                     nextstate=['AX',1,state[2],rightsensor]
 
             if state[1]==1:
@@ -119,17 +119,17 @@ class MySMClass(sm.SM):
                         k2=-9.97
                         e1=1.1-rightsensor
                         e0=state[3]
-                        print k1*e1+k2*e0
+                        print(k1*e1+k2*e0)
                         nextstate=['AX',1,state[2],e1]
                         rvel=(k1*e1+k2*e0)
                         fvel=0.3
                     else:
                         fvel=0.0
-                        print "AX,stop"
+                        print("AX,stop")
                         nextstate=['AX',2,inp.odometry.theta,state[3]]
                 else:
                     fvel=0
-                    print "AX,stop"
+                    print("AX,stop")
                     nextstate=['AX',3,state[2],state[3]]
 
             if state[1]==2:
@@ -141,17 +141,17 @@ class MySMClass(sm.SM):
                     if (inp.odometry.theta-state[2])<math.pi/2:
                         rvel=0.3
                         fvel=0.3
-                        print inp.odometry.theta-state[2]
+                        print(inp.odometry.theta-state[2])
                         nextstate=['AX',2,state[2],state[3]]
                     else:
 						rvel=0
 						fvel=0
-						print "AX,stop"
+						print("AX,stop")
 						nextstate=['AX',1,state[2],state[3]]
 
             if state[1]==3:
                 time.sleep(3)
-                print "AX,sleep"
+                print("AX,sleep")
 
                 nextstate=['XB',0,inp.odometry.theta,0]    
 		return nextstate, io.Action(fvel,rvel)

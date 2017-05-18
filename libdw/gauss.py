@@ -37,7 +37,7 @@ def gaussSolve(Ain, bin):
                             irow = j;
                             icol = k;
                     elif ipiv[k] > 1:
-                        raise Exception, "Error: Singular Matrix"
+                        raise Exception("Error: Singular Matrix")
         ipiv[icol] += 1
         if irow != icol:
             for l in range(1, n): swap2(A, irow, l, icol, l)
@@ -45,7 +45,7 @@ def gaussSolve(Ain, bin):
         indexr[i] = irow
         indexc[i] = icol
         if A[icol][icol] == 0.0:
-            raise Exception, "Error: Singular Matrix"
+            raise Exception("Error: Singular Matrix")
         pivinv = 1.0/A[icol][icol]
         A[icol][icol] = 1.0
         for l in range(1,n): A[icol][l] *= pivinv

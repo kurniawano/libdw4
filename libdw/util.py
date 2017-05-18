@@ -115,7 +115,7 @@ def valueListToPose(values):
     :param values: a list or tuple of three values: x, y, theta
     :returns: a corresponding ``util.Pose``
     """
-    return apply(Pose, values)
+    return Pose(*values)
 
 class Point:
     """
@@ -635,7 +635,7 @@ def prettyString(struct):
   
 def prettyPrint(struct):
     s = prettyString(struct)
-    print s
+    print(s)
 
 class SymbolGenerator:
     """
@@ -666,12 +666,14 @@ def gaussian(x, mu, sigma):
     """
     return math.exp(-((x-mu)**2 / (2*sigma**2))) /(sigma*math.sqrt(2*math.pi))  
 
-def lineIndices((i0, j0), (i1, j1)):
+def lineIndices(xxx_todo_changeme, xxx_todo_changeme1):
     """
     Takes two cells in the grid (each described by a pair of integer
     indices), and returns a list of the cells in the grid that are on the
     line segment between the cells.
     """
+    (i0, j0) = xxx_todo_changeme
+    (i1, j1) = xxx_todo_changeme1
     assert type(i0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(j0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(i1) == int, 'Args to lineIndices must be pairs of integers'
@@ -704,12 +706,14 @@ def lineIndices((i0, j0), (i1, j1)):
                 ans.append((int(t), j0))
     return ans
 
-def lineIndicesConservative((i0, j0), (i1, j1)):
+def lineIndicesConservative(xxx_todo_changeme2, xxx_todo_changeme3):
     """
     Takes two cells in the grid (each described by a pair of integer
     indices), and returns a list of the cells in the grid that are on the
     line segment between the cells.  This is a conservative version.
     """
+    (i0, j0) = xxx_todo_changeme2
+    (i1, j1) = xxx_todo_changeme3
     assert type(i0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(j0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(i1) == int, 'Args to lineIndices must be pairs of integers'
@@ -765,7 +769,7 @@ def findFile(filename):
         for f in files:
             if f == filename:
                 return root+'/'+f
-    print "Couldn't find file: ", filename
+    print("Couldn't find file: ", filename)
     return '.'
 # This only works if the brain directory is in sys.path, which isn't 
 # true unless we put it there, which is complicated

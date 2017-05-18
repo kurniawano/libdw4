@@ -13,7 +13,7 @@ def floatRange(lo, hi, stepsize):
     """
     result = []
     if stepsize == 0:
-       print 'Stepsize is 0 in floatRange'
+       print('Stepsize is 0 in floatRange')
        return result
     v = lo
     while v < hi:
@@ -71,7 +71,7 @@ def optOverLine(objective, xmin, xmax, numXsteps,
                operator. 
     """
     if type(numXsteps) != int:
-        raise Exception, 'numXsteps should be an integer number of steps'
+        raise Exception('numXsteps should be an integer number of steps')
     return argopt(objective, floatRange(xmin, xmax, 
                                         (xmax - xmin) / float(numXsteps)),
                   compare)

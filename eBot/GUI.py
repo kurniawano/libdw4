@@ -1,10 +1,10 @@
-import eBot
+from . import eBot
 import math
 import time
 import matplotlib.pyplot as plt
 myEBot= eBot.eBot()
 myEBot.connect()
-print myEBot.power()
+print((myEBot.power()))
 plt.axis([-5, 5, -5, 5])
 plt.ion()
 plt.show()
@@ -38,7 +38,7 @@ def main():
         else:
             obstacle_x2 =1000
             obstacle_y2 =1000
-        print sonar_values
+        print(sonar_values)
         plt.scatter(obstacle_x,obstacle_y, color='blue')
         plt.scatter(obstacle_x1,obstacle_y1, color='blue')
         plt.scatter(obstacle_x2,obstacle_y2, color='blue')

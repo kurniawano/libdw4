@@ -1,6 +1,6 @@
-import sm
+from . import sm
 from soar.io import io
-import util
+from . import util
 
 class RotateTSM (sm.SM):
     """
@@ -31,7 +31,7 @@ class RotateTSM (sm.SM):
     def getNextValues(self, state, inp):
         currentTheta = inp.odometry.theta
         if state == 'start':
-            print "Starting to rotate", self.headingDelta
+            print(("Starting to rotate", self.headingDelta))
             # Compute a desired absolute heading by adding the desired
             # delta to our current heading
             thetaDesired = \
@@ -82,7 +82,7 @@ class ForwardTSM (sm.SM):
         # State is: starting pose
         currentPos = inp.odometry.point()
         if state == 'start':
-            print "Starting forward", self.deltaDesired
+            print(("Starting forward", self.deltaDesired))
             startPos = currentPos
         else:
             (startPos, lastPos) = state

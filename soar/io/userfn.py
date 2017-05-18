@@ -14,7 +14,7 @@ class UserFunctionIF():
             f()
 
     def clearFunctions(self):
-        for k in self.fn.keys():
+        for k in list(self.fn.keys()):
             self.fn[k] = []
             
 

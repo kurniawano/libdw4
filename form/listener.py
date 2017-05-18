@@ -13,7 +13,7 @@
 
 ####################################Imports#####################################
 import socket
-import thread
+import _thread
 
 import form.parallel as parallel
 import form.common as common
@@ -37,13 +37,13 @@ class CommandListener(parallel.Stepper):
       self.socket.listen(1)
       self.connection, self.connected_address = self.socket.accept()
 
-    thread.start_new_thread(listen,tuple())    
+    _thread.start_new_thread(listen,tuple())    
     parallel.Stepper.__init__(self, self.do_queued_commands)
 
   def do_queued_commands(self, dt):
     if self.connection:
       str = self.connection.recv(4096)
-      print "'",str,"'"
+      print(("'",str,"'"))
       split = str.split(settings.COMMAND_SEPARATOR)
       self.incomplete_command += split[0]
       split = split[1:]
