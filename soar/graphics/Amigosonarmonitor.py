@@ -31,8 +31,8 @@ class AmigoSonarMonitor():
         self.windowWidth = 350
         self.robotScale = 100
         self.robotPos = (self.windowWidth/2.0, self.windowHeight*5.0/6.0)
-        def mapPoints(xxx_todo_changeme):
-            (x,y) = xxx_todo_changeme
+        def mapPoints(coordinates):
+            (x,y) = coordinates
             return (x*self.robotScale + self.robotPos[0],
                     -y*self.robotScale + self.robotPos[1])
         self.points = list(map(mapPoints, robotPoints))

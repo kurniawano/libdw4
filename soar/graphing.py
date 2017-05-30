@@ -216,9 +216,9 @@ class GraphingWindow(tkinter.Toplevel):
     def getDomain(self):
         return ((self.canvas.xmin, self.canvas.xmax), (self.canvas.ymin, self.canvas.ymax))
 
-    def setDomain(self, xxx_todo_changeme, xxx_todo_changeme1):
-	(xmin, xmax) = xxx_todo_changeme
-	(ymin,ymax) = xxx_todo_changeme1
+    def setDomain(self, xMinMax, yMinMax):
+	(xmin, xmax) = xMinMax
+	(ymin,ymax) = yMinMax
 	self.xmintext.set(repr(xmin))
 	self.xmaxtext.set(repr(xmax))
 	self.ymintext.set(repr(ymin))

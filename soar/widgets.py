@@ -100,9 +100,9 @@ class DrawingFrame(Frame):
     self.wrap_and_add_task(make)
     return returnid
 
-  def drawRect(self, xxx_todo_changeme, xxx_todo_changeme1, color = "black"):
-    (x1,y1) = xxx_todo_changeme
-    (x2,y2) = xxx_todo_changeme1
+  def drawRect(self, coordinate1, coordinate2, color = "black"):
+    (x1,y1) = coordinate1
+    (x2,y2) = coordinate2
     returnid, nexttag = self.tagpair()
     cx1, cy1 = int(self.px_to_cx(x1)), int(self.py_to_cy(y1))
     cx2, cy2 = int(self.px_to_cx(x2)), int(self.py_to_cy(y2))
@@ -112,8 +112,8 @@ class DrawingFrame(Frame):
     self.wrap_and_add_task(make)
     return returnid
 
-  def drawLine(self, xxx_todo_changeme2, color = "black"):
-    (a,b,c) = xxx_todo_changeme2
+  def drawLine(self, lineParams, color = "black"):
+    (a,b,c) = lineParams
     if abs(b) < 0.001:
       startX = int(self.px_to_cx(-c/a))
       endX = int(self.px_to_cx(-c/a))

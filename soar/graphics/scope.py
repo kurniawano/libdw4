@@ -245,8 +245,8 @@ class Oscilloscope():
                                  self.samplesPerElem, initVal))
         self.setStaticObjects()
                                       
-    def setExtremes(self, xxx_todo_changeme):
-        (minv, maxv) = xxx_todo_changeme
+    def setExtremes(self, minMax):
+        (minv, maxv) = minMax
         self.ymin = minv if self.ymin==None else min(self.ymin, minv)
         self.ymax = maxv if self.ymax==None else max(self.ymax, maxv)
 

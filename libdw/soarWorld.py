@@ -40,10 +40,10 @@ class SoarWorld:
     def dims(self, dx, dy):
         # x and y dimensions
         self.dimensions = (dx, dy)
-    def addWall(self, xxx_todo_changeme, xxx_todo_changeme1):
+    def addWall(self, lowPoints, highPoints):
         # walls are defined by two points
-        (xlo, ylo) = xxx_todo_changeme
-        (xhi, yhi) = xxx_todo_changeme1
+        (xlo, ylo) = lowPoints
+        (xhi, yhi) = highPoints
         self.walls.append((util.Point(xlo, ylo), util.Point(xhi, yhi)))
         # also store representation as line segments
         self.wallSegs.append(util.LineSeg(util.Point(xlo, ylo),

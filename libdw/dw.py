@@ -125,9 +125,9 @@ class DrawingWindow:
         # font="Arial 20",fill="#ff0000"
 
 
-    def drawRect(self, xxx_todo_changeme, xxx_todo_changeme1, color = "black"):
-        (x1,y1) = xxx_todo_changeme
-        (x2,y2) = xxx_todo_changeme1
+    def drawRect(self, coordinateIndices1, coordinateIndices2, color = "black"):
+        (x1,y1) = coordinateIndices1
+        (x2,y2) = coordinateIndices2
         return self.canvas.create_rectangle(self.scaleX(x1), self.scaleY(y1),
                                             self.scaleX(x2), self.scaleY(y2),
                                             fill = color)
@@ -152,8 +152,8 @@ class DrawingWindow:
                                             self.scaleY(y1)-yproj,
                                             fill = color)
             
-    def drawLine(self, xxx_todo_changeme2, color = "black"):
-        (a,b,c) = xxx_todo_changeme2
+    def drawLine(self, lineParams, color = "black"):
+        (a,b,c) = lineParams
         if abs(b) < 0.001:
             startX = self.scaleX(-c/a)
             endX = self.scaleX(-c/a)

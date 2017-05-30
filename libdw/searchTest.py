@@ -318,9 +318,9 @@ class EightPuzzleSM(sm.SM):
     def done(self, state):
         return state == self.goal
 
-def swap(board, xxx_todo_changeme, xxx_todo_changeme1):
-    (ox, oy) = xxx_todo_changeme
-    (nx, ny) = xxx_todo_changeme1
+def swap(board, originalCoordinates, newCoordinates):
+    (ox, oy) = originalCoordinates
+    (nx, ny) = newCoordinates
     if (ox, oy) == (nx, ny):
         return board
     else:

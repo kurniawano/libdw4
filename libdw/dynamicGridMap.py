@@ -39,31 +39,31 @@ class DynamicGridMap(gridMap.GridMap):
         else:  # free in input space, but not in cspace
             return 'gray'
 
-    def setCell(self, xxx_todo_changeme):
+    def setCell(self, coordinateIndices):
         """
         Takes indices for a grid cell, and updates it, given
         information that it contains an obstacle.  In this case, it
         sets the cell to ``True``, and redraws it if its color has changed.
         """
-        (xIndex, yIndex) = xxx_todo_changeme
+        (xIndex, yIndex) = coordinateIndices
         changed = self.grid[xIndex][yIndex] == False
         self.grid[xIndex][yIndex] = True
         if changed:
             self.drawSquare((xIndex, yIndex))
         
-    def clearCell(self, xxx_todo_changeme1):
+    def clearCell(self, coordinateIndices):
         """
         Takes indices for a grid cell, and updates it, given
         information that it does not contain an obstacle.  In this case, it
         sets the cell to ``True``, and redraws it if its color has changed.
         """
-        (xIndex, yIndex) = xxx_todo_changeme1
+        (xIndex, yIndex) = coordinateIndices
         changed = self.grid[xIndex][yIndex] == True
         self.grid[xIndex][yIndex] = False
         if changed:
             self.drawSquare((xIndex, yIndex))
 
-    def robotCanOccupy(self, xxx_todo_changeme2):
+    def robotCanOccupy(self, coordinateIndices):
         """
         Returns ``True`` if the robot's center can be at any location
         within the cell specified by ``(xIndex, yIndex)`` and not cause
@@ -71,7 +71,7 @@ class DynamicGridMap(gridMap.GridMap):
         a range of boxes around the spcified box, and ensures that
         none of them is ``self.occupied``.
         """
-        (xIndex, yIndex) = xxx_todo_changeme2
+        (xIndex, yIndex) = coordinateIndices
         for dx in range(0, self.growRadiusInCells + 1):
             for dy in range(0, self.growRadiusInCells + 1):
                 xPlus = util.clip(xIndex+dx, 0, self.xN-1)
@@ -85,7 +85,7 @@ class DynamicGridMap(gridMap.GridMap):
                     return False
         return True
 
-    def occupied(self, xxx_todo_changeme3):
+    def occupied(self, coordinateIndices):
         """
         Returns ``True`` if there is an obstacle in any part of this
         cell.  Note that it can be the case that a cell is not
@@ -93,7 +93,7 @@ class DynamicGridMap(gridMap.GridMap):
         robot's center were in that cell, some part of the robot would
         be in collision.
         """
-        (xIndex, yIndex) = xxx_todo_changeme3
+        (xIndex, yIndex) = coordinateIndices
         return xIndex < 0 or yIndex < 0 or \
                  xIndex >= self.xN or yIndex >= self.yN or \
                  self.grid[xIndex][yIndex]

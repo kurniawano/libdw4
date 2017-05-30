@@ -120,9 +120,9 @@ def timeToReplanStaticMap(plan, currentIndices, worldMap, goalIndices):
     """
     return plan == None or not adjacent(currentIndices, plan[0])
 
-def adjacent(xxx_todo_changeme, xxx_todo_changeme1):
-    (x1, y1) = xxx_todo_changeme
-    (x2, y2) = xxx_todo_changeme1
+def adjacent(coordinates1, coordinates2):
+    (x1, y1) = coordinates1
+    (x2, y2) = coordinates2
     return abs(x1 - x2) < 2 and abs(y1 - y2) < 2
 
 class ReplannerWithDynamicMap(sm.SM):

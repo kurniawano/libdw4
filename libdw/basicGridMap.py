@@ -48,12 +48,12 @@ class BasicGridMap(gridMap.GridMap):
                             g[i][j] = True
         return g
 
-    def robotCanOccupy(self, xxx_todo_changeme):
+    def robotCanOccupy(self, coordinateIndices):
         """
         Returns ``True`` if the robot's center can be at any location
         within this cell and not cause a collision.
         """
-        (xIndex, yIndex) = xxx_todo_changeme
+        (xIndex, yIndex) = coordinateIndices
         return not self.grid[xIndex][yIndex]
 
     def indicesToBoxSegs(self, indices):

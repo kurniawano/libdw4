@@ -78,9 +78,9 @@ def sonarangleok(angle):
   #if angle < 30: return 1-(angle**6)/(2*(30.**6)) > uniform(0,1)
   #else: return ((angle-90)**6)/(2*(60.**6)) > uniform(0,1)
 
-def intersectionhelper(xxx_todo_changeme4, xxx_todo_changeme5):
-  ((xa, ya),(xb,yb)) = xxx_todo_changeme4
-  ((xc,yc),(xd,yd)) = xxx_todo_changeme5
+def intersectionhelper(coordinates1, coordinates2):
+  ((xa, ya),(xb,yb)) = coordinates1
+  ((xc,yc),(xd,yd)) = coordinates2
   try:
     s = ((xb-xa)*(ya-yc)+(yb-ya)*(xc-xa))/((xb-xa)*(yd-yc)-(yb-ya)*(xd-xc)) 
     t = ((xc-xa)+(xd-xc)*s)/(xb-xa)
@@ -106,8 +106,8 @@ CIRCLE_SCALE_FACTOR = 2**(0.5)
 
 class Obstacle(object):
   # dr(dt) --> (dx, dy, th)
-  def __init__(self, xxx_todo_changeme):
-    (vertices, r, dr) = xxx_todo_changeme
+  def __init__(self, obstacleParams):
+    (vertices, r, dr) = obstacleParams
     self.d = dr
     self.x, self.y = r
     self.th = 0
@@ -311,15 +311,15 @@ class amigo_simulator(object):
   # The next two functions are inverses of each other
 
   # A mapping from the space the robot lives in to the space that is displayed onto the computer screen 
-  def PtoC(self, xxx_todo_changeme1):
-    (px, py) = xxx_todo_changeme1
+  def PtoC(self, coordinates):
+    (px, py) = coordinates
     cx = px*self.pxtocx+self.pxcxconstant
     cy = py*self.pytocy+self.cymin-self.pymin*self.pytocy
     return (cx, cy)
 
   # A mapping from the space that is displayed onto the computer screen to the space the robot lives in 
-  def CtoP(self, xxx_todo_changeme2):
-    (cx, cy) = xxx_todo_changeme2
+  def CtoP(self, coordinates):
+    (cx, cy) = coordinates
     px = cx*self.cxtopx+self.pxmin-self.cxmin*self.cxtopx
     py = cy*self.cytopy+self.pymin-self.cymin*self.cytopy
     return (px, py)
@@ -542,8 +542,8 @@ class amigo_simulator(object):
     self.drawRobot()
     self.updateSonars() 
 
-  def perp(self, xxx_todo_changeme3):
-    ((x0, y0),(x1, y1)) = xxx_todo_changeme3
+  def perp(self, coordinates):
+    ((x0, y0),(x1, y1)) = coordinates
     x,y = self.abspose.get()[:2]
     try:
       a = tan(-(x1-x0)/(y1-y0))

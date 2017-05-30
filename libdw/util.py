@@ -666,14 +666,14 @@ def gaussian(x, mu, sigma):
     """
     return math.exp(-((x-mu)**2 / (2*sigma**2))) /(sigma*math.sqrt(2*math.pi))  
 
-def lineIndices(xxx_todo_changeme, xxx_todo_changeme1):
+def lineIndices(cell1, cell2):
     """
     Takes two cells in the grid (each described by a pair of integer
     indices), and returns a list of the cells in the grid that are on the
     line segment between the cells.
     """
-    (i0, j0) = xxx_todo_changeme
-    (i1, j1) = xxx_todo_changeme1
+    (i0, j0) = cell1
+    (i1, j1) = cell2
     assert type(i0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(j0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(i1) == int, 'Args to lineIndices must be pairs of integers'
@@ -706,14 +706,14 @@ def lineIndices(xxx_todo_changeme, xxx_todo_changeme1):
                 ans.append((int(t), j0))
     return ans
 
-def lineIndicesConservative(xxx_todo_changeme2, xxx_todo_changeme3):
+def lineIndicesConservative(cell1, cell2):
     """
     Takes two cells in the grid (each described by a pair of integer
     indices), and returns a list of the cells in the grid that are on the
     line segment between the cells.  This is a conservative version.
     """
-    (i0, j0) = xxx_todo_changeme2
-    (i1, j1) = xxx_todo_changeme3
+    (i0, j0) = cell1
+    (i1, j1) = cell2
     assert type(i0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(j0) == int, 'Args to lineIndices must be pairs of integers'
     assert type(i1) == int, 'Args to lineIndices must be pairs of integers'

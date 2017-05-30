@@ -115,13 +115,13 @@ class GridMap:
         """
         return (self.xToIndex(point.x),self.yToIndex(point.y))
 
-    def indicesToPoint(self, xxx_todo_changeme):
+    def indicesToPoint(self, indices):
         """
         :param ix: x index of grid cell
         :param iy: y index of grid cell
         :return: c{Point} in real world coordinates of center of cell
         """
-        (ix,iy) = xxx_todo_changeme
+        (ix,iy) = indices
         return util.Point(self.indexToX(ix), self.indexToY(iy))
 
 
