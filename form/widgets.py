@@ -17,7 +17,7 @@ from tkinter.filedialog import askopenfilename
 from tkinter.filedialog import asksaveasfilename
 import os
 import platform
-from types import StringType
+# from types import StringType
 
 import form.parallel as parallel
 import form.spicy as spicy
@@ -79,7 +79,7 @@ class TabbedFrame(Frame):
     self.hidecbs = {}
 
   def display(self, frame):
-    if isinstance(frame,StringType):
+    if isinstance(frame,str):
       frame = self.names_frames[frame]
     self._show(frame)
 
@@ -132,7 +132,7 @@ class TabbedFrame(Frame):
     return frame
 
   def removeFrame(self, frame): 
-    if isinstance(frame,StringType):
+    if isinstance(frame,str):
       frame = self.names_frames[frame]
     if frame in self.tabs:
       self.tabs[frame].forget()
@@ -229,7 +229,7 @@ class FileBufferFrame(Frame):
         self.quotes = ['"""', "'''", '"', "'"] 
         self.string_literals = [] 
         self.needs_recompute = True
-	self.syntax_color(None)
+	  self.syntax_color(None)
 
   def onKeyRelease(self, e):
     self.needs_recompute = ((e.char == '"' or e.char == "'"))# or 

@@ -8,7 +8,9 @@ import types
 import inspect
 from . import util
 from functools import reduce
-reload(util)
+
+from importlib import reload
+reload(util) # TODO: Is this required?
 
 class SM:
     """
@@ -122,10 +124,10 @@ class SM:
         Start the machine fresh, and feed a sequence of values into
         the machine, collecting the sequence of outputs
 
-	For debugging, set the optional parameter check = True to (partially) 
-	check the representation invariance of the state machine before running 
-	it.  See the documentation for the ``check`` method for more information
-	about what is tested.
+    For debugging, set the optional parameter check = True to (partially) 
+    check the representation invariance of the state machine before running 
+    it.  See the documentation for the ``check`` method for more information
+    about what is tested.
 
         See documentation for the ``start`` method for description of
         the rest of the parameters.
@@ -235,88 +237,88 @@ class SM:
 
     def check(thesm, inps = None):
         """
-	Run a rudimentary check on a state machine, using the list of inputs provided.
-	Makes sure that getNextValues is defined, and that it takes the proper number
-	of input arguments (three: self, start, inp).  Also print out the start state,
-	and check that getNextValues provides a legal return value (list of 2 elements:
-	(state,output)).  And tries to check if getNextValues is changing either self.state
-	or some other attribute of the state machine instance (it shouldn't: getNextValues
-	should be a pure function).
-	
-	Raises exception 'InvalidSM' if a problem is found.
-    
-        :param thesm: the state machine instance to check
-        :param inps: list of inputs to test the state machine on (default None)
-        :return: none
+        Run a rudimentary check on a state machine, using the list of inputs provided.
+        Makes sure that getNextValues is defined, and that it takes the proper number
+        of input arguments (three: self, start, inp).  Also print out the start state,
+        and check that getNextValues provides a legal return value (list of 2 elements:
+        (state,output)).  And tries to check if getNextValues is changing either self.state
+        or some other attribute of the state machine instance (it shouldn't: getNextValues
+        should be a pure function).
 
-        """
-        # see if getNextValues is defined and is not the default version
-	# note that hasattr(thesm,'getNextValues') is always True, because
-	# getNextValues is defined in sm.SM
-	#
-	# so let's do this in an ugly way, by checking the documentation string
-	# for getNextValues, and seeing if that starts with "Default version"
-	gnvdoc = inspect.getdoc(thesm.getNextValues)
-	if gnvdoc != None:
-	 if len(gnvdoc)>16:
-          if gnvdoc[:15]=='Default version':
-            print("[SMCheck] Error! getNextValues undefined in state machine")
-            if hasattr(thesm,'GetNextValues'):
-                print("[SMCheck] you've defined GetNextValues -> should be getNextValues")
-            if hasattr(thesm,'getNextState'):
-                print("[SMCheck] you've defined getNextState -> should be getNextValues?")
-            raise Exception('Invalid SM')
-        
-        # check arguments of getNextValues
-        aspec = inspect.getargspec(thesm.getNextValues)
-        if isinstance(aspec, tuple):
-            args = aspec[0]
-        else:
-            args = aspec.args
-        if not (len(args)==3):
-            print("[SMCheck] getNextValues should take 3 arguments as input, namely self, state, inp")
-            print("          your function takes the arguments ",args)
-            raise Exception('Invalid SM')
+        Raises exception 'InvalidSM' if a problem is found.
 
-        # check start state
-        ss = thesm.startState
-        # start the machine (needed if complex, like cascade)
-        thesm.start()
-        print("[SMCheck] the start state of your state machine is '%s'" % repr(ss))
-        # check if getNextValues return value is legal
-        if inps != None:
-            rv = thesm.getNextValues(thesm.state,inps[0])
-            if not type(rv) in (list, tuple):
-                print("[SMCheck] getNextValues provides an invalid return value, '%s'" % repr(rv))
-                raise Exception('Invalid SM')
-            if not(len(rv)==2):
-                print("[SMCheck] getNextValues provides an invalid return value, '%s'" % repr(rv))
-                print("[SMCheck] the return value length should be 2, ie (state,output), but it is ",len(rv))
-                raise Exception('Invalid SM')
+            :param thesm: the state machine instance to check
+            :param inps: list of inputs to test the state machine on (default None)
+            :return: none
 
-
-        # Test to see if we're side-effecting the state.  This is not
-        # foolproof: it might miss some cases of state side-effects
-        startStateCopy = copy.copy(thesm.startState)
-        attrs = inspect.getmembers(thesm)
-        originalAttrs = dict(copy.copy(attrs))
-        # Call getNextValues a bunch of times
-        thesm.start()
-        for i in inps:
-            thesm.getNextValues(thesm.state, i)
-        # See what got clobbered
-        if thesm.state != startStateCopy:
-            print("[SMCheck] Your getNextValues method changes self.state.  It should instead return the new state as the first component of the result")
-            raise Exception('Invalid SM')
-        newAttrs = dict(inspect.getmembers(thesm))
-        for (name, val) in list(originalAttrs.items()):
-            if name != '_SM__debugParams' and newAttrs[name] != val:
-                print('[SMCheck] You seem to have changed attribute', end=' ')
-                print(name, 'from', val, 'to', newAttrs[name])
-                print('[SMCheck] but the getNextValues should not have side effects')
-                raise Exception('Invalid SM')
+            """
+            # see if getNextValues is defined and is not the default version
+        # note that hasattr(thesm,'getNextValues') is always True, because
+        # getNextValues is defined in sm.SM
+        #
+        # so let's do this in an ugly way, by checking the documentation string
+        # for getNextValues, and seeing if that starts with "Default version"
+        gnvdoc = inspect.getdoc(thesm.getNextValues)
+        if gnvdoc != None:
+            if len(gnvdoc)>16:
+                if gnvdoc[:15]=='Default version':
+                    print("[SMCheck] Error! getNextValues undefined in state machine")
+                    if hasattr(thesm,'GetNextValues'):
+                        print("[SMCheck] you've defined GetNextValues -> should be getNextValues")
+                    if hasattr(thesm,'getNextState'):
+                        print("[SMCheck] you've defined getNextState -> should be getNextValues?")
+                    raise Exception('Invalid SM')
             
-        # print "[SMCheck] Ok - your state machine passed this (rudimentary) check!"
+            # check arguments of getNextValues
+            aspec = inspect.getargspec(thesm.getNextValues)
+            if isinstance(aspec, tuple):
+                args = aspec[0]
+            else:
+                args = aspec.args
+            if not (len(args)==3):
+                print("[SMCheck] getNextValues should take 3 arguments as input, namely self, state, inp")
+                print("          your function takes the arguments ",args)
+                raise Exception('Invalid SM')
+
+            # check start state
+            ss = thesm.startState
+            # start the machine (needed if complex, like cascade)
+            thesm.start()
+            print("[SMCheck] the start state of your state machine is '%s'" % repr(ss))
+            # check if getNextValues return value is legal
+            if inps != None:
+                rv = thesm.getNextValues(thesm.state,inps[0])
+                if not type(rv) in (list, tuple):
+                    print("[SMCheck] getNextValues provides an invalid return value, '%s'" % repr(rv))
+                    raise Exception('Invalid SM')
+                if not(len(rv)==2):
+                    print("[SMCheck] getNextValues provides an invalid return value, '%s'" % repr(rv))
+                    print("[SMCheck] the return value length should be 2, ie (state,output), but it is ",len(rv))
+                    raise Exception('Invalid SM')
+
+
+            # Test to see if we're side-effecting the state.  This is not
+            # foolproof: it might miss some cases of state side-effects
+            startStateCopy = copy.copy(thesm.startState)
+            attrs = inspect.getmembers(thesm)
+            originalAttrs = dict(copy.copy(attrs))
+            # Call getNextValues a bunch of times
+            thesm.start()
+            for i in inps:
+                thesm.getNextValues(thesm.state, i)
+            # See what got clobbered
+            if thesm.state != startStateCopy:
+                print("[SMCheck] Your getNextValues method changes self.state.  It should instead return the new state as the first component of the result")
+                raise Exception('Invalid SM')
+            newAttrs = dict(inspect.getmembers(thesm))
+            for (name, val) in list(originalAttrs.items()):
+                if name != '_SM__debugParams' and newAttrs[name] != val:
+                    print('[SMCheck] You seem to have changed attribute', end=' ')
+                    print(name, 'from', val, 'to', newAttrs[name])
+                    print('[SMCheck] but the getNextValues should not have side effects')
+                    raise Exception('Invalid SM')
+                
+            # print "[SMCheck] Ok - your state machine passed this (rudimentary) check!"
 
                     
                     
