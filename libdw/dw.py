@@ -35,12 +35,12 @@ class DrawingWindow:
                  title):
         # start tk if it hasn't been done already
         tk.init()
-	self.title = title
+        self.title = title
         # Make a window to draw on
         self.top=tkinter.Toplevel()
         self.top.wm_title(title)
         self.top.protocol('WM_DELETE_WINDOW', self.destroy)
-	self.windowWidth = windowWidth
+        self.windowWidth = windowWidth
         self.windowHeight = windowHeight
         self.canvas = tkinter.Canvas(self.top, width=self.windowWidth,
                                      height=self.windowHeight, 
@@ -88,11 +88,11 @@ class DrawingWindow:
                                      windowY+1, fill = color, outline = color)
 
     def drawRobotWithNose(self, x, y, theta, color = "blue", size = 6):
-	rawx = math.cos(theta)
-	rawy = math.sin(theta)
-	hx, hy = 0.15, 0.0
-	noseX = x+rawx*hx-rawy*hy
-	noseY = y+rawy*hx+rawx*hy
+        rawx = math.cos(theta)
+        rawy = math.sin(theta)
+        hx, hy = 0.15, 0.0
+        noseX = x+rawx*hx-rawy*hy
+        noseY = y+rawy*hx+rawx*hy
         return self.drawRobot(x,y,noseX,noseY,color=color,size=size)
 
     def drawRobot(self, x, y, noseX, noseY,color = "blue", size = 8):

@@ -769,7 +769,7 @@ def findFile(filename):
         for f in files:
             if f == filename:
                 return root+'/'+f
-    print("Couldn't find file: ", filename)
+    print(("Couldn't find file: ", filename))
     return '.'
 # This only works if the brain directory is in sys.path, which isn't 
 # true unless we put it there, which is complicated

@@ -4,6 +4,8 @@ from . import colors
 import time
 
 import sys
+from imp import reload
+
 from . import gw
 from . import dw
 reload(dw)

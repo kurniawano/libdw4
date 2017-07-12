@@ -96,16 +96,16 @@ def search(initialState, goalTest, actions, successor,
     expanded = {}
     count = 1
     while (not agenda.isEmpty()) and maxNodes > count:
-        if verbose: print("agenda: ", agenda)
+        if verbose: print(("agenda: ", agenda))
         n = agenda.pop()
         if n.state not in expanded:
             expanded[n.state] = True
             if goalTest(n.state):
                 # We're done!
-                print(count, 'nodes visited;', len(expanded), 'states expanded;', 'solution cost:', n.cost)
+                print((count, 'nodes visited;', len(expanded), 'states expanded;', 'solution cost:', n.cost))
                 return n.path()
             if somewhatVerbose or verbose:
-                print("   ", n.cost, ":   expanding: ",  n)
+                print(("   ", n.cost, ":   expanding: ",  n))
             for a in actions:
                 (newS, cost) = successor(n.state, a)
                 if newS not in expanded:
@@ -113,7 +113,7 @@ def search(initialState, goalTest, actions, successor,
                     count += 1
                     newN = SearchNode(a, newS, n, cost)
                     agenda.push(newN, newN.cost + heuristic(newS))
-    print("Search failed after visiting ", count, " states.")
+    print(("Search failed after visiting ", count, " states."))
     return None
 
 def smSearch(smToSearch, initialState = None, goalTest = None,

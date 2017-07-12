@@ -3,7 +3,7 @@ Procedures and classes for doing uniform cost search, always with
 dynamic programming.  Becomes A* if a heuristic is specified. 
 """
 
-import util
+from . import util
 
 somewhatVerbose = False
 """If ``True``, prints a trace of the search"""
@@ -66,7 +66,7 @@ class PQ:
     def pop(self):
         """Returns and removes the least cost item.
            Assumes items are instances with an attribute ``cost``."""
-        (index, cost) = util.argmaxIndex(self.data, lambda (c, x): -c)
+        (index, cost) = util.argmaxIndex(self.data, lambda c_x: -c_x[0])
         return self.data.pop(index)[1] # just the data item
     def isEmpty(self):
         """Returns ``True`` if the PQ is empty and ``False`` otherwise."""
@@ -96,24 +96,24 @@ def search(initialState, goalTest, actions, successor,
     expanded = {}
     count = 1
     while (not agenda.isEmpty()) and maxNodes > count:
-        if verbose: print "agenda: ", agenda
+        if verbose: print("agenda: ", agenda)
         n = agenda.pop()
-        if not expanded.has_key(n.state):
+        if n.state not in expanded:
             expanded[n.state] = True
             if goalTest(n.state):
                 # We're done!
-                print count, 'nodes visited;', len(expanded), 'states expanded;', 'solution cost:', n.cost
+                print(count, 'nodes visited;', len(expanded), 'states expanded;', 'solution cost:', n.cost)
                 return n.path()
             if somewhatVerbose or verbose:
-                print "   ", n.cost, ":   expanding: ",  n
+                print("   ", n.cost, ":   expanding: ",  n)
             for a in actions:
                 (newS, cost) = successor(n.state, a)
-                if not expanded.has_key(newS):
+                if newS not in expanded:
                     # We don't know the best path to this state yet
                     count += 1
                     newN = SearchNode(a, newS, n, cost)
                     agenda.push(newN, newN.cost + heuristic(newS))
-    print "Search failed after visiting ", count, " states."
+    print("Search failed after visiting ", count, " states.")
     return None
 
 def smSearch(smToSearch, initialState = None, goalTest = None,

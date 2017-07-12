@@ -27,7 +27,6 @@ import datetime
 
 import tkinter
 import tkinter.filedialog
-from types import NoneType
 import os
 from . import tk
 
@@ -144,21 +143,21 @@ class GraphingWindow:
         self.top.geometry(geom)
 
     def graphContinuous(self, f, color="black"):
-	self.canvas.graphFunc(f, CONTINUOUS, color)
+        self.canvas.graphFunc(f, CONTINUOUS, color)
     def graphContinuousSet(self, xset, yset, color="black"):
-	self.canvas.graphFunc((xset, yset), CONTINUOUS_SET, color)
+        self.canvas.graphFunc((xset, yset), CONTINUOUS_SET, color)
     def graphDiscrete(self, f, color="black"):
-	self.canvas.graphFunc(f, DISCRETE_TIME, color)
+        self.canvas.graphFunc(f, DISCRETE_TIME, color)
     def graphPointSet(self, xset, yset, color="black"):
-	self.canvas.graphFunc((xset, yset), POINT_SET, color)
+        self.canvas.graphFunc((xset, yset), POINT_SET, color)
     def graphSlopefield(self, f, color="black"):
-	self.canvas.graphFunc(f, SLOPE_FIELD, color)
+        self.canvas.graphFunc(f, SLOPE_FIELD, color)
     def graphScalarfield(self, f):
-	self.canvas.graphFunc(f, SCALAR_FIELD, "foo")     
+        self.canvas.graphFunc(f, SCALAR_FIELD, "foo")     
 
     def clear(self):
-   	self.canvas.functions = []
-	self.canvas.draw()    
+        self.canvas.functions = []
+        self.canvas.draw()    
 
     def save(self):
         filename = \
@@ -171,7 +170,7 @@ class GraphingWindow:
 
     def postscript(self, filename):
         self.canvas.update()
-	self.canvas.postscript(file = filename)
+        self.canvas.postscript(file = filename)
 
     def close(self):
         self.top.destroy()
@@ -185,8 +184,8 @@ class GraphingWindow:
         self.ymaxtext.set(repr(self.canvas.ymax))
         
     def initToolbarTop(self):
-	self.topframe = tkinter.Frame(self.top)
-	frame = self.topframe
+        self.topframe = tkinter.Frame(self.top)
+        frame = self.topframe
         self.xmintext = tkinter.StringVar()
         self.xmaxtext = tkinter.StringVar()
         self.ymintext = tkinter.StringVar()
@@ -210,19 +209,19 @@ class GraphingWindow:
         tkinter.Label(frame, text = "]").pack(side = "left")        
         frame.resizebutton = tkinter.Button(frame, text = "Resize", command = lambda: self.resizeit(frame))
         frame.resizebutton.pack(side = "right")
-	frame.pack()
+        frame.pack()
     
     def getDomain(self):
         return ((self.canvas.xmin, self.canvas.xmax), (self.canvas.ymin, self.canvas.ymax))
 
     def setDomain(self, xMinMax, yMinMax):
-	(xmin, xmax) = xMinMax
-	(ymin,ymax) = yMinMax
-	self.xmintext.set(repr(xmin))
-	self.xmaxtext.set(repr(xmax))
-	self.ymintext.set(repr(ymin))
-	self.ymaxtext.set(repr(ymax))
-	self.resizeit()
+        (xmin, xmax) = xMinMax
+        (ymin,ymax) = yMinMax
+        self.xmintext.set(repr(xmin))
+        self.xmaxtext.set(repr(xmax))
+        self.ymintext.set(repr(ymin))
+        self.ymaxtext.set(repr(ymax))
+        self.resizeit()
 
     def resizeit(self, event = None):
         self.canvas.xmin = float(self.xmintext.get())
@@ -242,7 +241,7 @@ class Color:
     
     #convert a valid Tk color (within the widget) into r, g, b values
     def rgbcolor(self, tkcolor):
-        if not type(self.widget) == NoneType:
+        if not type(self.widget) == type(None):
             return self.widget.winfo_rgb(tkcolor)
         else:
             return GARBAGE
@@ -300,22 +299,22 @@ class Function:
         self.width = 1
         self.canvas = canvas
         self.color = color
-	if self.type() == SCALAR_FIELD:
-        	self.color.function(self)
+        if self.type() == SCALAR_FIELD:
+                self.color.function(self)
 
     def setInput(self, input):
         self.input = input
         argFor(self.input, self.tryrange)
         
     def tryrange(self, tryarg):
-    	try:
-        	trial = self.eval(tryarg)
-        	if self.min == GARBAGE or trial < self.min:
-            		self.min = trial
-        	if self.max == GARBAGE or trial > self.max:
-            		self.max = trial
-	except:
-		print("There was a problem with the function you passed")
+        try:
+            trial = self.eval(tryarg)
+            if self.min == GARBAGE or trial < self.min:
+                        self.min = trial
+            if self.max == GARBAGE or trial > self.max:
+                        self.max = trial
+        except:
+                print("There was a problem with the function you passed")
 
 class Continuous(Function):
     
@@ -331,34 +330,34 @@ class Continuous(Function):
 class Continuousset(Function):
     
     def __init__(self, canvas, func, color):
-	Function.__init__(self, canvas, func, color)
-	self.xset = func[0]
-	self.yset = func[1]
+        Function.__init__(self, canvas, func, color)
+        self.xset = func[0]
+        self.yset = func[1]
 
     def type(self):
         return CONTINUOUS_SET
 
     def eval(self,args):
-	try:
-		return self.yset[self.xset.index(args[0])]
-	except:
-		return GARBAGE	
+        try:
+                return self.yset[self.xset.index(args[0])]
+        except:
+                return GARBAGE        
 
 class Pointset(Function):
     
     def __init__(self, canvas, func, color):
-	Function.__init__(self, canvas, func, color)
-	self.xset = func[0]
-	self.yset = func[1]
+        Function.__init__(self, canvas, func, color)
+        self.xset = func[0]
+        self.yset = func[1]
 
     def type(self):
         return POINT_SET
 
     def eval(self,args):
-	try:
-		return self.yset[self.xset.index(args[0])]
-	except:
-		return GARBAGE	
+        try:
+                return self.yset[self.xset.index(args[0])]
+        except:
+                return GARBAGE        
 
 class Scalarfield(Function):
     
@@ -434,20 +433,20 @@ class GraphCanvas(tkinter.Canvas):
             self.width = w # remember adjusted value, not original
         tkinter.Canvas.__init__(self, parent, width = w, height = h, bg = 'white') # moved bkph
         self.img = tkinter.PhotoImage(width = w, height = h)
-	self.create_image(0, 0, image = self.img, anchor=tkinter.NW)
+        self.create_image(0, 0, image = self.img, anchor=tkinter.NW)
         self.functions = []
         self.initCBounds()
         self.initObjects()
         self.initPointSets()
 #         self.bind("<Button-1>", self.canvas_left_clicked_down)
-# 	try:
-# 		if os.uname() == 'Darwin':
-# 			self.bind("<Button-2>", self.canvas_right_clicked_down)
-# 		else:
-# 			self.bind("<Button-3>", self.canvas_right_clicked_down)
+#         try:
+#                 if os.uname() == 'Darwin':
+#                         self.bind("<Button-2>", self.canvas_right_clicked_down)
+#                 else:
+#                         self.bind("<Button-3>", self.canvas_right_clicked_down)
 #         except:
-# 		self.bind("<Button-3>", self.canvas_right_clicked_down)
-# 	self.bind("<ButtonRelease-1>", self.canvas_left_clicked_up)
+#                 self.bind("<Button-3>", self.canvas_right_clicked_down)
+#         self.bind("<ButtonRelease-1>", self.canvas_left_clicked_up)
 #         self.bind("<B1-Motion>", self.canvas_left_moved)
         self.draw()
     
@@ -470,25 +469,25 @@ class GraphCanvas(tkinter.Canvas):
         self.objects = {}
         self.objects[DISCRETE_TIME] = []
         self.objects[CONTINUOUS] = []
-	self.objects[CONTINUOUS_SET] = []
-	self.objects[POINT_SET] = []
+        self.objects[CONTINUOUS_SET] = []
+        self.objects[POINT_SET] = []
         self.objects[SLOPE_FIELD] = []
         self.objects[LABELS] = []
         self.objects[RK] = []
         self.objects[AXES] = []
     
     def clear(self):
-	for k in list(self.objects.keys()):
-		for j in self.objects[k]:
-			self.delete(j)
-		self.objects[k]= []        
-	self.img = tkinter.PhotoImage(width = self.width, height = self.height)
-	self.create_image(0, 0, image = self.img, anchor=tkinter.NW)
+        for k in list(self.objects.keys()):
+                for j in self.objects[k]:
+                        self.delete(j)
+                self.objects[k]= []        
+        self.img = tkinter.PhotoImage(width = self.width, height = self.height)
+        self.create_image(0, 0, image = self.img, anchor=tkinter.NW)
 
     def graphFunc(self, f, mode, color):
-	if mode == CONTINUOUS:
-	    func = Continuous(self, f, color)
-	    self.functions.append(func)
+        if mode == CONTINUOUS:
+            func = Continuous(self, f, color)
+            self.functions.append(func)
         if mode == POINT_SET:
             func = Pointset(self, f, color)
             self.functions.append(func)
@@ -521,7 +520,7 @@ class GraphCanvas(tkinter.Canvas):
     def drawFunctions(self):
         for f in self.functions:
             if f.type() == DISCRETE_TIME:
-		for i in range(len(self.xdtset)):
+                for i in range(len(self.xdtset)):
                     vx = self.xdtset[i]
                     cx = self.getCx(vx)
                     vy = f.eval([vx])
@@ -531,7 +530,7 @@ class GraphCanvas(tkinter.Canvas):
                         self.objects[DISCRETE_TIME].append(self.create_line(cx, self.getCy(0), cx, cy, width = f.width, fill = col, tags = ("f")))
                         self.objects[DISCRETE_TIME].append(self.create_oval(cx-2, cy-2, cx+2, cy+2, width = f.width, outline = col, fill = "white", tags = ("f")))
             elif f.type() == CONTINUOUS:  
-		vy = f.eval([self.xset[0]])
+                vy = f.eval([self.xset[0]])
                 last = [0, self.getCy(vy)]
                 for c in range(self.usablewidth-1):
                     x = self.xset[c+1]
@@ -543,13 +542,13 @@ class GraphCanvas(tkinter.Canvas):
                     if (lastwasvisible or self.visible(next[0], next[1])) and (last[1] != GARBAGE and next[1] != GARBAGE):
                         col = f.color
                         self.objects[CONTINUOUS].append(self.create_line(last[0], last[1], next[0], next[1], width = 1, fill = col))
-		    else:
-			lastwasvisible = False
+                    else:
+                        lastwasvisible = False
                     last = next
-  	    elif f.type() == CONTINUOUS_SET:
+            elif f.type() == CONTINUOUS_SET:
                 col = f.color   # TLP
-		last = [self.getCx(f.xset[0]), self.getCy(f.yset[0])]
-		for i in range(len(f.xset)):
+                last = [self.getCx(f.xset[0]), self.getCy(f.yset[0])]
+                for i in range(len(f.xset)):
                     next = [self.getCx(f.xset[i]), self.getCy(f.yset[i])]
                     if self.visible(last[0],last[1]) or \
                            self.visible(next[0], next[1]):
@@ -573,14 +572,14 @@ class GraphCanvas(tkinter.Canvas):
                                                 width = f.width, outline = col,
                                                 fill = col, tags = ("f")))
                     
-  	    elif f.type() == POINT_SET:
-		for i in range(len(f.xset)):
-                    curr = [self.getCx(f.xset[i]), self.getCy(f.yset[i])]
-                    (cx, cy) = curr
-                    if self.visible(cx, cy):
-                        size = 2
-                        col = f.color
-                        self.objects[POINT_SET].append(self.create_oval(cx-size, cy-size, cx+size, cy+size, width = f.width, outline = col, fill = col, tags = ("f")))
+            elif f.type() == POINT_SET:
+              for i in range(len(f.xset)):
+                  curr = [self.getCx(f.xset[i]), self.getCy(f.yset[i])]
+                  (cx, cy) = curr
+                  if self.visible(cx, cy):
+                      size = 2
+                      col = f.color
+                      self.objects[POINT_SET].append(self.create_oval(cx-size, cy-size, cx+size, cy+size, width = f.width, outline = col, fill = col, tags = ("f")))
             elif f.type() == SLOPE_FIELD:
                 for px in self.xslopeset:
                     for py in self.yslopeset:
@@ -673,7 +672,7 @@ class GraphCanvas(tkinter.Canvas):
                 except:
                     pass
             col = RK4_COLOR
-	    if col == f.color: col = "black"
+            if col == f.color: col = "black"
             self.path(RK, points, col, 1)
             
     def canvas_left_clicked_down(self, event):
@@ -700,28 +699,28 @@ class GraphCanvas(tkinter.Canvas):
             self.drawLabels()
         
     def getPx(self, cx):
-	try:
-        	return self.xmin+float(self.xmax-self.xmin)*(cx-self.usablecxmin)/float(self.usablewidth)
-	except:
-		return GARBAGE # not helpful: returns string if divide by zero
+        try:
+                return self.xmin+float(self.xmax-self.xmin)*(cx-self.usablecxmin)/float(self.usablewidth)
+        except:
+                return GARBAGE # not helpful: returns string if divide by zero
 
     def getPy(self, cy):
-	try:
-        	return self.ymax-(cy-self.usablecymin)*float(self.ymax-self.ymin)/float(self.usableheight)
+        try:
+                return self.ymax-(cy-self.usablecymin)*float(self.ymax-self.ymin)/float(self.usableheight)
         except:
-		return GARBAGE # not helpful: returns string if divide by zero
+                return GARBAGE # not helpful: returns string if divide by zero
     def getCx(self, px):
-	try:
-        	return int(self.usablecxmin + self.usablewidth*((px-self.xmin)/float(self.xmax-self.xmin)))
-   	except:
-		return GARBAGE # not helpful: returns string if divide by zero
+        try:
+            return int(self.usablecxmin + self.usablewidth*((px-self.xmin)/float(self.xmax-self.xmin)))
+        except:
+             return GARBAGE # not helpful: returns string if divide by zero
     def getCy(self, py):  
-	try:
+        try:
                 ymid = (self.ymin+self.ymax)/2 # bkph
                 py = ymid + (py - ymid)*0.9 # bkph
-        	return int(self.usablecymax-(self.usableheight*(py-self.ymin)/float(self.ymax-self.ymin)))
-	except:
-		return GARBAGE # not helpful: returns string if divide by zero
+                return int(self.usablecymax-(self.usableheight*(py-self.ymin)/float(self.ymax-self.ymin)))
+        except:
+                return GARBAGE # not helpful: returns string if divide by zero
 
     def visible(self, cx = GARBAGE, cy = GARBAGE):
         if cx == GARBAGE:
