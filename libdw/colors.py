@@ -25,11 +25,11 @@ def HSVtoRGB(h, s, v):
         return (v, v, v)
     else:
         h = h/60  # sector 0 to 5
-	i = floor( h )
-	f = h - i	# factorial part of h
-	p = v * ( 1 - s )
-	q = v * ( 1 - s * f )
-	t = v * ( 1 - s * ( 1 - f ) )
+        i = floor( h )
+        f = h - i        # factorial part of h
+        p = v * ( 1 - s )
+        q = v * ( 1 - s * f )
+        t = v * ( 1 - s * ( 1 - f ) )
         if i == 0:
             return (v, t, p)
         elif i == 1:

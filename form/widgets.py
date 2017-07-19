@@ -229,7 +229,7 @@ class FileBufferFrame(Frame):
         self.quotes = ['"""', "'''", '"', "'"] 
         self.string_literals = [] 
         self.needs_recompute = True
-	  self.syntax_color(None)
+        self.syntax_color(None)
 
   def onKeyRelease(self, e):
     self.needs_recompute = ((e.char == '"' or e.char == "'"))# or 
