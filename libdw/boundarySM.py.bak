@@ -81,34 +81,34 @@ class BoundaryFollowerSM4(sm.SM):
     'turningLeft', 'turningRight', 'movingForward', and 'following'
     """
     
-    startState = 'movingForward'
+    start_state = 'movingForward'
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         if state == 'turningLeft':
             if wallInFront(inp):
-                nextState = 'turningLeft'
+                next_state = 'turningLeft'
             elif wallOnRight(inp):
-                nextState = 'following'
+                next_state = 'following'
             else:
-                nextState = 'turningLeft'
+                next_state = 'turningLeft'
         elif state == 'turningRight':
             if wallOnRight(inp):
-                nextState = 'following'
+                next_state = 'following'
             else:
-                nextState = 'turningRight'
+                next_state = 'turningRight'
         elif state == 'movingForward':
             if wallInFront(inp):
-                nextState = 'turningLeft'
+                next_state = 'turningLeft'
             else:
-                nextState = 'movingForward'
+                next_state = 'movingForward'
         else: # state is 'following'
             if wallInFront(inp):
-                nextState = 'turningLeft'
+                next_state = 'turningLeft'
             elif wallOnRight(inp):
-                nextState = 'following'
+                next_state = 'following'
             else:
-                nextState = 'turningRight'
-        return (nextState, pickAction(nextState))
+                next_state = 'turningRight'
+        return (next_state, pickAction(next_state))
 
 
 class BoundaryFollowerSM2(sm.SM):
@@ -117,9 +117,9 @@ class BoundaryFollowerSM2(sm.SM):
     'right hand' on the wall.  Has two internal states:  'seek' and
     'following'. 
     """
-    startState = 'seek'
+    start_state = 'seek'
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         if state == 'seek':
             if wallInFront(inp):
                 return ('following', left)

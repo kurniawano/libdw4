@@ -20,19 +20,19 @@ class GridDynamics(sm.SM):
         self.theMap = theMap
         """instance of ``gridMap.GridMap`` representing locations of
         obstacles, with discretized poses"""
-        self.startState = None
-        self.legalInputs = [(dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)\
+        self.start_state = None
+        self.legal_inputs = [(dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)\
                             if (dx != 0 or dy != 0)]
         """In any state, you can move to any of the eight neighboring
         squares or stay in place.  Actions are (dx, dy), where dx and dy
         changes in x and y indices, in the set (-1, 1, 0)."""
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         """
         :param state: tuple of indices ``(ix, iy)`` representing
          robot's location in grid map
         :param inp: an action, which is one of the legal inputs
-        :returns: ``(nextState, cost)``
+        :returns: ``(next_state, cost)``
         """
         (ix, iy) = state
         (dx, dy) = inp
@@ -74,19 +74,19 @@ class GridCostDynamicsSM(sm.SM):
         self.theMap = theMap
         """instance of ``gridMap.GridMap`` representing locations of
         obstacles, with discretized poses"""
-        self.startState = None
-        self.legalInputs = [(dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)\
+        self.start_state = None
+        self.legal_inputs = [(dx, dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1)\
                             if (dx != 0 or dy != 0)]
         """In any state, you can move to any of the eight neighboring
         squares or stay in place.  Actions are (dx, dy), where dx and dy
         changes in x and y indices, in the set (-1, 1, 0)."""
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         """
         :param state: tuple of indices ``(ix, iy)`` representing
          robot's location in grid map
         :param inp: an action, which is one of the legal inputs
-        :returns: ``(nextState, cost)``
+        :returns: ``(next_state, cost)``
         """
         multiplier = 3
         (ix, iy) = state

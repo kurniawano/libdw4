@@ -21,7 +21,7 @@ class DynamicMoveToPoint(sm.SM):
     angleEps = 0.05
     distEps = 0.05
     
-    startState = False
+    start_state = False
     """State is ``True`` if we have reached the goal and ``False`` otherwise"""
 
     def __init__(self, maxRVel = 0.5, maxFVel = 0.5):
@@ -32,7 +32,7 @@ class DynamicMoveToPoint(sm.SM):
         self.maxRVel = maxRVel
         self.maxFVel = maxFVel
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (goalPoint, sensors) = inp
         robotPose = sensors.odometry
         robotPoint = robotPose.point()

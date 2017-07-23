@@ -23,7 +23,7 @@ class StateEstimator(sm.SM):
         """
         self.model = model
         self.verbose = verbose
-        self.startState = model.startDistribution
+        self.start_state = model.startDistribution
         """
         The state of this machine is the same as its output:  the
         distribution over states of the subject machine given
@@ -31,7 +31,7 @@ class StateEstimator(sm.SM):
         is the starting distribution of the subject machine.
         """
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         """
         :param state: Distribution over states of the subject machine,
          represented as a ``dist.Dist`` object
@@ -63,10 +63,10 @@ class StateEstimatorTriggered(StateEstimator):
     otherwise, just pass the state through.  Output is belief state,
     and a boolean indicating whether an update was just done.
     """
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (o, i, trigger) = inp
         if trigger:
-            sO = StateEstimator.getNextValues(self, state, (o, i))
+            sO = StateEstimator.get_next_values(self, state, (o, i))
             return (sO[0], (sO[1], True))
         else:
             return (state, (state, False))

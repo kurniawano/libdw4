@@ -50,7 +50,7 @@ class TransducedSignal(sig.Signal):
             return self.outputCache[k]
         else:
             if self.lastCalculatedState == None:
-                self.m.state = self.m.getStartState()
+                self.m.state = self.m.get_start_state()
             else:
                 self.m.state = self.lastCalculatedState
             for i in range(self.maxCalcValueSoFar+1, k+1):

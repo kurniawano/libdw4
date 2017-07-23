@@ -17,38 +17,38 @@ class SM:
     Generic superclass representing state machines.  Don't instantiate
     this:  make a subclass with definitions for the following methods:
 
-        - ``getNextValues: (state_t, inp_t) -> (state_t+1, output_t)`` or
-          ``getNextState: (state_t, inpt_t) -> state_t+1``
-        - ``startState:  state`` or ``startState() -> state``
+        - ``get_next_values: (state_t, inp_t) -> (state_t+1, output_t)`` or
+          ``get_next_state: (state_t, inpt_t) -> state_t+1``
+        - ``start_state:  state`` or ``start_state() -> state``
 
     optional:
 
         - ``done: (state) -> boolean``  (defaults to always false)
-        - ``legalInputs: list(inp)``
+        - ``legal_inputs: list(inp)``
 
     See State Machines chapter in 6.01 Readings for detailed explanation.
     """
-    startState = None
-    """By default, startState is none"""
+    start_state = None
+    """By default, start_state is none"""
 
-    def getStartState(self):
+    def get_start_state(self):
         """
-        Handles the case that self.startState is a function.
+        Handles the case that self.start_state is a function.
         Necessary for stochastic state machines. Ignore otherwise.
         """
-        if isinstance(self.startState, types.MethodType):
-            return self.startState()
+        if isinstance(self.start_state, types.MethodType):
+            return self.start_state()
         else:
-            return self.startState
+            return self.start_state
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         """
         Default version of this method.  If a subclass only defines
-        ``getNextState``, then we assume that the output of the machine
+        ``get_next_state``, then we assume that the output of the machine
         is the same as its next state.
         """
-        nextState = self.getNextState(state, inp)
-        return (nextState, nextState)
+        next_state = self.get_next_state(state, inp)
+        return (next_state, next_state)
 
     def done(self, state):
         """
@@ -56,43 +56,43 @@ class SM:
         """
         return False
 
-    def isDone(self):
+    def is_done(self):
         """
         Should only be used by transduce.  Don't call this.
         """
         return self.done(self.state)
 
-    legalInputs = []
+    legal_inputs = []
     """
     By default, the space of legal inputs is not defined.
     """
 
-    __debugParams = None # internal use
+    __debug_params = None # internal use
     
-    def start(self, traceTasks = [], verbose = False,
-              compact = True, printInput = True):
+    def start(self, trace_tasks = [], verbose = False,
+              compact = True, print_input = True):
         """
         Call before providing inp to a machine, or to reset it.
         Sets self.state and arranges things for tracing and debugging.
 
-        :param traceTasks: list of trace tasks.  See documentation for
-         ``doTraceTasks`` for details
+        :param trace_tasks: list of trace tasks.  See documentation for
+         ``do_trace_tasks`` for details
         :param verbose: If ``True``, print a description of each step
          of the machine
         :param compact: If ``True``, then if ``verbose = True``, print a
          one-line description of the step;  if ``False``, print
          out the recursive substructure of the state update at
          each step
-        :param printInput: If ``True``, then if ``verbose = True``,
+        :param print_input: If ``True``, then if ``verbose = True``,
          print the whole input in each step, otherwise don't.
          Useful to set to ``False`` when the input is large and
          you don't want to see it all.
         """
-        self.state = self.getStartState()
+        self.state = self.get_start_state()
         """ Instance variable set by start, and updated by step;
               should not be managed by user """
-        self.__debugParams = DebugParams(traceTasks, verbose, compact,
-                                         printInput)
+        self.__debug_params = debug_params(trace_tasks, verbose, compact,
+                                         print_input)
         
     def step(self, inp):
         """
@@ -101,24 +101,24 @@ class SM:
         Error to call ``step`` if ``done`` is true.
         :param inp: next input to the machine
         """
-        (s, o) = self.getNextValues(self.state, inp)
+        (s, o) = self.get_next_values(self.state, inp)
 
-        if self.__debugParams and self.__debugParams.doDebugging:
-            if self.__debugParams.verbose and not self.__debugParams.compact:
-                print("Step:", self.__debugParams.k)
-            self.printDebugInfo(0, self.state, s, inp, o, self.__debugParams)
-            if self.__debugParams.verbose and self.__debugParams.compact:
-                if self.__debugParams.printInput:
+        if self.__debug_params and self.__debug_params.doDebugging:
+            if self.__debug_params.verbose and not self.__debug_params.compact:
+                print("Step:", self.__debug_params.k)
+            self.print_debug_info(0, self.state, s, inp, o, self.__debug_params)
+            if self.__debug_params.verbose and self.__debug_params.compact:
+                if self.__debug_params.print_input:
                     print("In:", inp, "Out:", o, "Next State:", s)
                 else:
                     print("Out:", o, "Next State:", s)
-            self.__debugParams.k += 1
+            self.__debug_params.k += 1
 
         self.state = s
         return o
 
-    def transduce(self, inps, verbose = False, traceTasks = [],
-                  compact = True, printInput = True,
+    def transduce(self, inps, verbose = False, trace_tasks = [],
+                  compact = True, print_input = True,
                   check = False):
         """
         Start the machine fresh, and feed a sequence of values into
@@ -141,20 +141,20 @@ class SM:
         n = len(inps)
         result = []
         self.start(verbose = verbose, compact = compact,
-                   printInput = printInput, traceTasks = traceTasks)
+                   print_input = print_input, trace_tasks = trace_tasks)
         if verbose:
             print("Start state:", self.state)
         # Consider stopping if next state is done?  (as it is, we get
         # an output associated with a transition into a done state)
-        while i < n and not self.isDone():
+        while i < n and not self.is_done():
             result.append(self.step(inps[i]))
             i = i + 1
             if i % 100 == 0 and verbose:
                 print('Step', i)
         return result
 
-    def run(self, n = 10, verbose = False, traceTasks = [],
-                   compact = True, printInput = True, check = False):
+    def run(self, n = 10, verbose = False, trace_tasks = [],
+                   compact = True, print_input = True, check = False):
         """
         For a machine that doesn't consume input (e.g., one made with
         ``feedback``, for ``n`` steps or until it terminates. 
@@ -166,27 +166,27 @@ class SM:
         :return: list of outputs
         """
         return self.transduce([None]*n, verbose = verbose,
-                              traceTasks = traceTasks, compact = compact,
-                              printInput = printInput,
+                              trace_tasks = trace_tasks, compact = compact,
+                              print_input = print_input,
                               check = check)
 
-    def transduceF(self, inpFn, n = 10, verbose = False,
-                   traceTasks = [],
-                   compact = True, printInput = True):
+    def transduce_f(self, inp_fn, n = 10, verbose = False,
+                   trace_tasks = [],
+                   compact = True, print_input = True):
         """
         Like ``transduce``, but rather than getting inputs from a list
         of values, get them by calling a function with the input index
         as the argument. 
         """
-        return self.transduce([inpFn(i) for i in range(n)], 
-                              traceTasks = traceTasks, compact = compact,
-                              printInput = printInput, verbose =
+        return self.transduce([inp_fn(i) for i in range(n)], 
+                              trace_tasks = trace_tasks, compact = compact,
+                              print_input = print_input, verbose =
                    verbose)
     
     name = None
     """Name used for tracing"""
 
-    def guaranteeName(self):
+    def guarantee_name(self):
         """
         Makes sure that this instance has a unique name that can be
         used for tracing.
@@ -194,25 +194,25 @@ class SM:
         if not self.name:
             self.name = util.gensym(self.__class__.__name__)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
         """
         Default method for printing out all of the debugging
         information for a primitive machine.
         """
-        self.guaranteeName()
-        if debugParams.verbose and not debugParams.compact:
-            if debugParams.printInput:
+        self.guarantee_name()
+        if debug_params.verbose and not debug_params.compact:
+            if debug_params.print_input:
                 print(' '*depth, self.name, "In:", \
                       util.prettyString(inp), \
                       "Out:", util.prettyString(out), \
-                      "Next State:", util.prettyString(nextState))
+                      "Next State:", util.prettyString(next_state))
             else:
                 print(' '*depth, self.name, \
                       "Out:", util.prettyString(out), \
-                      "Next State:", util.prettyString(nextState))
-        self.doTraceTasks(inp, state, out, debugParams)
+                      "Next State:", util.prettyString(next_state))
+        self.do_trace_tasks(inp, state, out, debug_params)
 
-    def doTraceTasks(self, inp, state, out, debugParams):
+    def do_trace_tasks(self, inp, state, out, debug_params):
         """
         Actually execute the trace tasks.  A trace task is a list
         consisting of three components:
@@ -226,7 +226,7 @@ class SM:
         we execute it right now if its machine name equals the name of
         this machine.
         """
-        for (name, mode, fun) in debugParams.traceTasks:
+        for (name, mode, fun) in debug_params.trace_tasks:
             if name == self.name:
                 if mode == 'input':
                     fun(inp)
@@ -238,11 +238,11 @@ class SM:
     def check(thesm, inps = None):
         """
         Run a rudimentary check on a state machine, using the list of inputs provided.
-        Makes sure that getNextValues is defined, and that it takes the proper number
+        Makes sure that get_next_values is defined, and that it takes the proper number
         of input arguments (three: self, start, inp).  Also print out the start state,
-        and check that getNextValues provides a legal return value (list of 2 elements:
-        (state,output)).  And tries to check if getNextValues is changing either self.state
-        or some other attribute of the state machine instance (it shouldn't: getNextValues
+        and check that get_next_values provides a legal return value (list of 2 elements:
+        (state,output)).  And tries to check if get_next_values is changing either self.state
+        or some other attribute of the state machine instance (it shouldn't: get_next_values
         should be a pure function).
 
         Raises exception 'InvalidSM' if a problem is found.
@@ -252,70 +252,70 @@ class SM:
             :return: none
 
             """
-            # see if getNextValues is defined and is not the default version
-        # note that hasattr(thesm,'getNextValues') is always True, because
-        # getNextValues is defined in sm.SM
+            # see if get_next_values is defined and is not the default version
+        # note that hasattr(thesm,'get_next_values') is always True, because
+        # get_next_values is defined in sm.SM
         #
         # so let's do this in an ugly way, by checking the documentation string
-        # for getNextValues, and seeing if that starts with "Default version"
-        gnvdoc = inspect.getdoc(thesm.getNextValues)
+        # for get_next_values, and seeing if that starts with "Default version"
+        gnvdoc = inspect.getdoc(thesm.get_next_values)
         if gnvdoc != None:
             if len(gnvdoc)>16:
                 if gnvdoc[:15]=='Default version':
-                    print("[SMCheck] Error! getNextValues undefined in state machine")
+                    print("[SMCheck] Error! get_next_values undefined in state machine")
                     if hasattr(thesm,'GetNextValues'):
-                        print("[SMCheck] you've defined GetNextValues -> should be getNextValues")
-                    if hasattr(thesm,'getNextState'):
-                        print("[SMCheck] you've defined getNextState -> should be getNextValues?")
+                        print("[SMCheck] you've defined GetNextValues -> should be get_next_values")
+                    if hasattr(thesm,'get_next_state'):
+                        print("[SMCheck] you've defined get_next_state -> should be get_next_values?")
                     raise Exception('Invalid SM')
             
-            # check arguments of getNextValues
-            aspec = inspect.getargspec(thesm.getNextValues)
+            # check arguments of get_next_values
+            aspec = inspect.getargspec(thesm.get_next_values)
             if isinstance(aspec, tuple):
                 args = aspec[0]
             else:
                 args = aspec.args
             if not (len(args)==3):
-                print("[SMCheck] getNextValues should take 3 arguments as input, namely self, state, inp")
+                print("[SMCheck] get_next_values should take 3 arguments as input, namely self, state, inp")
                 print("          your function takes the arguments ",args)
                 raise Exception('Invalid SM')
 
             # check start state
-            ss = thesm.startState
+            ss = thesm.start_state
             # start the machine (needed if complex, like cascade)
             thesm.start()
             print("[SMCheck] the start state of your state machine is '%s'" % repr(ss))
-            # check if getNextValues return value is legal
+            # check if get_next_values return value is legal
             if inps != None:
-                rv = thesm.getNextValues(thesm.state,inps[0])
+                rv = thesm.get_next_values(thesm.state,inps[0])
                 if not type(rv) in (list, tuple):
-                    print("[SMCheck] getNextValues provides an invalid return value, '%s'" % repr(rv))
+                    print("[SMCheck] get_next_values provides an invalid return value, '%s'" % repr(rv))
                     raise Exception('Invalid SM')
                 if not(len(rv)==2):
-                    print("[SMCheck] getNextValues provides an invalid return value, '%s'" % repr(rv))
+                    print("[SMCheck] get_next_values provides an invalid return value, '%s'" % repr(rv))
                     print("[SMCheck] the return value length should be 2, ie (state,output), but it is ",len(rv))
                     raise Exception('Invalid SM')
 
 
             # Test to see if we're side-effecting the state.  This is not
             # foolproof: it might miss some cases of state side-effects
-            startStateCopy = copy.copy(thesm.startState)
+            start_stateCopy = copy.copy(thesm.start_state)
             attrs = inspect.getmembers(thesm)
             originalAttrs = dict(copy.copy(attrs))
-            # Call getNextValues a bunch of times
+            # Call get_next_values a bunch of times
             thesm.start()
             for i in inps:
-                thesm.getNextValues(thesm.state, i)
+                thesm.get_next_values(thesm.state, i)
             # See what got clobbered
-            if thesm.state != startStateCopy:
-                print("[SMCheck] Your getNextValues method changes self.state.  It should instead return the new state as the first component of the result")
+            if thesm.state != start_stateCopy:
+                print("[SMCheck] Your get_next_values method changes self.state.  It should instead return the new state as the first component of the result")
                 raise Exception('Invalid SM')
             newAttrs = dict(inspect.getmembers(thesm))
             for (name, val) in list(originalAttrs.items()):
-                if name != '_SM__debugParams' and newAttrs[name] != val:
+                if name != '_SM__debug_params' and newAttrs[name] != val:
                     print('[SMCheck] You seem to have changed attribute', end=' ')
                     print(name, 'from', val, 'to', newAttrs[name])
-                    print('[SMCheck] but the getNextValues should not have side effects')
+                    print('[SMCheck] but the get_next_values should not have side effects')
                     raise Exception('Invalid SM')
                 
             # print "[SMCheck] Ok - your state machine passed this (rudimentary) check!"
@@ -342,32 +342,32 @@ class Cascade (SM):
             print(m1, m2, name)
             raise Exception('Cascade takes two machine arguments and an optional name argument')
         self.name = name
-        self.legalInputs = self.m1.legalInputs
+        self.legal_inputs = self.m1.legal_inputs
 
-    def startState(self):
-        return (self.m1.getStartState(), self.m2.getStartState())
+    def start_state(self):
+        return (self.m1.get_start_state(), self.m2.get_start_state())
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
-        (newS1, o1) = self.m1.getNextValues(s1, inp)
-        (newS2, o2) = self.m2.getNextValues(s2, o1)
+        (newS1, o1) = self.m1.get_next_values(s1, inp)
+        (newS2, o2) = self.m2.get_next_values(s2, o1)
         return ((newS1, newS2), o2)
 
     def done(self, state):
         (s1, s2) = state
         return self.m1.done(s1) or self.m2.done(s2)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
-            if debugParams.verbose and not debugParams.compact:
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name)
             (s1, s2) = state
-            (ns1, ns2) = nextState
-            (ns1, o1) = self.m1.getNextValues(s1, inp)
-            self.m1.printDebugInfo(depth + 4, s1, ns1, inp, o1, debugParams)
-            self.m2.printDebugInfo(depth + 4, s2, ns2, o1, out, debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            (ns1, ns2) = next_state
+            (ns1, o1) = self.m1.get_next_values(s1, inp)
+            self.m1.print_debug_info(depth + 4, s1, ns1, inp, o1, debug_params)
+            self.m2.print_debug_info(depth + 4, s2, ns2, o1, out, debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 class Parallel (SM):
     """
@@ -385,33 +385,33 @@ class Parallel (SM):
         # Legal inputs to this machine are the legal inputs to the first
         # machine (which had better equal the legal inputs to the second
         # machine).  Check that here.
-        assert set(self.m1.legalInputs) == set(self.m2.legalInputs)
-        self.legalInputs = self.m1.legalInputs
+        assert set(self.m1.legal_inputs) == set(self.m2.legal_inputs)
+        self.legal_inputs = self.m1.legal_inputs
 
-    def startState(self):
-        return (self.m1.getStartState(), self.m2.getStartState())
+    def start_state(self):
+        return (self.m1.get_start_state(), self.m2.get_start_state())
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
-        (newS1, o1) = self.m1.getNextValues(s1, inp)
-        (newS2, o2) = self.m2.getNextValues(s2, inp)
+        (newS1, o1) = self.m1.get_next_values(s1, inp)
+        (newS2, o2) = self.m2.get_next_values(s2, inp)
         return ((newS1, newS2), (o1, o2))
 
     def done(self, state):
         (s1, s2) = state
         return self.m1.done(s1) or self.m2.done(s2)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (s1, s2) = state
-            (ns1, ns2) = nextState
+            (ns1, ns2) = next_state
             (o1, o2) = out
-            if debugParams.verbose and not debugParams.compact:
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name)
-            self.m1.printDebugInfo(depth + 4, s1, ns1, inp, o1, debugParams)
-            self.m2.printDebugInfo(depth + 4, s2, ns2, inp, o2, debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            self.m1.print_debug_info(depth + 4, s1, ns1, inp, o1, debug_params)
+            self.m2.print_debug_info(depth + 4, s2, ns2, inp, o2, debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 
 class Feedback (SM):
@@ -426,33 +426,33 @@ class Feedback (SM):
             raise Exception('Feedback takes one machine argument and an optional name argument')
         self.name = name
 
-    def startState(self):
-        return self.m.getStartState()
+    def start_state(self):
+        return self.m.get_start_state()
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         """
         Ignores input.
         """
         # Will only compute output
-        (ignore, o) = self.m.getNextValues(state, 'undefined')
+        (ignore, o) = self.m.get_next_values(state, 'undefined')
         assert o != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS, ignore) = self.m.getNextValues(state, o)
+        (newS, ignore) = self.m.get_next_values(state, o)
         return (newS, o)
 
     def done(self, state):
         return self.m.done(state)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        (machineState, lastOutput) = self.getNextValues(state, inp)
-        self.guaranteeName()
-        if debugParams.verbose and not debugParams.compact:
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        (machineState, lastOutput) = self.get_next_values(state, inp)
+        self.guarantee_name()
+        if debug_params.verbose and not debug_params.compact:
             print(' '*depth, self.name)
-        self.m.printDebugInfo(depth + 4, state, nextState,
-                              lastOutput, out, debugParams)
-        self.doTraceTasks(inp, state, out, debugParams)
+        self.m.print_debug_info(depth + 4, state, next_state,
+                              lastOutput, out, debug_params)
+        self.do_trace_tasks(inp, state, out, debug_params)
 
-def coupledMachine(m1, m2):
+def coupled_machine(m1, m2):
     """
     Couple two machines together.
     :param m1: ``SM``
@@ -469,23 +469,23 @@ class Feedback2 (Feedback):
     second inp.  Result is a machine with a single inp and single
     output.  
     """
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         # Will only compute output
-        (ignore, o) = self.m.getNextValues(state, (inp, 'undefined'))
+        (ignore, o) = self.m.get_next_values(state, (inp, 'undefined'))
         assert o != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS, ignore) = self.m.getNextValues(state, (inp, o))
+        (newS, ignore) = self.m.get_next_values(state, (inp, o))
         return (newS, o)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        (machineState, lastOutput) = self.getNextValues(state,
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        (machineState, lastOutput) = self.get_next_values(state,
                                                         (inp, 'undefined'))
-        self.guaranteeName()
-        if debugParams.verbose and not debugParams.compact:
+        self.guarantee_name()
+        if debug_params.verbose and not debug_params.compact:
             print(' '*depth, self.name)
-        self.m.printDebugInfo(depth + 4, state, nextState,
-                              (inp, lastOutput), out, debugParams)
-        self.doTraceTasks(inp, state, out, debugParams)
+        self.m.print_debug_info(depth + 4, state, next_state,
+                              (inp, lastOutput), out, debug_params)
+        self.do_trace_tasks(inp, state, out, debug_params)
 
 class FeedbackAdd(SM):
     """
@@ -501,11 +501,11 @@ class FeedbackAdd(SM):
             raise Exception('FeedbackAdd takes two machine arguments and an optional name argument')
         self.name = name
 
-    def startState(self):
+    def start_state(self):
         # Start state is product of start states of the two machines
-        return (self.m1.getStartState(), self.m2.getStartState())
+        return (self.m1.get_start_state(), self.m2.get_start_state())
         
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
         # All this craziness is to deal with the fact that either m1
         # or m2 might have immediate dependence on the input.  If both
@@ -513,31 +513,31 @@ class FeedbackAdd(SM):
 
         # Propagate the input through, so we're sure about the input
         # to m1
-        (ignore, o1) = self.m1.getNextValues(s1, 99999999)
-        (ignore, o2) = self.m2.getNextValues(s2, o1)
+        (ignore, o1) = self.m1.get_next_values(s1, 99999999)
+        (ignore, o2) = self.m2.get_next_values(s2, o1)
         # Now get a real new state and output
-        (newS1, output) = self.m1.getNextValues(s1, safeAdd(inp,o2))
-        (newS2, o2) = self.m2.getNextValues(s2, output)
+        (newS1, output) = self.m1.get_next_values(s1, safeAdd(inp,o2))
+        (newS2, o2) = self.m2.get_next_values(s2, output)
         return ((newS1, newS2), output)
 
     def done(self, state):
         (s1, s2) = state
         return self.m1.done(s1) or self.m2.done(s2)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (s1, s2) = state
-            (ns1, ns2) = nextState
-            if debugParams.verbose and not debugParams.compact:
+            (ns1, ns2) = next_state
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name)
             # Only way to do this right is to call machines again
-            (ignore, o1) = self.m1.getNextValues(s1, inp)
-            (ignore, o2) = self.m2.getNextValues(s2, o1)
-            (ignore, o1) = self.m1.getNextValues(s1, inp+o2)
-            self.m1.printDebugInfo(depth + 4, s1, ns1, inp+o2, o1, debugParams)
-            self.m2.printDebugInfo(depth + 4, s2, ns2, o1, o2, debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            (ignore, o1) = self.m1.get_next_values(s1, inp)
+            (ignore, o2) = self.m2.get_next_values(s2, o1)
+            (ignore, o1) = self.m1.get_next_values(s1, inp+o2)
+            self.m1.print_debug_info(depth + 4, s1, ns1, inp+o2, o1, debug_params)
+            self.m2.print_debug_info(depth + 4, s2, ns2, o1, o2, debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 
 class FeedbackSubtract(SM):
@@ -555,11 +555,11 @@ class FeedbackSubtract(SM):
             raise Exception('FeedbackSubtract takes two machine arguments and an optional name argument')
         self.name = name
 
-    def startState(self):
+    def start_state(self):
         # Start state is product of start states of the two machines
-        return (self.m1.getStartState(), self.m2.getStartState())
+        return (self.m1.get_start_state(), self.m2.get_start_state())
         
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
         # All this craziness is to deal with the fact that either m1
         # or m2 might have immediate dependence on the input.  If both
@@ -567,31 +567,31 @@ class FeedbackSubtract(SM):
 
         # Propagate the input through, so we're sure about the input
         # to m1
-        (ignore, o1) = self.m1.getNextValues(s1, 99999999)
-        (ignore, o2) = self.m2.getNextValues(s2, o1)
+        (ignore, o1) = self.m1.get_next_values(s1, 99999999)
+        (ignore, o2) = self.m2.get_next_values(s2, o1)
         # Now get a real new state and output
-        (newS1, output) = self.m1.getNextValues(s1, inp - o2)
-        (newS2, o2) = self.m2.getNextValues(s2, output)
+        (newS1, output) = self.m1.get_next_values(s1, inp - o2)
+        (newS2, o2) = self.m2.get_next_values(s2, output)
         return ((newS1, newS2), output)
 
     def done(self, state):
         (s1, s2) = state
         return self.m1.done(s1) or self.m2.done(s2)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (s1, s2) = state
-            (ns1, ns2) = nextState
-            if debugParams.verbose and not debugParams.compact:
+            (ns1, ns2) = next_state
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name)
             # Only way to do this right is to call machines again
-            (ignore, o1) = self.m1.getNextValues(s1, inp)
-            (ignore, o2) = self.m2.getNextValues(s2, o1)
-            (ignore, o1) = self.m1.getNextValues(s1, inp - o2)
-            self.m1.printDebugInfo(depth + 4, s1, ns1, inp-o2, o1, debugParams)
-            self.m2.printDebugInfo(depth + 4, s2, ns2, o1, o2, debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            (ignore, o1) = self.m1.get_next_values(s1, inp)
+            (ignore, o2) = self.m2.get_next_values(s2, o1)
+            (ignore, o1) = self.m1.get_next_values(s1, inp - o2)
+            self.m1.print_debug_info(depth + 4, s1, ns1, inp-o2, o1, debug_params)
+            self.m2.print_debug_info(depth + 4, s2, ns2, o1, o2, debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 
 
@@ -605,28 +605,28 @@ class Parallel2 (Parallel):
         Parallel.__init__(self, m1, m2)
         # Legal inputs to this machine are the cartesian product of the
         # legal inputs to both machines
-        self.legalInputs =  [(i1, i2) for i1 in self.m1.legalInputs \
-                             for i2 in self.m2.legalInputs]
+        self.legal_inputs =  [(i1, i2) for i1 in self.m1.legal_inputs \
+                             for i2 in self.m2.legal_inputs]
     
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
         (i1, i2) = splitValue(inp)
-        (newS1, o1) = self.m1.getNextValues(s1, i1)
-        (newS2, o2) = self.m2.getNextValues(s2, i2)
+        (newS1, o1) = self.m1.get_next_values(s1, i1)
+        (newS2, o2) = self.m2.get_next_values(s2, i2)
         return ((newS1, newS2), (o1, o2))
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (s1, s2) = state
-            (ns1, ns2) = nextState
+            (ns1, ns2) = next_state
             (i1, i2) = splitValue(inp)
             (o1, o2) = out
-            if debugParams.verbose and not debugParams.compact:
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name)
-            self.m1.printDebugInfo(depth + 4, s1, ns1, i1, o1, debugParams)
-            self.m2.printDebugInfo(depth + 4, s2, ns2, i2, o2, debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            self.m1.print_debug_info(depth + 4, s1, ns1, i1, o1, debug_params)
+            self.m2.print_debug_info(depth + 4, s2, ns2, i2, o2, debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 
 class ParallelAdd (Parallel):
@@ -634,10 +634,10 @@ class ParallelAdd (Parallel):
     Like ``Parallel``, but output is the sum of the outputs of the two
     machines. 
     """
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
-        (newS1, o1) = self.m1.getNextValues(s1, inp)
-        (newS2, o2) = self.m2.getNextValues(s2, inp)
+        (newS1, o1) = self.m1.get_next_values(s1, inp)
+        (newS2, o2) = self.m2.get_next_values(s2, inp)
         return ((newS1, newS2), o1 + o2)
 
 class If (SM):
@@ -648,7 +648,7 @@ class If (SM):
 
     Rarely useful.
     """
-    startState = ('start', None)
+    start_state = ('start', None)
     
     def __init__(self, condition, sm1, sm2, name = None):
         """
@@ -662,25 +662,25 @@ class If (SM):
         if not ((name is None or isinstance(name, str)) and isinstance(sm1, SM) and isinstance(sm2, SM)):
             raise Exception('If takes a condition, two machine arguments and an optional name argument')
         self.name = name
-        self.legalInputs = self.sm1.legalInputs
+        self.legal_inputs = self.sm1.legal_inputs
 
-    def getFirstRealState(self, inp):
+    def get_first_real_state(self, inp):
         # State is boolean indicating which machine is running, and its state
         if self.condition(inp):
-            return ('runningM1', self.sm1.getStartState())
+            return ('runningM1', self.sm1.get_start_state())
         else:
-            return ('runningM2', self.sm2.getStartState())
+            return ('runningM2', self.sm2.get_start_state())
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (ifState, smState) = state
         if ifState == 'start':
-            (ifState, smState) = self.getFirstRealState(inp)
+            (ifState, smState) = self.get_first_real_state(inp)
         
         if ifState == 'runningM1':
-            (newS, o) = self.sm1.getNextValues(smState, inp)
+            (newS, o) = self.sm1.get_next_values(smState, inp)
             return (('runningM1', newS), o)
         else:
-            (newS, o) = self.sm2.getNextValues(smState, inp)
+            (newS, o) = self.sm2.get_next_values(smState, inp)
             return (('runningM2', newS), o)
 
     def done(self, state):
@@ -692,20 +692,20 @@ class If (SM):
         else:
             return self.sm2.done(smState)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (ifState, smState) = state
-            (nifState, nsmState) = nextState
-            if debugParams.verbose and not debugParams.compact:
+            (nifState, nsmState) = next_state
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name, ifState)
             if ifState == 'runningM1':
-                self.sm1.printDebugInfo(depth + 4, smState, nsmState,
-                                        inp, out, debugParams)
+                self.sm1.print_debug_info(depth + 4, smState, nsmState,
+                                        inp, out, debug_params)
             elif ifState == 'runningM2':
-                self.sm2.printDebugInfo(depth + 4, smState, nsmState,
-                                        inp, out, debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+                self.sm2.print_debug_info(depth + 4, smState, nsmState,
+                                        inp, out, debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 class Switch (SM):
     """
@@ -727,40 +727,40 @@ class Switch (SM):
         if not ((name is None or isinstance(name, str)) and isinstance(sm1, SM) and isinstance(sm2, SM)):
             raise Exception('Switch takes a condition, two machine arguments and an optional name argument')
         self.name = name
-        self.legalInputs = self.m1.legalInputs
+        self.legal_inputs = self.m1.legal_inputs
 
-    def startState(self):
-        return (self.m1.getStartState(), self.m2.getStartState())
+    def start_state(self):
+        return (self.m1.get_start_state(), self.m2.get_start_state())
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
         if self.condition(inp):
-            (ns1, o) = self.m1.getNextValues(s1, inp)
+            (ns1, o) = self.m1.get_next_values(s1, inp)
             return ((ns1, s2), o)
         else:
-            (ns2, o) = self.m2.getNextValues(s2, inp)
+            (ns2, o) = self.m2.get_next_values(s2, inp)
             return ((s1, ns2), o)
 
     def done(self, state):
         (s1, s2) = state
         return self.m1.done(s1) or self.m2.done(s2)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (s1, s2) = state
-            (ns1, ns2) = nextState
+            (ns1, ns2) = next_state
             if self.condition(inp):
                 machineRunning = 'M1'
             else:
                 machineRunning = 'M2'
-            if debugParams.verbose and not debugParams.compact:
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name, 'Running', machineRunning)
             if machineRunning == 'M1':
-                self.m1.printDebugInfo(depth + 4, s1, ns1, inp, out,debugParams)
+                self.m1.print_debug_info(depth + 4, s1, ns1, inp, out,debug_params)
             else:
-                self.m2.printDebugInfo(depth + 4, s2, ns2, inp, out,debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+                self.m2.print_debug_info(depth + 4, s2, ns2, inp, out,debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 class Mux (Switch):
     """
@@ -769,10 +769,10 @@ class Mux (Switch):
     which output to generate.  If the condition is true, it generates
     the output from the first machine, otherwise, from the second.
     """
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
-        (ns1, o1) = self.m1.getNextValues(s1, inp)
-        (ns2, o2) = self.m2.getNextValues(s2, inp)
+        (ns1, o1) = self.m1.get_next_values(s1, inp)
+        (ns2, o2) = self.m2.get_next_values(s2, inp)
         if self.condition(inp):
             return ((ns1, ns2), o1)
         else:
@@ -799,12 +799,12 @@ class Sequence (SM):
             raise Exception('Sequence takes a list of machines and an optional name argument')
         self.n = len(smList)
         self.name = name
-        self.legalInputs = self.smList[0].legalInputs
+        self.legal_inputs = self.smList[0].legal_inputs
 
-    def startState(self):
-        return self.advanceIfDone(0, self.smList[0].getStartState())
+    def start_state(self):
+        return self.advance_if_done(0, self.smList[0].get_start_state())
 
-    def advanceIfDone(self, counter, smState):
+    def advance_if_done(self, counter, smState):
         """
         Internal use only.
         If that machine is done, start new machines until we get to
@@ -813,15 +813,15 @@ class Sequence (SM):
         while self.smList[counter].done(smState) and counter + 1 < self.n:
             # This machine is done and there's another left in the sequence
             counter = counter + 1
-            smState = self.smList[counter].getStartState()
+            smState = self.smList[counter].get_start_state()
         return (counter, smState)
     
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (counter, smState) = state
         # Get new stuff for current machine on the list
-        (smState, o) = self.smList[counter].getNextValues(smState, inp)
+        (smState, o) = self.smList[counter].get_next_values(smState, inp)
         # Start new machines until we get a good one or we finish 
-        (counter, smState) = self.advanceIfDone(counter, smState)
+        (counter, smState) = self.advance_if_done(counter, smState)
         return ((counter, smState), o)
 
     def done(self, state):
@@ -829,18 +829,18 @@ class Sequence (SM):
         (counter, smState) = state
         return self.smList[counter].done(smState)
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        # This condition is trying to guarantee that nextState has the
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        # This condition is trying to guarantee that next_state has the
         # right structure to be passed down recursively
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (counter, smState) = state
-            (ncounter, nsmState) = nextState
-            if debugParams.verbose and not debugParams.compact:
+            (ncounter, nsmState) = next_state
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name, 'Counter =', counter)
-            self.smList[counter].printDebugInfo(depth + 4, smState, nsmState,
-                                                inp, out, debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            self.smList[counter].print_debug_info(depth + 4, smState, nsmState,
+                                                inp, out, debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 class Repeat (SM):
     """
@@ -857,22 +857,22 @@ class Repeat (SM):
         if not ((name is None or isinstance(name, str)) and isinstance(sm, SM)):
             raise Exception('Repeast takes one machine argument, an integer, and an optional name argument')
         self.name = name
-        self.legalInputs = self.sm.legalInputs
+        self.legal_inputs = self.sm.legal_inputs
 
-    def startState(self):
-        return self.advanceIfDone(0, self.sm.getStartState())
+    def start_state(self):
+        return self.advance_if_done(0, self.sm.get_start_state())
 
-    def advanceIfDone(self, counter, smState):
+    def advance_if_done(self, counter, smState):
         while self.sm.done(smState) and not self.done((counter, smState)):
             counter = counter + 1
             print('Repeat counter', counter)
-            smState = self.sm.getStartState()
+            smState = self.sm.get_start_state()
         return (counter, smState)
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (counter, smState) = state
-        (smState, o) = self.sm.getNextValues(smState, inp)
-        (counter, smState) = self.advanceIfDone(counter, smState)
+        (smState, o) = self.sm.get_next_values(smState, inp)
+        (counter, smState) = self.advance_if_done(counter, smState)
         return ((counter, smState), o)
 
     # We're done if the termination condition is defined and met
@@ -880,16 +880,16 @@ class Repeat (SM):
         (counter, smState) = state
         return not self.n == None and counter == self.n
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (counter, smState) = state
-            (ncounter, nsmState) = nextState
-            if debugParams.verbose and not debugParams.compact:        
+            (ncounter, nsmState) = next_state
+            if debug_params.verbose and not debug_params.compact:        
                 print(' '*depth, self.name, 'Counter =', counter)
-            self.sm.printDebugInfo(depth + 4, smState, nsmState, inp, out,
-                                   debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            self.sm.print_debug_info(depth + 4, smState, nsmState, inp, out,
+                                   debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 class RepeatUntil (SM):
     """
@@ -908,21 +908,21 @@ class RepeatUntil (SM):
         if not ((name is None or isinstance(name, str)) and isinstance(sm, SM)):
             raise Exception('RepeatUntil takes a condition, a machine argument and an optional name argument')
         self.name = name
-        self.legalInputs = self.sm.legalInputs
+        self.legal_inputs = self.sm.legal_inputs
 
-    def startState(self):
-        return (False, self.sm.getStartState())
+    def start_state(self):
+        return (False, self.sm.get_start_state())
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (condTrue, smState) = state
-        (smState, o) = self.sm.getNextValues(smState, inp)
+        (smState, o) = self.sm.get_next_values(smState, inp)
         condTrue = self.condition(inp)
         # child machine is done, but the whole machine is not
         if self.sm.done(smState) and not condTrue:
             # Restart the child machine.  Could check to see if it's
             # done, but if the child machine wakes up done and our
             # condition is not true, then we'd risk an infinite loop.
-            smState = self.sm.getStartState()
+            smState = self.sm.get_start_state()
         return ((condTrue, smState), o)
 
     def done(self, state):
@@ -931,16 +931,16 @@ class RepeatUntil (SM):
         (condTrue, smState) = state
         return self.sm.done(smState) and condTrue
     
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (condTrue, smState) = state
-            (ncondTrue, nsmState) = nextState
-            if debugParams.verbose and not debugParams.compact:
+            (ncondTrue, nsmState) = next_state
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name, 'Condition =', condTrue)
-            self.sm.printDebugInfo(depth + 4, smState, nsmState, inp, out,
-                                   debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            self.sm.print_debug_info(depth + 4, smState, nsmState, inp, out,
+                                   debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
 
 class Until (SM):
     """
@@ -957,30 +957,30 @@ class Until (SM):
         if not ((name is None or isinstance(name, str)) and isinstance(sm, SM)):
             raise Exception('Until takes a condition, a machine arguments and an optional name argument')
         self.name = name
-        self.legalInputs = self.sm.legalInputs
+        self.legal_inputs = self.sm.legal_inputs
 
-    def startState(self):
-        return (False, self.sm.getStartState())
+    def start_state(self):
+        return (False, self.sm.get_start_state())
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (condTrue, smState) = state
-        (smState, o) = self.sm.getNextValues(smState, inp)
+        (smState, o) = self.sm.get_next_values(smState, inp)
         return ((self.condition(inp), smState), o)
     
     def done(self, state):
         (condTrue, smState) = state
         return self.sm.done(smState) or condTrue
 
-    def printDebugInfo(self, depth, state, nextState, inp, out, debugParams):
-        if nextState and len(nextState) == 2:
-            self.guaranteeName()
+    def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
+        if next_state and len(next_state) == 2:
+            self.guarantee_name()
             (condTrue, smState) = state
-            (ncondTrue, nsmState) = nextState
-            if debugParams.verbose and not debugParams.compact:
+            (ncondTrue, nsmState) = next_state
+            if debug_params.verbose and not debug_params.compact:
                 print(' '*depth, self.name,'Condition =', condTrue)
-            self.sm.printDebugInfo(depth + 4, smState, nsmState, inp, out,
-                                   debugParams)
-            self.doTraceTasks(inp, state, out, debugParams)
+            self.sm.print_debug_info(depth + 4, smState, nsmState, inp, out,
+                                   debug_params)
+            self.do_trace_tasks(inp, state, out, debug_params)
         
 
 #############################################################################
@@ -999,16 +999,16 @@ def splitValue(v, n = 2):
         assert len(v) == n, "Value wrong length"
         return v
 
-class DebugParams:
+class debug_params:
     """
     Housekeeping stuff
     """
-    def __init__(self, traceTasks, verbose, compact, printInput):
-        self.traceTasks = traceTasks
+    def __init__(self, trace_tasks, verbose, compact, print_input):
+        self.trace_tasks = trace_tasks
         self.verbose = verbose
         self.compact = compact
-        self.printInput = printInput
-        self.doDebugging = verbose or len(traceTasks) > 0
+        self.print_input = print_input
+        self.doDebugging = verbose or len(trace_tasks) > 0
         self.k = 0
 
 #############################################################################
@@ -1019,7 +1019,7 @@ class Wire(SM):
     """
     Machine whose output is its input, with no delay
     """
-    def getNextState(self, state, inp):
+    def get_next_state(self, state, inp):
         return inp
 
 class Constant(SM):
@@ -1031,7 +1031,7 @@ class Constant(SM):
         :param c: constant value
         """
         self.c = c
-    def getNextState(self, state, inp):
+    def get_next_state(self, state, inp):
         return self.c
 
 class R(SM):
@@ -1043,9 +1043,9 @@ class R(SM):
         """
         :param v0: initial output value
         """
-        self.startState = v0
+        self.start_state = v0
         """State is the previous input"""
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         # new state is inp, current output is old state
         return (inp, state)
 
@@ -1062,13 +1062,13 @@ class Gain(SM):
         :param k: gain
         """
         self.k = k
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         # new state is inp, current output is old state
         return (state, safeMul(self.k, inp))
 
 class Wire(SM):
     """Machine whose output is the input"""
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         return (state, inp)
 
 class Select (SM):
@@ -1082,7 +1082,7 @@ class Select (SM):
         structure to select
         """
         self.k = k
-    def getNextState(self, state, inp):
+    def get_next_state(self, state, inp):
         return inp[self.k]
 
 class PureFunction(SM):
@@ -1095,7 +1095,7 @@ class PureFunction(SM):
         :param f: a function of one argument
         """
         self.f = f
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         return (None, self.f(inp))
 
 import operator
@@ -1105,20 +1105,20 @@ import operator
 ##  To work in feedback situations we need to propagate 'undefined'
 ##  through various operations. 
 
-def isDefined(v):
+def is_defined(v):
     return not v == 'undefined'
-def allDefined(struct):
+def all_defined(struct):
     if struct == 'undefined':
         return False
     elif isinstance(struct, list) or isinstance(struct, tuple):
-        return reduce(operator.and_, [allDefined(x) for x in struct])
+        return reduce(operator.and_, [all_defined(x) for x in struct])
     else:
         return True
 
 # Only binary functions for now
 def safe(f):
     def safef(a1, a2):
-        if allDefined(a1) and allDefined(a2):
+        if all_defined(a1) and all_defined(a2):
             return f(a1, a2)
         else:
             return 'undefined'

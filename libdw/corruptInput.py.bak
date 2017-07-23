@@ -32,9 +32,9 @@ class SensorCorrupter(sm.SM):
     def __init__(self, sonarStDev, odoStDev):
         self.sonarStDev = sonarStDev
         self.odoStDev = odoStDev
-        self.startState = None # this is a pure function
+        self.start_state = None # this is a pure function
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         return (None, CorruptedSensorInput(\
                       [random.gauss(s, self.sonarStDev) for s in inp.sonars],
                        util.Pose(random.gauss(inp.odometry.x, self.odoStDev),

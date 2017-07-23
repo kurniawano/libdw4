@@ -159,16 +159,16 @@ class TextInputSM(sm.SM):
     is the output of this machine.  If the user types 'quit', then the
     machine terminates.
     """
-    def __init__(self, legalInputs):
-        self.legalInputs = legalInputs + ['quit']
-    startState = False
-    def getNextValues(self, state, inp):
+    def __init__(self, legal_inputs):
+        self.legal_inputs = legal_inputs + ['quit']
+    start_state = False
+    def get_next_values(self, state, inp):
         out = None
         first = True
-        while not out in self.legalInputs:
+        while not out in self.legal_inputs:
             if not first: print('Illegal input:', out)
             out = input('Type an input (' + \
-                            util.prettyString(self.legalInputs) + \
+                            util.prettyString(self.legal_inputs) + \
                             ' ): ')
             if not out == 'quit': out = int(out)
             first = False
@@ -186,7 +186,7 @@ def wrapTextUI(m):
                                  m),
                       sm.PureFunction(textOutput))
 
-def wrapWindowUI(m, worldColors, legalInputs, windowName = 'Belief',
+def wrapWindowUI(m, worldColors, legal_inputs, windowName = 'Belief',
                  initBelief = None):
     """
     :param m: A machine created by applying
@@ -226,7 +226,7 @@ def wrapWindowUI(m, worldColors, legalInputs, windowName = 'Belief',
                            ydim+0.2, windowName)
     drawWorld(dim)
     drawBelief(initBelief, window, dim)
-    return sm.Cascade(sm.Cascade(sm.Cascade(TextInputSM(legalInputs),
+    return sm.Cascade(sm.Cascade(sm.Cascade(TextInputSM(legal_inputs),
                                             sm.PureFunction(processInput)),
                                  m),
                       sm.PureFunction(processOutput))
@@ -254,7 +254,7 @@ def drawBelief(belief, window, numStates, drawNums = True):
 standardHallway = ['white', 'white', 'green', 'white', 'white']
 """Our favorite configuration of hallway colors"""
 
-def makeSESwithGUI(worldSM, realColors, legalInputs, initBelief = None,
+def makeSESwithGUI(worldSM, realColors, legal_inputs, initBelief = None,
                    verbose = False, title = 'hallway'):
     """
     Makes a colored hallway simulator and state estimator.  Text input
@@ -264,21 +264,21 @@ def makeSESwithGUI(worldSM, realColors, legalInputs, initBelief = None,
      world
     :param realColors: A list of the colors of the rooms in the
      hallway, from left to right.
-    :param legalInputs: A list of the possible action commands
+    :param legal_inputs: A list of the possible action commands
     :param verbose: if ``True`` then print out belief state after each update
     :param title: title of window being created
     """
     return wrapWindowUI(se.makeStateEstimationSimulation(worldSM, verbose),
-                        realColors, legalInputs, title, initBelief = initBelief)
+                        realColors, legal_inputs, title, initBelief = initBelief)
 
-def makeSim(hallwayColors, legalInputs, obsNoise, dynamics, transNoise,
+def makeSim(hallwayColors, legal_inputs, obsNoise, dynamics, transNoise,
             title = 'sim', initialDist = None):
     """
     Make an instance of the simulator with noisy motion and sensing models.
 
     :param hallwayColors: A list of the colors of the rooms in the
      hallway, from left to right.
-    :param legalInputs: A list of the possible action commands
+    :param legal_inputs: A list of the possible action commands
     :param obsNoise: conditional distribution specifying the
      probability of observing a color given the actual color of the room
     :param dynamics: function that takes the robot's current location,
@@ -294,11 +294,11 @@ def makeSim(hallwayColors, legalInputs, obsNoise, dynamics, transNoise,
     worldSM = ssm.StochasticSM(initialDist,
                                makeTransitionModel(dynamics, transNoise, n),
                                makeObservationModel(hallwayColors, obsNoise))
-    return makeSESwithGUI(worldSM, hallwayColors, legalInputs,
+    return makeSESwithGUI(worldSM, hallwayColors, legal_inputs,
                           verbose = True, title = title,
                           initBelief = initialDist)
 
-def hallSE(hallwayColors, legalInputs, obsNoise, dynamics, transNoise,
+def hallSE(hallwayColors, legal_inputs, obsNoise, dynamics, transNoise,
            initialDist = None, verbose = True):
     n = len(hallwayColors)
     if not initialDist:

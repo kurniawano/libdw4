@@ -59,10 +59,10 @@ class LTISM (sm.SM):
         """Output coefficients"""
         self.dCoeffs = dCoeffs
         """Input coefficients"""
-        self.startState = (previousInputs, previousOutputs)
+        self.start_state = (previousInputs, previousOutputs)
         """State is last j input values and last k output values"""
 
-    def getNextValues(self, state, input):
+    def get_next_values(self, state, input):
         (inputs, outputs) = state
 
         # Push the new input onto the front of the inputs

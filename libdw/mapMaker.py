@@ -26,13 +26,13 @@ class MapMaker(sm.SM):
         else:
             gm = dynamicGridMap.DynamicGridMap(xMin, xMax, yMin, yMax,
                                                gridSquareSize)
-        self.startState = gm
+        self.start_state = gm
         self.useClearInfo = useClearInfo or useBayesMap
         if useClearInfo: print('Using clear info')
 #!
-#!         self.startState = None   # change this
+#!         self.start_state = None   # change this
 #!
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
 #!        pass        
         """
         :param inp: instance of ``SensorInput``
@@ -116,22 +116,22 @@ def testMapMaker(data):
     (xMin, xMax, yMin, yMax, gridSquareSize) = (0, 5, 0, 5, 0.1)
     mapper = MapMaker(xMin, xMax, yMin, yMax, gridSquareSize)
     mapper.transduce(data)
-    mapper.startState.drawWorld()
+    mapper.start_state.drawWorld()
 
 def testMapMakerClear(data):
     (xMin, xMax, yMin, yMax, gridSquareSize) = (0, 5, 0, 5, 0.1)
     mapper = MapMaker(xMin, xMax, yMin, yMax, gridSquareSize)
     for i in range(50):
         for j in range(50):
-            mapper.startState.setCell((i, j))
+            mapper.start_state.setCell((i, j))
     mapper.transduce(data)
-    mapper.startState.drawWorld()
+    mapper.start_state.drawWorld()
 
 def testMapMakerN(n, data):
     (xMin, xMax, yMin, yMax, gridSquareSize) = (0, 5, 0, 5, 0.1)
     mapper = MapMaker(xMin, xMax, yMin, yMax, gridSquareSize)
     mapper.transduce(data*n)
-    mapper.startState.drawWorld()
+    mapper.start_state.drawWorld()
 
 testClearData = [SensorInput([1.0, 5.0, 5.0, 1.0, 1.0, 5.0, 5.0, 1.0],
                              util.Pose(1.0, 2.0, 0.0)),

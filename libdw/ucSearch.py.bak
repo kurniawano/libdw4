@@ -120,11 +120,11 @@ def smSearch(smToSearch, initialState = None, goalTest = None,
                heuristic = lambda x: 0, maxNodes = 10000):
    """
    :param smToSearch: instance of ``sm.SM`` defining a search domain;
-             ``getNextValues`` is used to determine the successor of a
-             state given an action; the output field of getNextValues is
+             ``get_next_values`` is used to determine the successor of a
+             state given an action; the output field of get_next_values is
              interpreted as a cost.
    :param initialState: initial state for the search;  if not
-             provided, will use ``smToSearch.startState``
+             provided, will use ``smToSearch.start_state``
    :param goalTest: function that takes a state as an argument and
              returns ``True`` if it is a goal state, and ``False`` otherwise
    :param heuristic: function from state to estimated cost to reach a goal;
@@ -138,11 +138,11 @@ def smSearch(smToSearch, initialState = None, goalTest = None,
     goal is unreachable (within the search limit), it returns ``None``. 
    """
    if initialState == None:
-       initialState = smToSearch.getStartState()
+       initialState = smToSearch.get_start_state()
    if goalTest == None:
        goalTest = smToSearch.done
    return search(initialState, goalTest,
-                 smToSearch.legalInputs,
-                 smToSearch.getNextValues,
+                 smToSearch.legal_inputs,
+                 smToSearch.get_next_values,
                  heuristic = heuristic,
                  maxNodes = maxNodes)

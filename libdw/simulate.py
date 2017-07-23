@@ -456,18 +456,18 @@ class Feedback (sm.SM):
         self.m2 = m2
         self.name = name
 
-    def startState(self):
-        return (self.m1.getStartState(), self.m2.getStartState())
+    def start_state(self):
+        return (self.m1.get_start_state(), self.m2.get_start_state())
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
         # Will only compute output
-        (ignore, o1) = self.m1.getNextValues(s1, 'undefined')
-        (ignore, o2) = self.m2.getNextValues(s2, o1)
+        (ignore, o1) = self.m1.get_next_values(s1, 'undefined')
+        (ignore, o2) = self.m2.get_next_values(s2, o1)
         assert o2 != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS1, o1) = self.m1.getNextValues(s1, o2)
-        (newS2, o2) = self.m2.getNextValues(s2, o1)
+        (newS1, o1) = self.m1.get_next_values(s1, o2)
+        (newS2, o2) = self.m2.get_next_values(s2, o1)
         return ((newS1, newS2), o1)
 
     def done(self, state):
@@ -481,15 +481,15 @@ class Feedback2 (Feedback):
     second inp.  Result is a machine with a single inp and single
     output.  
     """
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (s1, s2) = state
         # Will only compute output
-        (ignore, o1) = self.m1.getNextValues(s1, (inp, 'undefined'))
-        (ignore, o2) = self.m2.getNextValues(s2, o1)
+        (ignore, o1) = self.m1.get_next_values(s1, (inp, 'undefined'))
+        (ignore, o2) = self.m2.get_next_values(s2, o1)
         assert o2 != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS1, o1) = self.m1.getNextValues(s1, (inp, o2))
-        (newS2, o2) = self.m2.getNextValues(s2, o1)
+        (newS1, o1) = self.m1.get_next_values(s1, (inp, o2))
+        (newS2, o2) = self.m2.get_next_values(s2, o1)
         return ((newS1, newS2), o1)
 
 ######################################################################
@@ -497,20 +497,20 @@ class Feedback2 (Feedback):
 ##  To work in feedback situations we need to propagate 'undefined'
 ##  through various operations. 
 
-def isDefined(v):
+def is_defined(v):
     return not v == 'undefined'
-def allDefined(struct):
+def all_defined(struct):
     if struct == 'undefined':
         return False
     elif isinstance(struct, list) or isinstance(struct, tuple):
-        return reduce(operator.and_, [allDefined(x) for x in struct])
+        return reduce(operator.and_, [all_defined(x) for x in struct])
     else:
         return True
 
 # Only binary functions for now
 def safe(f):
     def safef(a1, a2):
-        if allDefined(a1) and allDefined(a2):
+        if all_defined(a1) and all_defined(a2):
             return f(a1, a2)
         else:
             return 'undefined'
@@ -667,10 +667,10 @@ def newDynamics(vm0, vm1, state):
 
 class MotorAccel(sm.SM):
     def __init__(self, init, motorNodes):
-        self.startState = init
+        self.start_state = init
         self.motorNodes = motorNodes
-    def getNextValues(self, state, inp):
-        if not allDefined(inp):
+    def get_next_values(self, state, inp):
+        if not all_defined(inp):
             return (state, 'undefined')
         vm0 = inp.translate(self.motorNodes[0])
         vm1 = inp.translate(self.motorNodes[1])
@@ -698,8 +698,8 @@ class CircuitSM(sm.SM):
         self.groundNode = groundNode     # zero potential
 
     # in these circuits, there is no meaningful state (the world has state)
-    def getNextValues(self, state, inp):
-        if not allDefined(inp):
+    def get_next_values(self, state, inp):
+        if not all_defined(inp):
             return (state, 'undefined')
         components = self.components[:] # permanent components
         inpDict = reduceToDict(inp)     # combine dictionaries in input
@@ -750,7 +750,7 @@ def systemSM(circuit, inComponents, motorNodes, initState):
         return Feedback(sm.Cascade(cSM,wSM), MotorFeedback())
 
 class MotorFeedback(sm.SM):
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         # inp is (motorOutput, circuitSol)
         if modelinductance:
             (vel, pos,curr) = inp[0]

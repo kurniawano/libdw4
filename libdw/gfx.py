@@ -57,7 +57,7 @@ class RobotGraphics():
         self.plotData = {}
         self.plotData['clocktime'] = []
         self.plotData['step'] = []
-        self.traceTasks = []
+        self.trace_tasks = []
         self.windowSize = 500
         self.step = 0
         io.registerUserFunction('shutdown', self.reset)
@@ -84,7 +84,7 @@ class RobotGraphics():
         self.plotWindows = []
     
     def tasks(self):
-        return self.traceTasks
+        return self.trace_tasks
 
     def enableSonarMonitor(self):
         io.sonarMonitor(True)
@@ -178,7 +178,7 @@ class RobotGraphics():
         else:
             sys.stderr.write("Trying to add multiple probes w/ name:"+\
                                  streamName)
-        self.traceTasks.append((machineName, mode,
+        self.trace_tasks.append((machineName, mode,
                                 self.makeTraceFun(machineName, mode,
                                                   valueFun, stream)))
 

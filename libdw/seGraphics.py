@@ -15,14 +15,14 @@ does some useful display.  If ``None``, then no display is done."""
 class StateEstimator(seFast.StateEstimator):
     """By default, this is the same as ``seFast.StateEstimator``.  If
     the attributes ``observationHook`` or ``beliefHook`` are defined,
-    then as well as doing ``getNextValues`` from
+    then as well as doing ``get_next_values`` from
     ``seFast.StateEstimator``, it calls the hooks.
     """
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         if observationHook and inp:
             observationHook(inp[0], self.model.observationDistribution)
             
-        result = seFast.StateEstimator.getNextValues(self, state, inp)
+        result = seFast.StateEstimator.get_next_values(self, state, inp)
         
         if beliefHook:
             beliefHook(result[0])

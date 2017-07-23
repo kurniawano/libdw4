@@ -17,7 +17,7 @@ class RotateTSM (sm.SM):
 
     rotationalGain = 3.0
     angleEpsilon = 0.01
-    startState = 'start'
+    start_state = 'start'
 
     def __init__(self, headingDelta, maxVel = 0.5):
         """
@@ -28,7 +28,7 @@ class RotateTSM (sm.SM):
         self.headingDelta = headingDelta
         self.maxVel = maxVel
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         currentTheta = inp.odometry.theta
         if state == 'start':
             print("Starting to rotate", self.headingDelta)
@@ -67,7 +67,7 @@ class ForwardTSM (sm.SM):
     forwardGain = 1.0
     distTargetEpsilon = 0.01
     maxVel = 0.5
-    startState = 'start'
+    start_state = 'start'
 
     # Have to be able to look up the desired distance to travel
     def __init__(self, delta, maxVel = 0.5):
@@ -78,7 +78,7 @@ class ForwardTSM (sm.SM):
         self.deltaDesired = delta
         self.maxVel = maxVel
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         # State is: starting pose
         currentPos = inp.odometry.point()
         if state == 'start':
@@ -115,7 +115,7 @@ class StopSM(sm.SM):
     """
     Robot controller that always generates the stop action
     """
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         return (None, io.Action())
 
 

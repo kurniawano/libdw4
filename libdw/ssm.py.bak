@@ -52,10 +52,10 @@ class StochasticSM(sm.SM):
         estimator, for example, might call to display a sensor
         likelihoods. Takes an observation as input."""
         
-    def startState(self):
+    def start_state(self):
         return self.startDistribution.draw()
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         return (self.transitionDistribution(inp)(state).draw(),
                 self.observationDistribution(state).draw())
 
@@ -64,8 +64,8 @@ class StochasticSMWithStateObservation(StochasticSM):
     Special kind of stochastic state machine whose observation includes
     its state
     """
-    def getNextValues(self, state, inp):
-        nextState = self.transitionDistribution(inp)(state).draw()
-        return (nextState,
-                (self.observationDistribution(state).draw(), nextState))
+    def get_next_values(self, state, inp):
+        next_state = self.transitionDistribution(inp)(state).draw()
+        return (next_state,
+                (self.observationDistribution(state).draw(), next_state))
 

@@ -20,7 +20,7 @@ class StateEstimator(sm.SM):
         specifying the transition and observation models
         """
         self.model = model
-        self.startState = model.startDistribution
+        self.start_state = model.startDistribution
         """
         The state of this machine is the same as its output:  the
         distribution over states of the subject machine given
@@ -28,7 +28,7 @@ class StateEstimator(sm.SM):
         is the starting distribution of the subject machine.
         """
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         """
         :param state: Distribution over states of the subject machine,
          represented as a ``dist.Dist`` object

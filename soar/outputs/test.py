@@ -5,8 +5,8 @@ import libdw.gfx as gfx
 from soar.io import io
 import time
 class MySMClass(sm.SM):
-    startState=['SX',0,0,0]
-    def getNextValues(self, state, inp):
+    start_state=['SX',0,0,0]
+    def get_next_values(self, state, inp):
         #ebot
         frontsensor=inp.sonars[2]
         rightsensor=inp.sonars[4]
@@ -179,14 +179,14 @@ def setup():
 
 # this function is called when the start button is pushed
 def brainStart():
-    robot.behavior.start(traceTasks = robot.gfx.tasks())
+    robot.behavior.start(trace_tasks = robot.gfx.tasks())
 
 # this function is called 10 times per second
 def step():
     inp = io.SensorInput()
     # print inp.sonars[3]
     robot.behavior.step(inp).execute()
-    io.done(robot.behavior.isDone())
+    io.done(robot.behavior.is_done())
 
 # called when the stop button is pushed
 def brainStop():

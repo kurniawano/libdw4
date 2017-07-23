@@ -33,9 +33,9 @@ class Replanner(sm.SM):
         self.worldMap = mapClass(worldPath, gridSquareSize)
         self.dynamicsModel = gridDynamics.GridDynamics(self.worldMap)
         self.goalPoint = goalPoint
-        self.startState = None
+        self.start_state = None
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         return newPathAndSubgoal(self.worldMap, inp, self.goalPoint,
                                  self.dynamicsModel, state,
                                  timeToReplanStaticMap)
@@ -149,10 +149,10 @@ class ReplannerWithDynamicMap(sm.SM):
         """
         
         self.goalPoint = goalPoint
-        self.startState = None
+        self.start_state = None
         self.useCostDynamics = useCostDynamics
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (map, sensors) = inp
         if self.useCostDynamics:
             dynamicsModel = gridDynamics.GridCostDynamicsSM(map)
@@ -236,10 +236,10 @@ class ReplannerWithDynamicMapAndGoal(sm.SM):
         and uses step length as a cost.
         """
         
-        self.startState = None
+        self.start_state = None
         self.useCostDynamics = useCostDynamics
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (goalIndices, (map, sensors)) = inp
         if self.useCostDynamics:
             dynamicsModel = gridDynamics.GridCostDynamicsSM(map)

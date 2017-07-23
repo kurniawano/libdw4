@@ -160,10 +160,10 @@ def smSearch(smToSearch, initialState = None, goalTest = None, maxNodes = 10000,
              depthFirst = False, DP = True):
    """
    @param smToSearch: instance of C{sm.SM} defining a search domain;
-             C{getNextValues} is used to determine the successor of a
+             C{get_next_values} is used to determine the successor of a
              state given an action
    @param initialState: initial state for the search;  if not
-             provided, will use C{smToSearch.startState}
+             provided, will use C{smToSearch.start_state}
    @param goalTest: function that takes a state as an argument and
              returns C{True} if it is a goal state, and C{False} otherwise
    @param maxNodes: maximum number of nodes to be searched;  prevents
@@ -178,12 +178,12 @@ def smSearch(smToSearch, initialState = None, goalTest = None, maxNodes = 10000,
     goal is unreachable (within the search limit), it returns C{None}. 
    """
    if initialState == None:
-       initialState = smToSearch.getStartState()
+       initialState = smToSearch.get_start_state()
    if goalTest == None:
        goalTest = smToSearch.done
-   return search(initialState, goalTest, smToSearch.legalInputs,
+   return search(initialState, goalTest, smToSearch.legal_inputs,
                  # This returns the next state
-                 lambda s, a: smToSearch.getNextValues(s, a)[0],
+                 lambda s, a: smToSearch.get_next_values(s, a)[0],
                  maxNodes = maxNodes,
                  depthFirst=depthFirst, DP=DP)
 
@@ -203,5 +203,5 @@ def pathValid(smToSearch, path):
     else:
         (a0, s0) = path[0]
         (a1, s1) = path[1]
-        (resultingS, out) = smToSearch.getNextValues(s0, a1)
+        (resultingS, out) = smToSearch.get_next_values(s0, a1)
         return s1 == resultingS and pathValid(smToSearch, path[1:])

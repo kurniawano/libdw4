@@ -182,11 +182,11 @@ def bigTest(s, g):
 ######################################################################
 
 class NumberTestSM(sm.SM):
-    startState = 1
-    legalInputs = ['x*2', 'x+1', 'x-1', 'x**2', '-x']
+    start_state = 1
+    legal_inputs = ['x*2', 'x+1', 'x-1', 'x**2', '-x']
     def __init__(self, goal):
         self.goal = goal
-    def nextState(self, state, action):
+    def next_state(self, state, action):
         if action == 'x*2':
             return state*2
         elif action == 'x+1':
@@ -197,18 +197,18 @@ class NumberTestSM(sm.SM):
             return state**2
         elif action == '-x':
             return -state
-    def getNextValues(self, state, action):
-        nextState = self.nextState(state, action)
-        return (nextState, nextState)
+    def get_next_values(self, state, action):
+        next_state = self.next_state(state, action)
+        return (next_state, next_state)
     def done(self, state):
         return state == self.goal
 
 class NumberTestCostSM(sm.SM):
-    startState = 1
-    legalInputs = ['x*2', 'x+1', 'x-1', 'x**2', '-x']
+    start_state = 1
+    legal_inputs = ['x*2', 'x+1', 'x-1', 'x**2', '-x']
     def __init__(self, goal):
         self.goal = goal
-    def nextState(self, state, action):
+    def next_state(self, state, action):
         if action == 'x*2':
             return (state*2, 1)
         elif action == 'x+1':
@@ -219,8 +219,8 @@ class NumberTestCostSM(sm.SM):
             return (state**2, 1)
         elif action == '-x':
             return (-state, 1)
-    def getNextValues(self, state, action):
-        return self.nextState(state, action)
+    def get_next_values(self, state, action):
+        return self.next_state(state, action)
     def done(self, state):
         return state == self.goal
 
@@ -232,10 +232,10 @@ class NumberTestFiniteSM(NumberTestSM):
     def __init__(self, goal, maxVal):
         self.goal = goal
         self.maxVal = maxVal
-    def getNextValues(self, state, action):
-        nextState = self.nextState(state, action)
-        if abs(nextState) < self.maxVal:
-            return (nextState, nextState)
+    def get_next_values(self, state, action):
+        next_state = self.next_state(state, action)
+        if abs(next_state) < self.maxVal:
+            return (next_state, next_state)
         else:
             return (state, state)
     
@@ -300,21 +300,21 @@ def numberCostTest(s, g, h):
 ######################################################################
 
 class EightPuzzleSM(sm.SM):
-    startState = (((2, 8, 3), (1, 6, 4), (7, None, 5)),
+    start_state = (((2, 8, 3), (1, 6, 4), (7, None, 5)),
                   (2, 1))
-    legalInputs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    legal_inputs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
     def __init__(self, goal):
         self.goal = goal
-    def nextState(self, state, action):
+    def next_state(self, state, action):
         (board, (x, y)) = state
         (dx, dy) = action
         newSpaceLoc = (util.clip(x + dx, 0, 2),
                        util.clip(y + dy, 0, 2))
         newBoard = swap(board, (x, y), newSpaceLoc)
         return (newBoard, newSpaceLoc)
-    def getNextValues(self, state, action):
-        nextState = self.nextState(state, action)
-        return (nextState, 1)
+    def get_next_values(self, state, action):
+        next_state = self.next_state(state, action)
+        return (next_state, 1)
     def done(self, state):
         return state == self.goal
 

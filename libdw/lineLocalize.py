@@ -46,11 +46,11 @@ class PreProcess(sm.SM):
 	:param numObservations: number of discrete observations
         :param stateWidth: width, in meters, of a discrete state
 	"""
-        self.startState = (None, None)
+        self.start_state = (None, None)
         self.numObservations = numObservations
         self.stateWidth = stateWidth
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (lastUpdatePose, lastUpdateSonar) = state
         currentPose = inp.odometry
         currentSonar = idealReadings.discreteSonar(inp.sonars[0],
@@ -229,9 +229,9 @@ def makeMetricMachine(xMin, xMax, y, numStates):
                          0, numStates-1)
 
     class Metric(sm.SM):
-        startState = (0, 0)  # total and count
+        start_state = (0, 0)  # total and count
     
-        def getNextValues(self, state, inp):
+        def get_next_values(self, state, inp):
             # output is average probability mass in range of true loc
             (cheat, b) = inp
             (overallTotal, count) = state

@@ -25,7 +25,7 @@ class MoveToDynamicPoint(sm.SM):
     angleEps = 0.1
     """Tolerance for angles"""
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (goalPoint, sensors) = inp
         return (None, actionToPoint(goalPoint, sensors.odometry,
                                     self.forwardGain, self.rotationGain,
@@ -86,7 +86,7 @@ class MoveToFixedPose(sm.SM):
     distEps = 0.05
     """Tolerance for distances"""
 
-    startState = False
+    start_state = False
   
     def __init__(self, goalPose, maxVel = maxVel):
         """
@@ -96,7 +96,7 @@ class MoveToFixedPose(sm.SM):
         self.goalPose = goalPose
         self.maxVel = maxVel
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         nearGoal = inp.odometry.near(self.goalPose, self.distEps, self.angleEps)
         return (nearGoal, actionToPose(self.goalPose, inp.odometry,
                                         self.forwardGain, self.rotationGain,
@@ -125,13 +125,13 @@ class MoveToFixedPoint(sm.SM):
     maxVel = 0.5
     """Maximum velocity"""
     
-    startState = False
+    start_state = False
   
     def __init__(self, goalPoint, maxVel = maxVel):
         self.goalPoint = goalPoint
         self.maxVel = maxVel
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         nearGoal = inp.odometry.point().isNear(self.goalPoint, self.distEps)
         return (nearGoal, actionToPoint(self.goalPoint, inp.odometry,
                                         self.forwardGain, self.rotationGain,

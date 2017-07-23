@@ -25,12 +25,12 @@ class ReplannerWithDynamicMap(sm.SM):
         reach
         """
         self.goalPoint = goalPoint
-        self.startState = None
+        self.start_state = None
         """
         State is the plan currently being executed.  No plan to start with.
         """
 
-    def getNextValues(self, state, inp):
+    def get_next_values(self, state, inp):
         (map, sensors) = inp
         # Make a model for planning in this particular map
         dynamicsModel = gridDynamics.GridDynamics(map)
