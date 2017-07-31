@@ -108,7 +108,7 @@ class Pose:
         return (self.x, self.y, self.theta)
     
     def __repr__(self):
-        return 'pose:'+ prettyString(self.xytTuple())
+        return 'pose:'+ pretty_string(self.xytTuple())
 
 def valueListToPose(values):
     """
@@ -162,7 +162,7 @@ class Point:
         return (self.x, self.y)
 
     def __repr__(self):
-        return 'point:'+ prettyString(self.xyTuple())
+        return 'point:'+ pretty_string(self.xyTuple())
 
     def angleTo(self, p):
         """
@@ -247,7 +247,7 @@ class Transform:
         return self.compose(pose.transform()).pose()
 
     def __repr__(self):
-        return 'transform:'+ prettyString(self.matrix)
+        return 'transform:'+ pretty_string(self.matrix)
 
 class Line:
     """
@@ -275,7 +275,7 @@ class Line:
         return dist < eps
 
     def __repr__(self):
-        return 'line:'+ prettyString((self.nx, self.ny, self.off))
+        return 'line:'+ pretty_string((self.nx, self.ny, self.off))
 
 class LineSeg:
     """
@@ -341,7 +341,7 @@ class LineSeg:
             return helper(other, self)
 
     def __repr__(self):
-        return 'lineSeg:'+ prettyString((self.p1, self.p2))
+        return 'lineSeg:'+ pretty_string((self.p1, self.p2))
 
 #####################
 
@@ -616,17 +616,17 @@ def makeVectorFill(dim, initFun):
     """
     return [initFun(i) for i in range(dim)]
 
-def prettyString(struct):
+def pretty_string(struct):
     """
     Make nicer looking strings for printing, mostly by truncating
     floats
     """
     if type(struct) == list:
-        return '[' + ', '.join([prettyString(item) for item in struct]) + ']'
+        return '[' + ', '.join([pretty_string(item) for item in struct]) + ']'
     elif type(struct) == tuple:
-        return '(' + ', '.join([prettyString(item) for item in struct]) + ')'
+        return '(' + ', '.join([pretty_string(item) for item in struct]) + ')'
     elif type(struct) == dict:
-        return '{' + ', '.join([str(item) + ':' +  prettyString(struct[item]) \
+        return '{' + ', '.join([str(item) + ':' +  pretty_string(struct[item]) \
                                              for item in struct]) + '}'
     elif type(struct) == float:
         return "%5.6f" % struct
@@ -634,7 +634,7 @@ def prettyString(struct):
         return str(struct)
   
 def prettyPrint(struct):
-    s = prettyString(struct)
+    s = pretty_string(struct)
     print(s)
 
 class SymbolGenerator:

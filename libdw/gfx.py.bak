@@ -261,13 +261,13 @@ class RobotGraphics():
             'slime')
         # Draw dimensions
         self.slimeWindow.drawText(xLower + 0.1 * xRange, yLower + 0.05 * yRange,
-                                  util.prettyString(xLower), color = "black")
+                                  util.pretty_string(xLower), color = "black")
         self.slimeWindow.drawText(xUpper - 0.1 * xRange, yLower + 0.05 * yRange,
-                                  util.prettyString(xUpper), color = "black")
+                                  util.pretty_string(xUpper), color = "black")
         self.slimeWindow.drawText(xLower + 0.05 * xRange, yLower + 0.1 * yRange,
-                                  util.prettyString(yLower), color = "black")
+                                  util.pretty_string(yLower), color = "black")
         self.slimeWindow.drawText(xLower + 0.05 * xRange, yUpper - 0.1 * yRange,
-                                  util.prettyString(yUpper), color = "black")
+                                  util.pretty_string(yUpper), color = "black")
         # Draw axes
         xMin = min(slimeX)
         xMax = max(slimeX)

@@ -44,11 +44,11 @@ class SensorInput:
         self.light = app.soar.output.ldr.get()[:]
 
     def __str__(self):
-        return 'Sonar: ' + util.prettyString(self.sonars) + \
-               "; Odo: " + util.prettyString(self.odometry) + \
-               "; Analog: " + util.prettyString(self.analogInputs) + \
-               "; Temperature: " + util.prettyString(self.temperature) + \
-               "; LDR: " + util.prettyString(self.light)
+        return 'Sonar: ' + util.pretty_string(self.sonars) + \
+               "; Odo: " + util.pretty_string(self.odometry) + \
+               "; Analog: " + util.pretty_string(self.analogInputs) + \
+               "; Temperature: " + util.pretty_string(self.temperature) + \
+               "; LDR: " + util.pretty_string(self.light)
 
 referenceVoltage = 5.0
 class Action:
@@ -85,7 +85,7 @@ class Action:
 
     def __str__(self):
         return 'Act: ' + \
-               util.prettyString([self.fvel, self.rvel, self.voltage])
+               util.pretty_string([self.fvel, self.rvel, self.voltage])
 
 def registerUserFunction(type, f):
     app.soar.registerUserFunction(type, f)

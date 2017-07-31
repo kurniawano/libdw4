@@ -21,9 +21,9 @@ class FakeSensorInput:
         self.analogInputs = analogInputs
 
     def __str__(self):
-        return 'Sonar: ' + util.prettyString(self.sonars) + \
-               "; Odo: " + util.prettyString(self.odometry) +\
-               "; Analog: " + util.prettyString(self.analogInputs)
+        return 'Sonar: ' + util.pretty_string(self.sonars) + \
+               "; Odo: " + util.pretty_string(self.odometry) +\
+               "; Analog: " + util.pretty_string(self.analogInputs)
 
 referenceVoltage = 5.0
 class Action:
@@ -47,7 +47,7 @@ class Action:
         print('Not connected to soar, change your import io statement.')
 
     def __str__(self):
-        return 'Act: ' + '(fvel = ' + util.prettyString(self.fvel) + \
-               ', rvel = ' + util.prettyString(self.rvel) + ')'
+        return 'Act: ' + '(fvel = ' + util.pretty_string(self.fvel) + \
+               ', rvel = ' + util.pretty_string(self.rvel) + ')'
     __repr__ = __str__
 

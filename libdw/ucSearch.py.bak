@@ -107,12 +107,12 @@ def search(initialState, goalTest, actions, successor,
             if somewhatVerbose or verbose:
                 print("   ", n.cost, ":   expanding: ",  n)
             for a in actions:
-                (newS, cost) = successor(n.state, a)
-                if newS not in expanded:
+                (new_s, cost) = successor(n.state, a)
+                if new_s not in expanded:
                     # We don't know the best path to this state yet
                     count += 1
-                    newN = SearchNode(a, newS, n, cost)
-                    agenda.push(newN, newN.cost + heuristic(newS))
+                    newN = SearchNode(a, new_s, n, cost)
+                    agenda.push(newN, newN.cost + heuristic(new_s))
     print("Search failed after visiting ", count, " states.")
     return None
 

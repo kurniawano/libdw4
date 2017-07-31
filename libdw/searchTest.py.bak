@@ -308,10 +308,10 @@ class EightPuzzleSM(sm.SM):
     def next_state(self, state, action):
         (board, (x, y)) = state
         (dx, dy) = action
-        newSpaceLoc = (util.clip(x + dx, 0, 2),
+        new_spaceLoc = (util.clip(x + dx, 0, 2),
                        util.clip(y + dy, 0, 2))
-        newBoard = swap(board, (x, y), newSpaceLoc)
-        return (newBoard, newSpaceLoc)
+        newBoard = swap(board, (x, y), new_spaceLoc)
+        return (newBoard, new_spaceLoc)
     def get_next_values(self, state, action):
         next_state = self.next_state(state, action)
         return (next_state, 1)

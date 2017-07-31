@@ -38,14 +38,14 @@ class RotateTSM (sm.SM):
                util.fixAnglePlusMinusPi(currentTheta + self.headingDelta)
         else:
             (thetaDesired, thetaLast) = state
-        newState = (thetaDesired, currentTheta)
+        new_state = (thetaDesired, currentTheta)
         # Rotate at a velocity proportional to angular error
         # This sets the 'rvel' field in the action specification, and
         # leaves the other fields at their default values 
         action = io.Action(rvel = util.clip(self.rotationalGain * \
                      util.fixAnglePlusMinusPi(thetaDesired - currentTheta),
                                        -self.maxVel, self.maxVel))
-        return (newState, action)
+        return (new_state, action)
 
     def done(self, state):
         if state == 'start':
@@ -86,13 +86,13 @@ class ForwardTSM (sm.SM):
             startPos = currentPos
         else:
             (startPos, lastPos) = state
-        newState = (startPos, currentPos)
+        new_state = (startPos, currentPos)
         # Drive straight at a speed proportional to remaining distance to
         # be traveled.  No attempt to correct for angular deviations.
         error = self.deltaDesired - startPos.distance(currentPos)
         action = io.Action(fvel = util.clip(self.forwardGain * error,
                                     -self.maxVel, self.maxVel))
-        return (newState, action)
+        return (new_state, action)
 
     def done(self, state):
         # Just check to see if we're the desired distance away from where

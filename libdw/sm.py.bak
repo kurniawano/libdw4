@@ -100,7 +100,7 @@ class SM:
         """
         (s, o) = self.get_next_values(self.state, inp)
 
-        if self.__debug_params and self.__debug_params.doDebugging:
+        if self.__debug_params and self.__debug_params.do_debugging:
             if self.__debug_params.verbose and not self.__debug_params.compact:
                 print "Step:", self.__debug_params.k
             self.print_debug_info(0, self.state, s, inp, o, self.__debug_params)
@@ -200,13 +200,13 @@ class SM:
         if debug_params.verbose and not debug_params.compact:
             if debug_params.print_input:
                 print ' '*depth, self.name, "In:", \
-                      util.prettyString(inp), \
-                      "Out:", util.prettyString(out), \
-                      "Next State:", util.prettyString(next_state)
+                      util.pretty_string(inp), \
+                      "Out:", util.pretty_string(out), \
+                      "Next State:", util.pretty_string(next_state)
             else:
                 print ' '*depth, self.name, \
-                      "Out:", util.prettyString(out), \
-                      "Next State:", util.prettyString(next_state)
+                      "Out:", util.pretty_string(out), \
+                      "Next State:", util.pretty_string(next_state)
         self.do_trace_tasks(inp, state, out, debug_params)
 
     def do_trace_tasks(self, inp, state, out, debug_params):
@@ -296,22 +296,22 @@ class SM:
 
         # Test to see if we're side-effecting the state.  This is not
         # foolproof: it might miss some cases of state side-effects
-        start_stateCopy = copy.copy(thesm.start_state)
+        start_state_copy = copy.copy(thesm.start_state)
         attrs = inspect.getmembers(thesm)
-        originalAttrs = dict(copy.copy(attrs))
+        original_attrs = dict(copy.copy(attrs))
         # Call get_next_values a bunch of times
         thesm.start()
         for i in inps:
             thesm.get_next_values(thesm.state, i)
         # See what got clobbered
-        if thesm.state != start_stateCopy:
+        if thesm.state != start_state_copy:
             print "[SMCheck] Your get_next_values method changes self.state.  It should instead return the new state as the first component of the result"
             raise Exception, 'Invalid SM'
-        newAttrs = dict(inspect.getmembers(thesm))
-        for (name, val) in originalAttrs.items():
-            if name != '_SM__debug_params' and newAttrs[name] != val:
+        new_attrs = dict(inspect.getmembers(thesm))
+        for (name, val) in original_attrs.items():
+            if name != '_SM__debug_params' and new_attrs[name] != val:
                 print '[SMCheck] You seem to have changed attribute',
-                print name, 'from', val, 'to', newAttrs[name]
+                print name, 'from', val, 'to', new_attrs[name]
                 print '[SMCheck] but the get_next_values should not have side effects'
                 raise Exception, 'Invalid SM'
             
@@ -346,9 +346,9 @@ class Cascade (SM):
 
     def get_next_values(self, state, inp):
         (s1, s2) = state
-        (newS1, o1) = self.m1.get_next_values(s1, inp)
-        (newS2, o2) = self.m2.get_next_values(s2, o1)
-        return ((newS1, newS2), o2)
+        (new_s1, o1) = self.m1.get_next_values(s1, inp)
+        (new_s2, o2) = self.m2.get_next_values(s2, o1)
+        return ((new_s1, new_s2), o2)
 
     def done(self, state):
         (s1, s2) = state
@@ -390,9 +390,9 @@ class Parallel (SM):
 
     def get_next_values(self, state, inp):
         (s1, s2) = state
-        (newS1, o1) = self.m1.get_next_values(s1, inp)
-        (newS2, o2) = self.m2.get_next_values(s2, inp)
-        return ((newS1, newS2), (o1, o2))
+        (new_s1, o1) = self.m1.get_next_values(s1, inp)
+        (new_s2, o2) = self.m2.get_next_values(s2, inp)
+        return ((new_s1, new_s2), (o1, o2))
 
     def done(self, state):
         (s1, s2) = state
@@ -434,19 +434,19 @@ class Feedback (SM):
         (ignore, o) = self.m.get_next_values(state, 'undefined')
         assert o != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS, ignore) = self.m.get_next_values(state, o)
-        return (newS, o)
+        (new_s, ignore) = self.m.get_next_values(state, o)
+        return (new_s, o)
 
     def done(self, state):
         return self.m.done(state)
 
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
-        (machineState, lastOutput) = self.get_next_values(state, inp)
+        (machine_state, last_output) = self.get_next_values(state, inp)
         self.guarantee_name()
         if debug_params.verbose and not debug_params.compact:
             print ' '*depth, self.name
         self.m.print_debug_info(depth + 4, state, next_state,
-                              lastOutput, out, debug_params)
+                              last_output, out, debug_params)
         self.do_trace_tasks(inp, state, out, debug_params)
 
 def coupled_machine(m1, m2):
@@ -471,17 +471,17 @@ class Feedback2 (Feedback):
         (ignore, o) = self.m.get_next_values(state, (inp, 'undefined'))
         assert o != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS, ignore) = self.m.get_next_values(state, (inp, o))
-        return (newS, o)
+        (new_s, ignore) = self.m.get_next_values(state, (inp, o))
+        return (new_s, o)
 
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
-        (machineState, lastOutput) = self.get_next_values(state,
+        (machine_state, last_output) = self.get_next_values(state,
                                                         (inp, 'undefined'))
         self.guarantee_name()
         if debug_params.verbose and not debug_params.compact:
             print ' '*depth, self.name
         self.m.print_debug_info(depth + 4, state, next_state,
-                              (inp, lastOutput), out, debug_params)
+                              (inp, last_output), out, debug_params)
         self.do_trace_tasks(inp, state, out, debug_params)
 
 class FeedbackAdd(SM):
@@ -513,9 +513,9 @@ class FeedbackAdd(SM):
         (ignore, o1) = self.m1.get_next_values(s1, 99999999)
         (ignore, o2) = self.m2.get_next_values(s2, o1)
         # Now get a real new state and output
-        (newS1, output) = self.m1.get_next_values(s1, safeAdd(inp,o2))
-        (newS2, o2) = self.m2.get_next_values(s2, output)
-        return ((newS1, newS2), output)
+        (new_s1, output) = self.m1.get_next_values(s1, safeAdd(inp,o2))
+        (new_s2, o2) = self.m2.get_next_values(s2, output)
+        return ((new_s1, new_s2), output)
 
     def done(self, state):
         (s1, s2) = state
@@ -567,9 +567,9 @@ class FeedbackSubtract(SM):
         (ignore, o1) = self.m1.get_next_values(s1, 99999999)
         (ignore, o2) = self.m2.get_next_values(s2, o1)
         # Now get a real new state and output
-        (newS1, output) = self.m1.get_next_values(s1, inp - o2)
-        (newS2, o2) = self.m2.get_next_values(s2, output)
-        return ((newS1, newS2), output)
+        (new_s1, output) = self.m1.get_next_values(s1, inp - o2)
+        (new_s2, o2) = self.m2.get_next_values(s2, output)
+        return ((new_s1, new_s2), output)
 
     def done(self, state):
         (s1, s2) = state
@@ -607,17 +607,17 @@ class Parallel2 (Parallel):
     
     def get_next_values(self, state, inp):
         (s1, s2) = state
-        (i1, i2) = splitValue(inp)
-        (newS1, o1) = self.m1.get_next_values(s1, i1)
-        (newS2, o2) = self.m2.get_next_values(s2, i2)
-        return ((newS1, newS2), (o1, o2))
+        (i1, i2) = split_value(inp)
+        (new_s1, o1) = self.m1.get_next_values(s1, i1)
+        (new_s2, o2) = self.m2.get_next_values(s2, i2)
+        return ((new_s1, new_s2), (o1, o2))
 
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
         if next_state and len(next_state) == 2:
             self.guarantee_name()
             (s1, s2) = state
             (ns1, ns2) = next_state
-            (i1, i2) = splitValue(inp)
+            (i1, i2) = split_value(inp)
             (o1, o2) = out
             if debug_params.verbose and not debug_params.compact:
                 print ' '*depth, self.name
@@ -633,9 +633,9 @@ class ParallelAdd (Parallel):
     """
     def get_next_values(self, state, inp):
         (s1, s2) = state
-        (newS1, o1) = self.m1.get_next_values(s1, inp)
-        (newS2, o2) = self.m2.get_next_values(s2, inp)
-        return ((newS1, newS2), o1 + o2)
+        (new_s1, o1) = self.m1.get_next_values(s1, inp)
+        (new_s2, o2) = self.m2.get_next_values(s2, inp)
+        return ((new_s1, new_s2), o1 + o2)
 
 class If (SM):
     """
@@ -669,38 +669,38 @@ class If (SM):
             return ('runningM2', self.sm2.get_start_state())
 
     def get_next_values(self, state, inp):
-        (ifState, smState) = state
-        if ifState == 'start':
-            (ifState, smState) = self.get_first_real_state(inp)
+        (if_state, sm_state) = state
+        if if_state == 'start':
+            (if_state, sm_state) = self.get_first_real_state(inp)
         
-        if ifState == 'runningM1':
-            (newS, o) = self.sm1.get_next_values(smState, inp)
-            return (('runningM1', newS), o)
+        if if_state == 'runningM1':
+            (new_s, o) = self.sm1.get_next_values(sm_state, inp)
+            return (('runningM1', new_s), o)
         else:
-            (newS, o) = self.sm2.get_next_values(smState, inp)
-            return (('runningM2', newS), o)
+            (new_s, o) = self.sm2.get_next_values(sm_state, inp)
+            return (('runningM2', new_s), o)
 
     def done(self, state):
-        (ifState, smState) = state
-        if ifState == 'start':
+        (if_state, sm_state) = state
+        if if_state == 'start':
             return False
-        elif ifState == 'runningM1':
-            return self.sm1.done(smState)
+        elif if_state == 'runningM1':
+            return self.sm1.done(sm_state)
         else:
-            return self.sm2.done(smState)
+            return self.sm2.done(sm_state)
 
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
         if next_state and len(next_state) == 2:
             self.guarantee_name()
-            (ifState, smState) = state
-            (nifState, nsmState) = next_state
+            (if_state, sm_state) = state
+            (nif_state, nsm_state) = next_state
             if debug_params.verbose and not debug_params.compact:
-                print ' '*depth, self.name, ifState
-            if ifState == 'runningM1':
-                self.sm1.print_debug_info(depth + 4, smState, nsmState,
+                print ' '*depth, self.name, if_state
+            if if_state == 'runningM1':
+                self.sm1.print_debug_info(depth + 4, sm_state, nsm_state,
                                         inp, out, debug_params)
-            elif ifState == 'runningM2':
-                self.sm2.print_debug_info(depth + 4, smState, nsmState,
+            elif if_state == 'runningM2':
+                self.sm2.print_debug_info(depth + 4, sm_state, nsm_state,
                                         inp, out, debug_params)
             self.do_trace_tasks(inp, state, out, debug_params)
 
@@ -748,12 +748,12 @@ class Switch (SM):
             (s1, s2) = state
             (ns1, ns2) = next_state
             if self.condition(inp):
-                machineRunning = 'M1'
+                machine_running = 'M1'
             else:
-                machineRunning = 'M2'
+                machine_running = 'M2'
             if debug_params.verbose and not debug_params.compact:
-                print ' '*depth, self.name, 'Running', machineRunning
-            if machineRunning == 'M1':
+                print ' '*depth, self.name, 'Running', machine_running
+            if machine_running == 'M1':
                 self.m1.print_debug_info(depth + 4, s1, ns1, inp, out,debug_params)
             else:
                 self.m2.print_debug_info(depth + 4, s2, ns2, inp, out,debug_params)
@@ -787,55 +787,55 @@ class Sequence (SM):
     the first until it is done, then execute the second, etc.  Assume
     they all have the same input space.
     """
-    def __init__(self, smList, name = None):
+    def __init__(self, sm_list, name = None):
         """
-        :param smList: ``List`` of terminating ``SM``
+        :param sm_list: ``List`` of terminating ``SM``
         """
-        self.smList = smList
-        if not (name is None or isinstance(name, str)) or not isinstance(smList, (tuple, list)):
+        self.sm_list = sm_list
+        if not (name is None or isinstance(name, str)) or not isinstance(sm_list, (tuple, list)):
             raise Exception, 'Sequence takes a list of machines and an optional name argument'
-        self.n = len(smList)
+        self.n = len(sm_list)
         self.name = name
-        self.legal_inputs = self.smList[0].legal_inputs
+        self.legal_inputs = self.sm_list[0].legal_inputs
 
     def start_state(self):
-        return self.advance_if_done(0, self.smList[0].get_start_state())
+        return self.advance_if_done(0, self.sm_list[0].get_start_state())
 
-    def advance_if_done(self, counter, smState):
+    def advance_if_done(self, counter, sm_state):
         """
         Internal use only.
         If that machine is done, start new machines until we get to
         one that isn't done
         """
-        while self.smList[counter].done(smState) and counter + 1 < self.n:
+        while self.sm_list[counter].done(sm_state) and counter + 1 < self.n:
             # This machine is done and there's another left in the sequence
             counter = counter + 1
-            smState = self.smList[counter].get_start_state()
-        return (counter, smState)
+            sm_state = self.sm_list[counter].get_start_state()
+        return (counter, sm_state)
     
     def get_next_values(self, state, inp):
-        (counter, smState) = state
+        (counter, sm_state) = state
         # Get new stuff for current machine on the list
-        (smState, o) = self.smList[counter].get_next_values(smState, inp)
+        (sm_state, o) = self.sm_list[counter].get_next_values(sm_state, inp)
         # Start new machines until we get a good one or we finish 
-        (counter, smState) = self.advance_if_done(counter, smState)
-        return ((counter, smState), o)
+        (counter, sm_state) = self.advance_if_done(counter, sm_state)
+        return ((counter, sm_state), o)
 
     def done(self, state):
         # This machine is done if its current machine is done
-        (counter, smState) = state
-        return self.smList[counter].done(smState)
+        (counter, sm_state) = state
+        return self.sm_list[counter].done(sm_state)
 
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
         # This condition is trying to guarantee that next_state has the
         # right structure to be passed down recursively
         if next_state and len(next_state) == 2:
             self.guarantee_name()
-            (counter, smState) = state
-            (ncounter, nsmState) = next_state
+            (counter, sm_state) = state
+            (ncounter, nsm_state) = next_state
             if debug_params.verbose and not debug_params.compact:
                 print ' '*depth, self.name, 'Counter =', counter
-            self.smList[counter].print_debug_info(depth + 4, smState, nsmState,
+            self.sm_list[counter].print_debug_info(depth + 4, sm_state, nsm_state,
                                                 inp, out, debug_params)
             self.do_trace_tasks(inp, state, out, debug_params)
 
@@ -859,32 +859,32 @@ class Repeat (SM):
     def start_state(self):
         return self.advance_if_done(0, self.sm.get_start_state())
 
-    def advance_if_done(self, counter, smState):
-        while self.sm.done(smState) and not self.done((counter, smState)):
+    def advance_if_done(self, counter, sm_state):
+        while self.sm.done(sm_state) and not self.done((counter, sm_state)):
             counter = counter + 1
             print 'Repeat counter', counter
-            smState = self.sm.get_start_state()
-        return (counter, smState)
+            sm_state = self.sm.get_start_state()
+        return (counter, sm_state)
 
     def get_next_values(self, state, inp):
-        (counter, smState) = state
-        (smState, o) = self.sm.get_next_values(smState, inp)
-        (counter, smState) = self.advance_if_done(counter, smState)
-        return ((counter, smState), o)
+        (counter, sm_state) = state
+        (sm_state, o) = self.sm.get_next_values(sm_state, inp)
+        (counter, sm_state) = self.advance_if_done(counter, sm_state)
+        return ((counter, sm_state), o)
 
     # We're done if the termination condition is defined and met
     def done(self, state):
-        (counter, smState) = state
+        (counter, sm_state) = state
         return not self.n == None and counter == self.n
 
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
         if next_state and len(next_state) == 2:
             self.guarantee_name()
-            (counter, smState) = state
-            (ncounter, nsmState) = next_state
+            (counter, sm_state) = state
+            (ncounter, nsm_state) = next_state
             if debug_params.verbose and not debug_params.compact:        
                 print ' '*depth, self.name, 'Counter =', counter
-            self.sm.print_debug_info(depth + 4, smState, nsmState, inp, out,
+            self.sm.print_debug_info(depth + 4, sm_state, nsm_state, inp, out,
                                    debug_params)
             self.do_trace_tasks(inp, state, out, debug_params)
 
@@ -911,31 +911,31 @@ class RepeatUntil (SM):
         return (False, self.sm.get_start_state())
 
     def get_next_values(self, state, inp):
-        (condTrue, smState) = state
-        (smState, o) = self.sm.get_next_values(smState, inp)
-        condTrue = self.condition(inp)
+        (cond_true, sm_state) = state
+        (sm_state, o) = self.sm.get_next_values(sm_state, inp)
+        cond_true = self.condition(inp)
         # child machine is done, but the whole machine is not
-        if self.sm.done(smState) and not condTrue:
+        if self.sm.done(sm_state) and not cond_true:
             # Restart the child machine.  Could check to see if it's
             # done, but if the child machine wakes up done and our
             # condition is not true, then we'd risk an infinite loop.
-            smState = self.sm.get_start_state()
-        return ((condTrue, smState), o)
+            sm_state = self.sm.get_start_state()
+        return ((cond_true, sm_state), o)
 
     def done(self, state):
         # We're done if component machine is done and the termination
         # condition is true
-        (condTrue, smState) = state
-        return self.sm.done(smState) and condTrue
+        (cond_true, sm_state) = state
+        return self.sm.done(sm_state) and cond_true
     
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
         if next_state and len(next_state) == 2:
             self.guarantee_name()
-            (condTrue, smState) = state
-            (ncondTrue, nsmState) = next_state
+            (cond_true, sm_state) = state
+            (ncond_true, nsm_state) = next_state
             if debug_params.verbose and not debug_params.compact:
-                print ' '*depth, self.name, 'Condition =', condTrue
-            self.sm.print_debug_info(depth + 4, smState, nsmState, inp, out,
+                print ' '*depth, self.name, 'Condition =', cond_true
+            self.sm.print_debug_info(depth + 4, sm_state, nsm_state, inp, out,
                                    debug_params)
             self.do_trace_tasks(inp, state, out, debug_params)
 
@@ -960,22 +960,22 @@ class Until (SM):
         return (False, self.sm.get_start_state())
 
     def get_next_values(self, state, inp):
-        (condTrue, smState) = state
-        (smState, o) = self.sm.get_next_values(smState, inp)
-        return ((self.condition(inp), smState), o)
+        (cond_true, sm_state) = state
+        (sm_state, o) = self.sm.get_next_values(sm_state, inp)
+        return ((self.condition(inp), sm_state), o)
     
     def done(self, state):
-        (condTrue, smState) = state
-        return self.sm.done(smState) or condTrue
+        (cond_true, sm_state) = state
+        return self.sm.done(sm_state) or cond_true
 
     def print_debug_info(self, depth, state, next_state, inp, out, debug_params):
         if next_state and len(next_state) == 2:
             self.guarantee_name()
-            (condTrue, smState) = state
-            (ncondTrue, nsmState) = next_state
+            (cond_true, sm_state) = state
+            (ncond_true, nsm_state) = next_state
             if debug_params.verbose and not debug_params.compact:
-                print ' '*depth, self.name,'Condition =', condTrue
-            self.sm.print_debug_info(depth + 4, smState, nsmState, inp, out,
+                print ' '*depth, self.name,'Condition =', cond_true
+            self.sm.print_debug_info(depth + 4, sm_state, nsm_state, inp, out,
                                    debug_params)
             self.do_trace_tasks(inp, state, out, debug_params)
         
@@ -984,7 +984,7 @@ class Until (SM):
 ##   Utility stuff
 #############################################################################
 
-def splitValue(v, n = 2):
+def split_value(v, n = 2):
     """
     If ``v`` is a list of ``n`` elements, return it; if it is
     'undefined', return a list of ``n`` 'undefined' values; else
@@ -1005,7 +1005,7 @@ class debug_params:
         self.verbose = verbose
         self.compact = compact
         self.print_input = print_input
-        self.doDebugging = verbose or len(trace_tasks) > 0
+        self.do_debugging = verbose or len(trace_tasks) > 0
         self.k = 0
 
 #############################################################################

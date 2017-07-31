@@ -51,8 +51,8 @@ class DDist:
             return "Empty DDist"
         else:
             dictRepr = reduce(operator.add,
-                              [util.prettyString(k)+": "+\
-                               util.prettyString(p)+", " \
+                              [util.pretty_string(k)+": "+\
+                               util.pretty_string(p)+", " \
                                for (k, p) in list(self.d.items())])
             return "DDist(" + dictRepr[:-2] + ")"
     __str__ = __repr__

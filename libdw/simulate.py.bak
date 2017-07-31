@@ -465,9 +465,9 @@ class Feedback (sm.SM):
         (ignore, o2) = self.m2.get_next_values(s2, o1)
         assert o2 != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS1, o1) = self.m1.get_next_values(s1, o2)
-        (newS2, o2) = self.m2.get_next_values(s2, o1)
-        return ((newS1, newS2), o1)
+        (new_s1, o1) = self.m1.get_next_values(s1, o2)
+        (new_s2, o2) = self.m2.get_next_values(s2, o1)
+        return ((new_s1, new_s2), o1)
 
     def done(self, state):
         (s1, s2) = state
@@ -487,9 +487,9 @@ class Feedback2 (Feedback):
         (ignore, o2) = self.m2.get_next_values(s2, o1)
         assert o2 != 'undefined', 'Error in feedback; machine has no delay'
         # Will only compute next state
-        (newS1, o1) = self.m1.get_next_values(s1, (inp, o2))
-        (newS2, o2) = self.m2.get_next_values(s2, o1)
-        return ((newS1, newS2), o1)
+        (new_s1, o1) = self.m1.get_next_values(s1, (inp, o2))
+        (new_s2, o2) = self.m2.get_next_values(s2, o1)
+        return ((new_s1, new_s2), o1)
 
 ######################################################################
 ##
@@ -674,10 +674,10 @@ class MotorAccel(sm.SM):
         vm0 = inp.translate(self.motorNodes[0])
         vm1 = inp.translate(self.motorNodes[1])
         if oldMotorModel:
-            newState = oldDynamics(vm0, vm1, state)
+            new_state = oldDynamics(vm0, vm1, state)
         else:
-            newState = newDynamics(vm0, vm1, state)
-        return (newState, newState)
+            new_state = newDynamics(vm0, vm1, state)
+        return (new_state, new_state)
 
 ############
 # Model the circuit with the world as a composite state machine

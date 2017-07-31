@@ -168,7 +168,7 @@ class TextInputSM(sm.SM):
         while not out in self.legal_inputs:
             if not first: print('Illegal input:', out)
             out = input('Type an input (' + \
-                            util.prettyString(self.legal_inputs) + \
+                            util.pretty_string(self.legal_inputs) + \
                             ' ): ')
             if not out == 'quit': out = int(out)
             first = False

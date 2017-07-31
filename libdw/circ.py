@@ -66,7 +66,7 @@ class Circuit:
         return (vTh, rTh)
 
     def __str__(self):
-        return 'Circuit: '+util.prettyString(self.components)
+        return 'Circuit: '+util.pretty_string(self.components)
 #!
 class NodeToCurrents:
     """

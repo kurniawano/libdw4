@@ -274,12 +274,12 @@ class DifferenceEquation:
     def __str__(self):
         result = 'DE: y[n] = '
         for i in range(len(self.cCoeffs)):
-            result += util.prettyString(self.cCoeffs[i])+'y[n-'+str(i+1)+'] + '
+            result += util.pretty_string(self.cCoeffs[i])+'y[n-'+str(i+1)+'] + '
         for i in range(len(self.dCoeffs)):
             if i == 0:
-                result += util.prettyString(self.dCoeffs[i])+'x[n] + '
+                result += util.pretty_string(self.dCoeffs[i])+'x[n] + '
             else:
-                result +=util.prettyString(self.dCoeffs[i])+'x[n-'+str(i)+'] + '
+                result +=util.pretty_string(self.dCoeffs[i])+'x[n-'+str(i)+'] + '
         return result[:-2]
     __repr__ = __str__
 

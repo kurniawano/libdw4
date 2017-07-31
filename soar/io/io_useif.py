@@ -35,9 +35,9 @@ class SensorInput():
         self.odometry = valueListToPose(p)
         self.analogInputs = io_environ['analogInputs']()
     def __str__(self):
-        return 'Sonar: ' + util.prettyString(self.sonars) + \
-               "; Odo: " + util.prettyString(self.odometry) +\
-               "; Analog: " + util.prettyString(self.analogInputs)
+        return 'Sonar: ' + util.pretty_string(self.sonars) + \
+               "; Odo: " + util.pretty_string(self.odometry) +\
+               "; Analog: " + util.pretty_string(self.analogInputs)
 
 referenceVoltage = 5.0
 class Action:
@@ -77,7 +77,7 @@ class Action:
 
     def __str__(self):
         return 'Act: ' + \
-               util.prettyString([self.fvel, self.rvel, self.voltage])
+               util.pretty_string([self.fvel, self.rvel, self.voltage])
 
 def registerUserFunction(type, f):
     io_environ['registerUserFunction'](type, f)

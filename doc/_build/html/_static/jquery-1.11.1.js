@@ -773,7 +773,7 @@ try {
 function Sizzle( selector, context, results, seed ) {
 	var match, elem, m, nodeType,
 		// QSA vars
-		i, groups, old, nid, newContext, newSelector;
+		i, groups, old, nid, newContext, new_selector;
 
 	if ( ( context ? context.ownerDocument || context : preferredDoc ) !== document ) {
 		setDocument( context );
@@ -835,7 +835,7 @@ function Sizzle( selector, context, results, seed ) {
 		if ( support.qsa && (!rbuggyQSA || !rbuggyQSA.test( selector )) ) {
 			nid = old = expando;
 			newContext = context;
-			newSelector = nodeType === 9 && selector;
+			new_selector = nodeType === 9 && selector;
 
 			// qSA works strangely on Element-rooted queries
 			// We can work around this by specifying an extra ID on the root
@@ -856,13 +856,13 @@ function Sizzle( selector, context, results, seed ) {
 					groups[i] = nid + toSelector( groups[i] );
 				}
 				newContext = rsibling.test( selector ) && testContext( context.parentNode ) || context;
-				newSelector = groups.join(",");
+				new_selector = groups.join(",");
 			}
 
-			if ( newSelector ) {
+			if ( new_selector ) {
 				try {
 					push.apply( results,
-						newContext.querySelectorAll( newSelector )
+						newContext.querySelectorAll( new_selector )
 					);
 					return results;
 				} catch(qsaError) {

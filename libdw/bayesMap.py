@@ -22,7 +22,7 @@ def oGivenS(s):
     else: # occ
         return dist.DDist({'hit': 1 - falseNeg, 'free': falseNeg})
 #!
-# Transition model: P(newState | s | a)
+# Transition model: P(new_state | s | a)
 def uGivenAS(a):
 #!     pass    
     return lambda s: dist.DDist({s: 1.0})
