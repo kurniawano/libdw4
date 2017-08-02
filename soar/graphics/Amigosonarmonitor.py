@@ -148,5 +148,5 @@ class AmigoSonarMonitor():
         :return: ``util.Point`` representing position of the sonar hit in the
         global frame.  
         """
-        return robotPose.transformPoint(sonarPose.transformPoint(\
+        return robotPose.transform_point(sonarPose.transform_point(\
                 util.Point(distance,0)))

@@ -24,7 +24,7 @@ class DynamicGridMap(gridMap.GridMap):
         In this case, the grid is an array filled with the value
         ``False``, meaning that the cells are not occupied.
         """
-        return util.make2DArray(self.xN, self.yN, False)
+        return util.make_2d_array(self.xN, self.yN, False)
 
     def squareColor(self, indices):
         """

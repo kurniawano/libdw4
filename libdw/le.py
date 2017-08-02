@@ -129,8 +129,8 @@ class EquationSet:
 
         # Write the coefficients into the A matrix and the constants
         # in the c vector.  Return a vector of values.
-        c = util.makeVector(numEqs, 0.0)
-        A = util.make2DArray(numEqs, numVars, 0.0)
+        c = util.make_vector(numEqs, 0.0)
+        A = util.make_2d_array(numEqs, numVars, 0.0)
         for i in range(len(self.equations)):
             equation = self.equations[i]
             for (n, var) in zip(equation.coeffs, equation.variableNames):

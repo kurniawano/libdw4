@@ -55,7 +55,7 @@ class MapMaker(sm.SM):
         """
         for (sonarPose, d) in zip(sonarDist.sonarPoses, sonars):
             # location of sensor in global frame
-            s = grid.pointToIndices(robotPose.transformPoint(\
+            s = grid.pointToIndices(robotPose.transform_point(\
                 sonarPose.point()))
             if d < sonarDist.sonarMax:
                 # location of sonar 'hit point' in global frame
@@ -64,7 +64,7 @@ class MapMaker(sm.SM):
                 # clear list of grid points on the line between the sensor
                 # and the hit point, not including the hit point
                 if self.useClearInfo:
-                    for ci in util.lineIndices(s, h)[:-1]:
+                    for ci in util.line_indices(s, h)[:-1]:
                         grid.clearCell(ci)
                 # Fill in the end point of the reading
                 grid.setCell(h)
@@ -76,16 +76,16 @@ class MapMaker(sm.SM):
                 # clear list of grid points on the line between the sensor
                 # and the hit point, not including the hit point
                 if self.useClearInfo:
-                    for ci in util.lineIndices(s, h)[:-1]:
+                    for ci in util.line_indices(s, h)[:-1]:
                         grid.clearCell(ci)
                 
     def clearUnderRobot(self, grid, robotPose):
         rr =  (int(gridMap.robotRadius / grid.xStep) - 1) * grid.xStep
         corners = \
-          [grid.pointToIndices(robotPose.transformPoint(util.Point(rr, rr))),
-           grid.pointToIndices(robotPose.transformPoint(util.Point(rr, -rr))),
-           grid.pointToIndices(robotPose.transformPoint(util.Point(-rr, rr))),
-           grid.pointToIndices(robotPose.transformPoint(util.Point(-rr, -rr)))]
+          [grid.pointToIndices(robotPose.transform_point(util.Point(rr, rr))),
+           grid.pointToIndices(robotPose.transform_point(util.Point(rr, -rr))),
+           grid.pointToIndices(robotPose.transform_point(util.Point(-rr, rr))),
+           grid.pointToIndices(robotPose.transform_point(util.Point(-rr, -rr)))]
         minX = min([cx for (cx, cy) in corners])
         maxX = max([cx for (cx, cy) in corners])
         minY = min([cy for (cx, cy) in corners])

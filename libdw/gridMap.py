@@ -53,7 +53,7 @@ class GridMap:
 
         self.grid = self.makeStartingGrid()
         """values stored in the grid cells"""
-        self.graphicsGrid = util.make2DArray(self.xN, self.yN, None)
+        self.graphicsGrid = util.make_2d_array(self.xN, self.yN, None)
         """graphics objects"""
 
         self.makeWindow(windowWidth)

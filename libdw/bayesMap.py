@@ -56,7 +56,7 @@ class BayesGridMap(dynamicGridMap.DynamicGridMap):
             m = seFast.StateEstimator(cellSSM)
             m.start()
             return m
-        return util.make2DArrayFill(self.xN, self.yN, makeEstimator)
+        return util.make_2d_array_fill(self.xN, self.yN, makeEstimator)
 #!
     def setCell(self, coordinateIndices):
 #!        pass        

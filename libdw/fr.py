@@ -16,7 +16,7 @@ class RotateTSM (sm.SM):
     """
 
     rotationalGain = 3.0
-    angleEpsilon = 0.01
+    angle_epsilon = 0.01
     start_state = 'start'
 
     def __init__(self, headingDelta, maxVel = 0.5):
@@ -35,7 +35,7 @@ class RotateTSM (sm.SM):
             # Compute a desired absolute heading by adding the desired
             # delta to our current heading
             thetaDesired = \
-               util.fixAnglePlusMinusPi(currentTheta + self.headingDelta)
+               util.fix_angle_plus_minus_pi(currentTheta + self.headingDelta)
         else:
             (thetaDesired, thetaLast) = state
         new_state = (thetaDesired, currentTheta)
@@ -43,7 +43,7 @@ class RotateTSM (sm.SM):
         # This sets the 'rvel' field in the action specification, and
         # leaves the other fields at their default values 
         action = io.Action(rvel = util.clip(self.rotationalGain * \
-                     util.fixAnglePlusMinusPi(thetaDesired - currentTheta),
+                     util.fix_angle_plus_minus_pi(thetaDesired - currentTheta),
                                        -self.maxVel, self.maxVel))
         return (new_state, action)
 
@@ -54,8 +54,8 @@ class RotateTSM (sm.SM):
             (thetaDesired, thetaLast) = state
             # We're done if the desired heading is within epsilon of our
             # current heading
-            return util.nearAngle(thetaDesired, thetaLast,
-                                       self.angleEpsilon)
+            return util.near_angle(thetaDesired, thetaLast,
+                                       self.angle_epsilon)
 
 class ForwardTSM (sm.SM):
     """

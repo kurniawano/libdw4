@@ -156,8 +156,8 @@ def setGround(vn1):
 def wire(vn1, vn2):
     return Equation([1.0, -1.0], [vn1, vn2], 0.0)
 
-def opamp(K, vPlus, vMinus, voutPlus):
-    return Equation([1.0, -K, K,], [voutPlus, vPlus, vMinus], 0.0)
+def opamp(K, vPlus, v_minus, voutPlus):
+    return Equation([1.0, -K, K,], [voutPlus, vPlus, v_minus], 0.0)
 
 def isrc(Is, i):                        # Is is supply current
     return Equation([1.0], [i], float(Is))

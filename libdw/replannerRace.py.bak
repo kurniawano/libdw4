@@ -106,7 +106,7 @@ def planInvalidInMap(map, plan, currentIndices):
     if len(plan) == 0:
         return False
     wayPoint = plan[0]
-    for p in util.lineIndicesConservative(currentIndices, wayPoint)[1:]:
+    for p in util.line_indices_conservative(currentIndices, wayPoint)[1:]:
         if not map.robotCanOccupy(p):
             print('plan invalid', currentIndices, p, wayPoint, '-- replanning')
             return True

@@ -66,7 +66,7 @@ class PQ:
     def pop(self):
         """Returns and removes the least cost item.
            Assumes items are instances with an attribute ``cost``."""
-        (index, cost) = util.argmaxIndex(self.data, lambda c_x: -c_x[0])
+        (index, cost) = util.argmax_index(self.data, lambda c_x: -c_x[0])
         return self.data.pop(index)[1] # just the data item
     def isEmpty(self):
         """Returns ``True`` if the PQ is empty and ``False`` otherwise."""

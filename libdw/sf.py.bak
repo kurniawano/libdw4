@@ -34,8 +34,8 @@ class SystemFunction:
         # reverse the coefficients of our polynomial (which is in R).
 
         # make polynomials of z
-        num = util.reverseCopy(self.numerator.coeffs)
-        den = util.reverseCopy(self.denominator.coeffs)
+        num = util.reverse_copy(self.numerator.coeffs)
+        den = util.reverse_copy(self.denominator.coeffs)
         # kill off zero-valued leading coeffs (although they don't
         # seem to bother numpy)
         while len(num) > 1 and num[0] == 0:
@@ -79,9 +79,9 @@ class SystemFunction:
         # these are the least delayed, so we have to reverse the
         # coeffs in the polynomials
         cCoeffs = [-a/a0 for a in \
-                        util.reverseCopy(self.denominator.coeffs[:-1])]
+                        util.reverse_copy(self.denominator.coeffs[:-1])]
         dCoeffs = [b/a0 for b in \
-                        util.reverseCopy(self.numerator.coeffs)]
+                        util.reverse_copy(self.numerator.coeffs)]
 
         return DifferenceEquation(dCoeffs, cCoeffs)
 
@@ -249,8 +249,8 @@ class DifferenceEquation:
          equation
         """
         return SystemFunction(
-                poly.Polynomial(util.reverseCopy(self.dCoeffs)),
-                poly.Polynomial([-c for c in util.reverseCopy(self.cCoeffs)] \
+                poly.Polynomial(util.reverse_copy(self.dCoeffs)),
+                poly.Polynomial([-c for c in util.reverse_copy(self.cCoeffs)] \
                                 + [1]))
 
     def stateMachine(self, previousInputs = None, previousOutputs = None):

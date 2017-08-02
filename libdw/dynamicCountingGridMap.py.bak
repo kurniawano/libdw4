@@ -33,7 +33,7 @@ class DynamicCountingGridMap(gridMap.GridMap):
         self.xMax = gridSquareSize * self.xN
         self.yMax = gridSquareSize * self.yN
 
-        self.grid = util.make2DArray(self.xN, self.yN, 0)
+        self.grid = util.make_2d_array(self.xN, self.yN, 0)
         """values stored in the grid cells"""
 
         self.growRadiusInCells = int(math.ceil(gridMap.robotRadius\

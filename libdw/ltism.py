@@ -69,8 +69,8 @@ class LTISM (sm.SM):
         if not input == None and not self.dCoeffs == []:
             inputs = [input] + inputs
 
-        currentOutput = util.dotProd(outputs, self.cCoeffs) + \
-                        util.dotProd(inputs, self.dCoeffs)
+        currentOutput = util.dot_prod(outputs, self.cCoeffs) + \
+                        util.dot_prod(inputs, self.dCoeffs)
 
         # Remember the most recent output
         # Forget the oldest input and the oldest output

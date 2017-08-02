@@ -50,7 +50,7 @@ class GridDynamics(sm.SM):
             delta = math.sqrt((dx*self.theMap.xStep)**2 + \
                               (dy*self.theMap.yStep)**2)
             target = math.atan2(dy, dx)
-            turn = abs(util.fixAnglePlusMinusPi(target - angle))
+            turn = abs(util.fix_angle_plus_minus_pi(target - angle))
             return ((newX, newY, target), delta + self.rotationCost*turn)
 
     def legal(self, ix, iy, newX, newY):

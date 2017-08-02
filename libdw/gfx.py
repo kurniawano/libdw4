@@ -185,7 +185,7 @@ class RobotGraphics():
     def stepPlotting(self):
         if self.drawSlimeTrail:
             odo = io.SensorInput(self.drawSlimeTrail=='Cheat').odometry
-            self.slimeData.append(odo.xytTuple())
+            self.slimeData.append(odo.xyt_tuple())
         self.plotData['clocktime'].append(time.time())
         self.plotData['step'].append(self.step)
         self.step += 1

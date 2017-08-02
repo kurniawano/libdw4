@@ -32,7 +32,7 @@ class SensorInput():
             p = io_environ['cheatPose']()
         else:
             p = io_environ['pose']()
-        self.odometry = valueListToPose(p)
+        self.odometry = value_list_to_pose(p)
         self.analogInputs = io_environ['analogInputs']()
     def __str__(self):
         return 'Sonar: ' + util.pretty_string(self.sonars) + \

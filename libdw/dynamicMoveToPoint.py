@@ -18,8 +18,8 @@ class DynamicMoveToPoint(sm.SM):
 #!    pass
     forwardGain = 2.0
     rotationGain = 1.5
-    angleEps = 0.05
-    distEps = 0.05
+    angle_eps = 0.05
+    dist_eps = 0.05
     
     start_state = False
     """State is ``True`` if we have reached the goal and ``False`` otherwise"""
@@ -38,7 +38,7 @@ class DynamicMoveToPoint(sm.SM):
         robotPoint = robotPose.point()
         robotTheta = robotPose.theta
 
-        nearGoal = robotPoint.isNear(goalPoint, self.distEps)
+        nearGoal = robotPoint.is_near(goalPoint, self.dist_eps)
 
         headingTheta = robotPoint.angleTo(goalPoint)
         r = robotPoint.distance(goalPoint)
@@ -46,13 +46,13 @@ class DynamicMoveToPoint(sm.SM):
         if nearGoal:
             # At the right place, so do nothing
             a = io.Action()
-        elif util.nearAngle(robotTheta, headingTheta, self.angleEps):
+        elif util.near_angle(robotTheta, headingTheta, self.angle_eps):
             # Pointing in the right direction, so move forward
             a = io.Action(fvel = util.clip(r * self.forwardGain,
                                            -self.maxFVel, self.maxFVel))
         else:
             # Rotate to point toward goal
-            headingError = util.fixAnglePlusMinusPi(headingTheta - robotTheta)
+            headingError = util.fix_angle_plus_minus_pi(headingTheta - robotTheta)
             a = io.Action(rvel = util.clip(headingError * self.rotationGain,
                                            -self.maxRVel, self.maxRVel))
         return (nearGoal, a)

@@ -30,23 +30,23 @@ class Pose:
         Return a transformation matrix that corresponds to rotating by theta 
         and then translating by x,y (in the original coordinate frame).
         """
-        cosTh = math.cos(self.theta)
-        sinTh = math.sin(self.theta)
-        return Transform([[cosTh, -sinTh, self.x],
-                          [sinTh, cosTh, self.y],
+        cos_th = math.cos(self.theta)
+        sin_th = math.sin(self.theta)
+        return Transform([[cos_th, -sin_th, self.x],
+                          [sin_th, cos_th, self.y],
                           [0, 0, 1]])
 
-    def transformPoint(self, point):
+    def transform_point(self, point):
         """
         Applies the pose.transform to point and returns new point.
         :param point: an instance of ``util.Point``
         """
-        cosTh = math.cos(self.theta)
-        sinTh = math.sin(self.theta)
-        return Point(self.x + cosTh * point.x - sinTh * point.y,
-                     self.y + sinTh * point.x + cosTh * point.y)
+        cos_th = math.cos(self.theta)
+        sin_th = math.sin(self.theta)
+        return Point(self.x + cos_th * point.x - sin_th * point.y,
+                     self.y + sin_th * point.x + cos_th * point.y)
 
-    def transformDelta(self, point):
+    def transform_delta(self, point):
         """
         Does the rotation by theta of the pose but does not add the
         x,y offset. This is useful in transforming the difference(delta)
@@ -54,24 +54,24 @@ class Pose:
         :param point: an instance of ``util.Point``
         :returns: a ``util.Point``.
         """
-        cosTh = math.cos(self.theta)
-        sinTh = math.sin(self.theta)
-        return Point(cosTh * point.x - sinTh * point.y,
-                     sinTh * point.x + cosTh * point.y)
+        cos_th = math.cos(self.theta)
+        sin_th = math.sin(self.theta)
+        return Point(cos_th * point.x - sin_th * point.y,
+                     sin_th * point.x + cos_th * point.y)
 
-    def transformPose(self, pose):
+    def transform_pose(self, pose):
         """
         Make self into a transformation matrix and apply it to pose.
         :returns: Af new ``util.pose``.
         """
-        return self.transform().applyToPose(pose)
+        return self.transform().apply_to_pose(pose)
 
-    def isNear(self, pose, distEps, angleEps):
+    def is_near(self, pose, dist_eps, angle_eps):
         """
-        :returns: True if pose is within distEps and angleEps of self
+        :returns: True if pose is within dist_eps and angle_eps of self
         """
-        return self.point().isNear(pose.point(), distEps) and \
-               nearAngle(self.theta, pose.theta, angleEps)
+        return self.point().is_near(pose.point(), dist_eps) and \
+               near_angle(self.theta, pose.theta, angle_eps)
 
     def diff(self, pose):
         """
@@ -81,7 +81,7 @@ class Pose:
         """
         return Pose(self.x-pose.x,
                     self.y-pose.y,
-                    fixAnglePlusMinusPi(self.theta-pose.theta))
+                    fix_angle_plus_minus_pi(self.theta-pose.theta))
 
     def distance(self, pose):
         """
@@ -100,7 +100,7 @@ class Pose:
         """
         return self.transform().inverse().pose()
 
-    def xytTuple(self):
+    def xyt_tuple(self):
         """
         :returns: a representation of this pose as a tuple of x, y,
          theta values  
@@ -108,9 +108,9 @@ class Pose:
         return (self.x, self.y, self.theta)
     
     def __repr__(self):
-        return 'pose:'+ pretty_string(self.xytTuple())
+        return 'pose:'+ pretty_string(self.xyt_tuple())
 
-def valueListToPose(values):
+def value_list_to_pose(values):
     """
     :param values: a list or tuple of three values: x, y, theta
     :returns: a corresponding ``util.Pose``
@@ -129,17 +129,17 @@ class Point:
         self.y = float(y)
         """y coordinate"""
 
-    def near(self, point, distEps):
+    def near(self, point, dist_eps):
         """
         :param point: instance of ``util.Point``
-        :param distEps: positive real number
+        :param dist_eps: positive real number
         :returns: true if the distance between ``self`` and ``util.Point`` is less
-         than distEps
+         than dist_eps
         """
-        return self.distance(point) < distEps
+        return self.distance(point) < dist_eps
 
     # This is hear for backward compatibility
-    isNear = near
+    is_near = near
 
     def distance(self, point):
         """
@@ -206,7 +206,7 @@ class Transform:
     """
     def __init__(self, matrix = None):
         if matrix == None:
-            self.matrix = make2DArray(3, 3, 0)
+            self.matrix = make_2d_array(3, 3, 0)
             """matrix representation of transform"""
         else:
             self.matrix = matrix
@@ -233,14 +233,14 @@ class Transform:
         theta = math.atan2(self.matrix[1][0], self.matrix[0][0])
         return Pose(self.matrix[0][2], self.matrix[1][2], theta)
 
-    def applyToPoint(self, point):
+    def apply_to_point(self, point):
         """
         Transform a point into a new point.
         """
         # could convert the point to a vector and do multiply instead
-        return self.pose().transformPoint(point)
+        return self.pose().transform_point(point)
 
-    def applyToPose(self, pose):
+    def apply_to_pose(self, pose):
         """
         Transform a pose into a new pose.
         """
@@ -267,7 +267,7 @@ class Line:
         self.off = p1.x * self.nx + p1.y * self.ny
         """offset along normal"""
 
-    def pointOnLine(self, p, eps):
+    def point_on_line(self, p, eps):
         """
         Return true if p is within eps of the line
         """
@@ -293,7 +293,7 @@ class LineSeg:
         self.M = p2 - p1
         """Vector from the stored point to the other point"""
 
-    def closestPoint(self, p):
+    def closest_point(self, p):
         """
         Return the point on the line that is closest to point p
         """
@@ -305,11 +305,11 @@ class LineSeg:
         else:
             return self.p1 + t0 * self.M
 
-    def distToPoint(self, p):
+    def dist_to_point(self, p):
         """
         Shortest distance between point p and this line
         """
-        return p.distance(self.closestPoint(p))
+        return p.distance(self.closest_point(p))
 
     def intersection(self, other):
         """
@@ -345,22 +345,22 @@ class LineSeg:
 
 #####################
 
-def localToGlobal(pose, point):
+def local_to_global(pose, point):
     """
-    Same as pose.transformPoint(point)
+    Same as pose.transform_point(point)
     :param point: instance of ``util.Point``
     """
-    return pose.transformPoint(point)
+    return pose.transform_point(point)
 
-def localPoseToGlobalPose(pose1, pose2):
+def local_pose_to_global_pose(pose1, pose2):
     """
     Applies the transform from pose1 to pose2
     :param pose1: instance of ``util.Pose``
     :param pose2: instance of ``util.Pose``
     """
-    return pose1.transform().applyToPose(pose2)
+    return pose1.transform().apply_to_pose(pose2)
 
-def inversePose(pose):
+def inverse_pose(pose):
     """
     Same as pose.inverse()
     :param pose: instance of ``util.Pose``
@@ -369,31 +369,31 @@ def inversePose(pose):
 
 # Given robot's pose in a global frame and a point in the global frame
 # return coordinates of point in local frame
-def globalToLocal(pose, point):
+def global_to_local(pose, point):
     """
     Applies inverse of pose to point.
     :param pose: instance of ``util.Pose``
     :param point: instance of ``util.Point``
     """
-    return inversePose(pose).transformPoint(point)
+    return inverse_pose(pose).transform_point(point)
 
-def globalPoseToLocalPose(pose1, pose2):
+def global_pose_to_local_pose(pose1, pose2):
     """
     Applies inverse of pose1 to pose2.
     :param pose1: instance of ``util.Pose``
     :param pose2: instance of ``util.Pose``
     """
-    return inversePose(pose1).transform().applyToPose(pose2)
+    return inverse_pose(pose1).transform().apply_to_pose(pose2)
 
 # Given robot's pose in a global frame an a point in the global frame
 # return coordinates of point in local frame
-def globalDeltaToLocal(pose, deltaPoint):
+def global_delta_to_local(pose, deltaPoint):
     """
-    Applies inverse of pose to delta using transformDelta.
+    Applies inverse of pose to delta using transform_delta.
     :param pose: instance of ``util.Pose``
     :param deltaPoint: instance of ``util.Point``
     """
-    return inversePose(pose).transformDelta(deltaPoint)
+    return inverse_pose(pose).transform_delta(deltaPoint)
 
 def sum(items):
     """
@@ -417,7 +417,7 @@ def within(v1, v2, eps):
     """
     return abs(v1 - v2) < eps
 
-def nearAngle(a1, a2, eps):
+def near_angle(a1, a2, eps):
     """
     :param a1: number representing angle; no restriction on range
     :param a2: number representing angle; no restriction on range
@@ -425,9 +425,9 @@ def nearAngle(a1, a2, eps):
     :returns: ``True`` if ``a1`` is within ``eps`` of ``a2``.  Don't use
      within for this, because angles wrap around!
     """
-    return abs(fixAnglePlusMinusPi(a1-a2)) < eps
+    return abs(fix_angle_plus_minus_pi(a1-a2)) < eps
 
-def nearlyEqual(x,y):
+def nearly_equal(x,y):
     """
     Like within, but with the tolerance built in
     """
@@ -437,37 +437,37 @@ def mm(t1, t2):
     """
     Multiplies 3 x 3 matrices represented as lists of lists
     """
-    result = make2DArray(3, 3, 0)
+    result = make_2d_array(3, 3, 0)
     for i in range(3):
         for j in range(3):
             for k in range(3):
                 result[i][j] += t1[i][k]*t2[k][j]
     return result
 
-def fixAnglePlusMinusPi(a):
+def fix_angle_plus_minus_pi(a):
     """
     A is an angle in radians;  return an equivalent angle between plus
     and minus pi
     """
     return ((a+math.pi)%(2*math.pi))-math.pi
 
-def fixAngle02Pi(a):
+def fix_angle_02_pi(a):
     """
     :param a: angle in radians
     :returns: return an equivalent angle between 0 and 2 pi
     """
     return a%(2*math.pi)
 
-def reverseCopy(items):
+def reverse_copy(items):
     """
     Return a list that is a reversed copy of items
     """
-    itemCopy = items[:]
-    itemCopy.reverse()
-    return itemCopy
+    item_copy = items[:]
+    item_copy.reverse()
+    return item_copy
 
 
-def dotProd(a, b):
+def dot_prod(a, b):
     """
     Return the dot product of two lists of numbers
     """
@@ -482,43 +482,43 @@ def argmax(l, f):
     vals = [f(x) for x in l]
     return l[vals.index(max(vals))]
 
-def argmaxWithVal(l, f):
+def argmax_with_val(l, f):
     """
     :param l: ``List`` of items
     :param f: ``Procedure`` that maps an item into a numeric score
     :returns: the element of ``l`` that has the highest score and the score
     """
-    best = l[0]; bestScore = f(best)
+    best = l[0]; best_score = f(best)
     for x in l:
-        xScore = f(x)
-        if xScore > bestScore:
-            best, bestScore = x, xScore
-    return (best, bestScore)
+        x_score = f(x)
+        if x_score > best_score:
+            best, best_score = x, x_score
+    return (best, best_score)
 
-def argmaxIndex(l, f = lambda x: x):
+def argmax_index(l, f = lambda x: x):
     """
     :param l: ``List`` of items
     :param f: ``Procedure`` that maps an item into a numeric score
     :returns: the index of ``l`` that has the highest score
     """
-    best = 0; bestScore = f(l[best])
+    best = 0; best_score = f(l[best])
     for i in range(len(l)):
-        xScore = f(l[i])
-        if xScore > bestScore:
-            best, bestScore = i, xScore
-    return (best, bestScore)
+        x_score = f(l[i])
+        if x_score > best_score:
+            best, best_score = i, x_score
+    return (best, best_score)
 
-def argmaxIndices3D(l, f = lambda x: x):
-    best = (0,0,0); bestScore = f(l[0][0][0])
+def argmax_indices_3d(l, f = lambda x: x):
+    best = (0,0,0); best_score = f(l[0][0][0])
     for i in range(len(l)):
         for j in range(len(l[0])):
             for k in range(len(l[0][0])):
-                xScore = f(l[i][j][k])
-                if xScore > bestScore:
-                    best, bestScore = (i, j, k), xScore
-    return (best, bestScore)
+                x_score = f(l[i][j][k])
+                if x_score > best_score:
+                    best, best_score = (i, j, k), x_score
+    return (best, best_score)
 
-def randomMultinomial(dist):
+def random_multinomial(dist):
     """
     :param dist: List of positive numbers summing to 1 representing a
      multinomial distribution over integers from 0 to ``len(dist)-1``.
@@ -531,24 +531,24 @@ def randomMultinomial(dist):
             return i
     return "weird"
 
-def clip(v, vMin, vMax):
+def clip(v, v_min, v_max):
     """
     :param v: number
-    :param vMin: number (may be None, if no limit)
-    :param vMax: number greater than ``vMin`` (may be None, if no limit)
-    :returns: If ``vMin <= v <= vMax``, then return ``v``; if ``v <
-     vMin`` return ``vMin``; else return ``vMax``
+    :param v_min: number (may be None, if no limit)
+    :param v_max: number greater than ``v_min`` (may be None, if no limit)
+    :returns: If ``v_min <= v <= v_max``, then return ``v``; if ``v <
+     v_min`` return ``v_min``; else return ``v_max``
     """
-    if vMin == None:
-        if vMax == None:
+    if v_min == None:
+        if v_max == None:
             return v
         else:
-            return min(v, vMax)
+            return min(v, v_max)
     else:
-        if vMax == None:
-            return max(v, vMin)
+        if v_max == None:
+            return max(v, v_min)
         else:
-            return max(min(v, vMax), vMin)
+            return max(min(v, v_max), v_min)
 
 def sign(x):
     """
@@ -561,39 +561,39 @@ def sign(x):
     else:
         return -1
 
-def make2DArray(dim1, dim2, initValue):
+def make_2d_array(dim1, dim2, init_value):
     """
     Return a list of lists representing a 2D array with dimensions
     dim1 and dim2, filled with initialValue
     """
     result = []
     for i in range(dim1):
-        result = result + [makeVector(dim2, initValue)]
+        result = result + [make_vector(dim2, init_value)]
     return result
 
-def make2DArrayFill(dim1, dim2, initFun):
+def make_2d_array_fill(dim1, dim2, init_fun):
     """
     Return a list of lists representing a 2D array with dimensions
-    ``dim1`` and ``dim2``, filled by calling ``initFun(ix, iy)`` with
+    ``dim1`` and ``dim2``, filled by calling ``init_fun(ix, iy)`` with
     ``ix`` ranging from 0 to ``dim1 - 1`` and ``iy`` ranging from 0 to
     ``dim2-1``. 
     """
     result = []
     for i in range(dim1):
-        result = result + [makeVectorFill(dim2, lambda j: initFun(i, j))]
+        result = result + [make_vector_fill(dim2, lambda j: init_fun(i, j))]
     return result
 
-def make3DArray(dim1, dim2, dim3, initValue):
+def make_3d_array(dim1, dim2, dim3, init_value):
     """
     Return a list of lists of lists representing a 3D array with dimensions
     dim1, dim2, and dim3 filled with initialValue
     """
     result = []
     for i in range(dim1):
-        result = result + [make2DArray(dim2, dim3, initValue)]
+        result = result + [make_2d_array(dim2, dim3, init_value)]
     return result
 
-def mapArray3D(array, f):
+def map_array_3d(array, f):
     """
     Map a function over the whole array.  Side effects the array.  No
     return value.
@@ -603,18 +603,18 @@ def mapArray3D(array, f):
             for k in range(len(array[0][0])):
                 array[i][j][k] = f(array[i][j][k])
 
-def makeVector(dim, initValue):
+def make_vector(dim, init_value):
     """
-    Return a list of dim copies of initValue
+    Return a list of dim copies of init_value
     """
-    return [initValue]*dim
+    return [init_value]*dim
 
-def makeVectorFill(dim, initFun):
+def make_vector_fill(dim, init_fun):
     """
-    Return a list resulting from applying initFun to values from 0 to
+    Return a list resulting from applying init_fun to values from 0 to
     dim-1
     """
-    return [initFun(i) for i in range(dim)]
+    return [init_fun(i) for i in range(dim)]
 
 def pretty_string(struct):
     """
@@ -633,7 +633,7 @@ def pretty_string(struct):
     else:
         return str(struct)
   
-def prettyPrint(struct):
+def pretty_print(struct):
     s = pretty_string(struct)
     print(s)
 
@@ -652,7 +652,7 @@ class SymbolGenerator:
 gensym = SymbolGenerator().gensym
 """Call this function to get a new symbol"""
 
-def logGaussian(x, mu, sigma):
+def log_gaussian(x, mu, sigma):
     """
     Log of the value of the gaussian distribution with mean mu and
     stdev sigma at value x
@@ -666,7 +666,7 @@ def gaussian(x, mu, sigma):
     """
     return math.exp(-((x-mu)**2 / (2*sigma**2))) /(sigma*math.sqrt(2*math.pi))  
 
-def lineIndices(cell1, cell2):
+def line_indices(cell1, cell2):
     """
     Takes two cells in the grid (each described by a pair of integer
     indices), and returns a list of the cells in the grid that are on the
@@ -674,10 +674,10 @@ def lineIndices(cell1, cell2):
     """
     (i0, j0) = cell1
     (i1, j1) = cell2
-    assert type(i0) == int, 'Args to lineIndices must be pairs of integers'
-    assert type(j0) == int, 'Args to lineIndices must be pairs of integers'
-    assert type(i1) == int, 'Args to lineIndices must be pairs of integers'
-    assert type(j1) == int, 'Args to lineIndices must be pairs of integers'
+    assert type(i0) == int, 'Args to line_indices must be pairs of integers'
+    assert type(j0) == int, 'Args to line_indices must be pairs of integers'
+    assert type(i1) == int, 'Args to line_indices must be pairs of integers'
+    assert type(j1) == int, 'Args to line_indices must be pairs of integers'
     
     ans = [(i0,j0)]
     di = i1 - i0
@@ -706,7 +706,7 @@ def lineIndices(cell1, cell2):
                 ans.append((int(t), j0))
     return ans
 
-def lineIndicesConservative(cell1, cell2):
+def line_indices_conservative(cell1, cell2):
     """
     Takes two cells in the grid (each described by a pair of integer
     indices), and returns a list of the cells in the grid that are on the
@@ -714,10 +714,10 @@ def lineIndicesConservative(cell1, cell2):
     """
     (i0, j0) = cell1
     (i1, j1) = cell2
-    assert type(i0) == int, 'Args to lineIndices must be pairs of integers'
-    assert type(j0) == int, 'Args to lineIndices must be pairs of integers'
-    assert type(i1) == int, 'Args to lineIndices must be pairs of integers'
-    assert type(j1) == int, 'Args to lineIndices must be pairs of integers'
+    assert type(i0) == int, 'Args to line_indices must be pairs of integers'
+    assert type(j0) == int, 'Args to line_indices must be pairs of integers'
+    assert type(i1) == int, 'Args to line_indices must be pairs of integers'
+    assert type(j1) == int, 'Args to line_indices must be pairs of integers'
     
     ans = [(i0,j0)]
     di = i1 - i0
@@ -759,7 +759,7 @@ def lineIndicesConservative(cell1, cell2):
     return ans
 
 import sys, os
-def findFile(filename):
+def find_file(filename):
     """
     Takes a filename and returns a complete path to the first instance of the file found within the subdirectories of the brain directory.
     """
@@ -773,7 +773,7 @@ def findFile(filename):
     return '.'
 # This only works if the brain directory is in sys.path, which isn't 
 # true unless we put it there, which is complicated
-# def findFile(filename):
+# def find_file(filename):
 #     """
 #     Takes a filename and returns the first directory in sys.path that contains
 #     the file

@@ -35,7 +35,7 @@ class BasicGridMap(gridMap.GridMap):
         Called by ``gridMap.GridMap.__init__``.  Returns the initial
         value for the grid, which will be stored in ``self.Grid``.
         """
-        g = util.make2DArray(self.xN, self.yN, False)
+        g = util.make_2d_array(self.xN, self.yN, False)
 
         # write the walls into the grid, grown by robot radius
         # won't work if boxes are much bigger than robot

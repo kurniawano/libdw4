@@ -31,11 +31,11 @@ class SensorInput:
         """List of 8 sonar readings, in meters."""
         if cheat == True:
             self.odometry = \
-                util.valueListToPose(app.soar.output.abspose.get())
+                util.value_list_to_pose(app.soar.output.abspose.get())
             """Instance of util.Pose, representing robot's pose in the global frame if ``cheat = True`` and the odometry frame if ``cheat = False``."""
         else:
             self.odometry = \
-                util.valueListToPose(app.soar.output.odpose.get())
+                util.value_list_to_pose(app.soar.output.odpose.get())
         self.analogInputs = app.soar.output.analogInputs.get()
         """List of 4 analog input values."""
 

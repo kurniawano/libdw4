@@ -454,7 +454,7 @@ class eBot():
         elif self.pos_values[2]<0:
             self.pos_values[2]+=2*pi
         pose = (self.pos_values[0],self.pos_values[1],self.pos_values[2])
-        return util.valueListToPose(pose)
+        return util.value_list_to_pose(pose)
 
     #TODO: implement temperature feedback from MPU6050 IC
     def temperature(self):

@@ -22,17 +22,17 @@ class MoveToDynamicPoint(sm.SM):
     """Gain for rotating"""
     maxVel = 0.5
     """Maximum velocity"""
-    angleEps = 0.1
+    angle_eps = 0.1
     """Tolerance for angles"""
 
     def get_next_values(self, state, inp):
         (goalPoint, sensors) = inp
         return (None, actionToPoint(goalPoint, sensors.odometry,
                                     self.forwardGain, self.rotationGain,
-                                    self.maxVel, self.angleEps))
+                                    self.maxVel, self.angle_eps))
 
 def actionToPoint(goalPoint, robotPose, forwardGain, rotationGain,
-                  maxVel, angleEps):
+                  maxVel, angle_eps):
     """
     Internal procedure that returns an action to take to drive
     toward a specified goal point.
@@ -47,9 +47,9 @@ def actionToPoint(goalPoint, robotPose, forwardGain, rotationGain,
     # Difference between the way the robot is currently heading and
     # the angle to the goal.  This is an angular error relative to the
     # robot's current heading, in the range +pi to -pi.
-    headingError = util.fixAnglePlusMinusPi(headingTheta - robotPose.theta)
+    headingError = util.fix_angle_plus_minus_pi(headingTheta - robotPose.theta)
     
-    if util.nearAngle(robotPose.theta, headingTheta, angleEps):
+    if util.near_angle(robotPose.theta, headingTheta, angle_eps):
         # The robot is pointing toward the goal, so it's okay to move
         # forward.  Note that we are actually doing two proportional
         # controllers simultaneously:  one to reduce angular error
@@ -81,9 +81,9 @@ class MoveToFixedPose(sm.SM):
     """Gain for rotating"""
     maxVel = 0.5
     """Maximum velocity"""
-    angleEps = 0.05
+    angle_eps = 0.05
     """Tolerance for angles"""
-    distEps = 0.05
+    dist_eps = 0.05
     """Tolerance for distances"""
 
     start_state = False
@@ -97,11 +97,11 @@ class MoveToFixedPose(sm.SM):
         self.maxVel = maxVel
 
     def get_next_values(self, state, inp):
-        nearGoal = inp.odometry.near(self.goalPose, self.distEps, self.angleEps)
+        nearGoal = inp.odometry.near(self.goalPose, self.dist_eps, self.angle_eps)
         return (nearGoal, actionToPose(self.goalPose, inp.odometry,
                                         self.forwardGain, self.rotationGain,
-                                        self.maxVel, self.angleEps,
-                                       self.distEps))
+                                        self.maxVel, self.angle_eps,
+                                       self.dist_eps))
 
     def done(self, state):
         return state
@@ -118,9 +118,9 @@ class MoveToFixedPoint(sm.SM):
     """Gain for driving forward"""
     rotationGain = 1.0
     """Gain for rotating"""
-    angleEps = 0.05
+    angle_eps = 0.05
     """Tolerance for angles"""
-    distEps = 0.05
+    dist_eps = 0.05
     """Tolerance for distances"""
     maxVel = 0.5
     """Maximum velocity"""
@@ -132,25 +132,25 @@ class MoveToFixedPoint(sm.SM):
         self.maxVel = maxVel
 
     def get_next_values(self, state, inp):
-        nearGoal = inp.odometry.point().isNear(self.goalPoint, self.distEps)
+        nearGoal = inp.odometry.point().is_near(self.goalPoint, self.dist_eps)
         return (nearGoal, actionToPoint(self.goalPoint, inp.odometry,
                                         self.forwardGain, self.rotationGain,
-                                        self.maxVel, self.angleEps))
+                                        self.maxVel, self.angle_eps))
 
     def done(self, state):
         return state
 
 
 def actionToPose(goalPose, robotPose, forwardGain, rotationGain,
-                 maxVel, angleEps, distEps):
+                 maxVel, angle_eps, dist_eps):
     """
     Internal procedure that returns an action to take to drive
     toward a specified goal pose.
     """
-    if robotPose.distance(goalPose) < distEps:
-        finalRotError = util.fixAnglePlusMinusPi(goalPose.theta -robotPose.theta)
+    if robotPose.distance(goalPose) < dist_eps:
+        finalRotError = util.fix_angle_plus_minus_pi(goalPose.theta -robotPose.theta)
         return io.Action(rvel = finalRotError * rotationGain)
     else:
         return actionToPoint(goalPose.point(), robotPose, forwardGain,
-                             rotationGain, maxVel, angleEps)
+                             rotationGain, maxVel, angle_eps)
 
