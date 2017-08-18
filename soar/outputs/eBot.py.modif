@@ -327,7 +327,7 @@ class eBot:
                 while line[:2] != "eB":
                     if (s.inWaiting()>0):
                         line = s.readline()
-                    s.write("<<1?")
+                    s.write("<<1?".encode("utf-8"))
                     sleep(0.5)
 
                     line = s.readline()
@@ -660,7 +660,7 @@ class eBot:
         #pkt[len(pkt)-1] = (chk&0xFF)
         s = reduce(lambda x, y: x + chr(y), pkt, "")
         try:
-            self.port.write(s)
+            self.port.write(s.encode("utf-8"))
         except:
             sys.stderr.write("Could not write to serial port.\n")
             self.serialReady = False

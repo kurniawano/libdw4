@@ -468,7 +468,7 @@ class Pioneer:
     pkt[len(pkt)-1] = (chk&0xFF)
     s = reduce(lambda x,y: x+chr(y),pkt,"")
     try:
-      self.port.write(s)
+      self.port.write(s.encode("utf-8"))
     except:
       sys.stderr.write("Could not write to serial port.  Is robot turned on and connected?\n")
     sleep(0.008)

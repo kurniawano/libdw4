@@ -222,18 +222,18 @@ class eBot:
         debug("eBot variables set up", 2)
         self.serialReady = False
         self.prev_sonar = [0, 0, 0, 0, 0, 0]
-        try:
-            self.connect(Serial)
-            self.open()
-            debug("Serial Connection started", 2)
-            print("eBot connection successful")
-        except:
-            sys.stderr.write("Couldn't connect to eBot.\n")
-            sys.stderr.write("- Check if eBot is on, paired and connected. If not, power up and try again. \n")
-            #sys.stderr.write("- Check to see if COM port below is eBot. If not, remove device and try again. \n")
-            debug("Could not open the serial port", 0)
-            print(5)
-            raise CancelGUIAction("Error opening serial port")
+        # try:
+        self.connect(Serial)
+        self.open()
+        debug("Serial Connection started", 2)
+        print("eBot connection successful")
+        # except:
+        #     sys.stderr.write("Couldn't connect to eBot.\n")
+        #     sys.stderr.write("- Check if eBot is on, paired and connected. If not, power up and try again. \n")
+        #     #sys.stderr.write("- Check to see if COM port below is eBot. If not, remove device and try again. \n")
+        #     debug("Could not open the serial port", 0)
+        #     print(5)
+        #     raise CancelGUIAction("Error opening serial port")
 
         app.soar.addFlowTriplet((self.startmoving, self.update, self.stopmoving))
         self.currentthread = None
@@ -332,7 +332,7 @@ class eBot:
                 while line[:2] != "eB":
                     if (s.inWaiting()>0):
                         line = s.readline()
-                    s.write("<<1?")
+                    s.write("<<1?".encode("utf-8"))
                     sleep(0.5)
 
                     line = s.readline()
@@ -349,7 +349,7 @@ class eBot:
                 if (line[:2] == "eB"):
                     break
                     #s.close()
-#                    self.
+    #                    self.
             except:
                 try:
                     if s.isOpen():
@@ -665,7 +665,7 @@ class eBot:
         #pkt[len(pkt)-1] = (chk&0xFF)
         s = reduce(lambda x, y: x + chr(y), pkt, "")
         try:
-            self.port.write(s)
+            self.port.write(s.encode("utf-8"))
         except:
             sys.stderr.write("Could not write to serial port.\n")
             self.serialReady = False

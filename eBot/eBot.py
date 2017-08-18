@@ -117,15 +117,15 @@ class eBot():
                 s = Serial(port, baudRate, timeout=5.0, writeTimeout=5.0)
                 s._timeout = 5.0
                 s._writeTimeout = 5.0
-                #try:
-                #    s.open()
-                #except:
-                #    continue
+                try:
+                   s.open()
+                except:
+                   continue
 
                 while (line[:2] != "eB"):
                     if (s.inWaiting()>0):
                         line=s.readline()
-                    s.write("<<1?")
+                    s.write("<<1?".encode("utf-8"))
                     sleep(0.5)
                     line = s.readline()
                     if (line[:2] == "eB"):
@@ -139,8 +139,8 @@ class eBot():
                         self.port.flushInput()
                         self.port.flushOutput()
                         break
-                    #s.close()
-                #                    self.
+                        #s.close()
+                    #                    self.
             except:
                 try:
                     if s.isOpen():
@@ -161,14 +161,14 @@ class eBot():
 
         sleep(.01)
         try:
-            self.port.write('<<1E')
+            self.port.write('<<1E'.encode("utf-8"))
             sleep(0.4)
             line = self.port.readline()
             if (line != ">>1B\n" and line != ">>1B" and line != ">>\n" and line != ">>"):
                 self.lostConnection()
-            self.port.write("<<1O")
+            self.port.write("<<1O".encode("utf-8"))
             sleep(0.4)
-            self.port.write("F")
+            self.port.write("F".encode("utf-8"))
             sleep(0.2)
             self.port.flushInput()
             self.port.flushOutput()
@@ -321,7 +321,7 @@ class eBot():
         """
         if self.serialReady:
             try:
-                self.port.write("2C")
+                self.port.write("2C".encode("utf-8"))
             except:
                 self.lostConnection()
         line = self.port.readline()
@@ -329,7 +329,7 @@ class eBot():
         while len(values) < 10:
             if self.serialReady:
                 try:
-                    self.port.write("2C")
+                    self.port.write("2C".encode("utf-8"))
                 except:
                     self.lostConnection()
             line = self.port.readline()
@@ -352,7 +352,7 @@ class eBot():
         """
         if self.serialReady:
             try:
-                self.port.write("2H")
+                self.port.write("2H".encode("utf-8"))
             except:
                 self.lostConnection()
         sleep(0.05)
@@ -377,7 +377,7 @@ class eBot():
         """
         if self.serialReady:
             try:
-                self.port.write("2L")
+                self.port.write("2L".encode("utf-8"))
             except:
                 self.lostConnection()
         sleep(0.05)
@@ -388,7 +388,7 @@ class eBot():
         """
         if self.serialReady:
             try:
-                self.port.write("2l")
+                self.port.write("2l".encode("utf-8"))
             except:
                 self.lostConnection()
         sleep(0.05)
@@ -483,7 +483,7 @@ class eBot():
         """
         if self.serialReady:
             try:
-                self.port.write("2b")
+                self.port.write("2b".encode("utf-8"))
             except:
                 self.lostConnection()
 
@@ -503,7 +503,7 @@ class eBot():
         myvalue = chr(str_len) + 'B' + bt1 + ';' + bf1
         if self.serialReady:
             try:
-                self.port.write(myvalue)
+                self.port.write(myvalue.encode("utf-8"))
             except:
                 self.lostConnection()
         sleep(buzzer_time/1000)
@@ -557,7 +557,7 @@ class eBot():
         myvalue = '8' + 'w' + LS1 + ';' + RS1
         if self.serialReady:
             try:
-                self.port.write(myvalue)
+                self.port.write(myvalue.encode("utf-8"))
             except:
                 self.lostConnection()
 
@@ -584,7 +584,7 @@ class eBot():
         myvalue = ':' + 'c' + LS1 + ';' + RS1
         if self.serialReady:
             try:
-                self.port.write(myvalue)
+                self.port.write(myvalue.encode("utf-8"))
             except:
                 self.lostConnection()
 

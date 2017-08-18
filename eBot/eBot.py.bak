@@ -125,7 +125,7 @@ class eBot():
                 while (line[:2] != "eB"):
                     if (s.inWaiting()>0):
                         line=s.readline()
-                    s.write("<<1?")
+                    s.write("<<1?".encode("utf-8"))
                     sleep(0.5)
                     line = s.readline()
                     if (line[:2] == "eB"):

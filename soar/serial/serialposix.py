@@ -276,7 +276,7 @@ class Serial(SerialBase):
                 if not ready:
                     break   #timeout
                 buf = os.read(self.fd, size-len(read))
-                read = read + buf
+                read = read + buf.decode("utf-8")
                 if self._timeout >= 0 and not buf:
                     break  #early abort on timeout
         return read
