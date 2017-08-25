@@ -107,7 +107,7 @@ class GraphingWindow(Tkinter.Toplevel):
 
     def graphContinuous(self, f, color="black"):
 	self.canvas.graphFunc(f, CONTINUOUS, color)
-    def graphContinuousSet(self, xset, yset, color="black"):
+    def graph_continuous_set(self, xset, yset, color="black"):
 	self.canvas.graphFunc((xset, yset), CONTINUOUS_SET, color)
     def graphDiscrete(self, f, color="black"):
 	self.canvas.graphFunc(f, DISCRETE_TIME, color)

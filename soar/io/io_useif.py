@@ -79,5 +79,5 @@ class Action:
         return 'Act: ' + \
                util.pretty_string([self.fvel, self.rvel, self.voltage])
 
-def registerUserFunction(type, f):
-    io_environ['registerUserFunction'](type, f)
+def register_user_function(type, f):
+    io_environ['register_user_function'](type, f)

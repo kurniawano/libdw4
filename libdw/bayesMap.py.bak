@@ -80,13 +80,13 @@ class BayesGridMap(dynamicGridMap.DynamicGridMap):
         for dx in range(0, self.growRadiusInCells + 1):
             for dy in range(0, self.growRadiusInCells + 1):
                 xPlus = util.clip(xIndex+dx, 0, self.xN-1)
-                xMinus = util.clip(xIndex-dx, 0, self.xN-1)
+                x_minus = util.clip(xIndex-dx, 0, self.xN-1)
                 yPlus = util.clip(yIndex+dy, 0, self.yN-1)
-                yMinus = util.clip(yIndex-dy, 0, self.yN-1)
+                y_minus = util.clip(yIndex-dy, 0, self.yN-1)
                 cost = max(cost, self.cost1((xPlus, yPlus)),
-                           self.cost1((xPlus,yMinus)),
-                           self.cost1((xMinus, yPlus)),
-                           self.cost1((xMinus, yMinus)))
+                           self.cost1((xPlus,y_minus)),
+                           self.cost1((x_minus, yPlus)),
+                           self.cost1((x_minus, y_minus)))
         return cost
 
     def cost1(self, (xIndex, yIndex)):

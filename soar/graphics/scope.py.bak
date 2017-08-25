@@ -128,9 +128,9 @@ class Oscilloscope():
             self.outlineRect = self.canvas.create_rectangle(0,0,1,1,
                                                             fill="white")
             self.xminText = self.canvas.create_text(0, 0, text="")
-            self.xmaxText = self.canvas.create_text(0, 0, text="")
+            self.xmax_text = self.canvas.create_text(0, 0, text="")
             self.yminText = self.canvas.create_text(0, 0, text="")
-            self.ymaxText = self.canvas.create_text(0, 0, text="")
+            self.ymax_text = self.canvas.create_text(0, 0, text="")
             self.yLabelText = self.canvas.create_text(0, 0, text="")
             self.xLabelText = self.canvas.create_text(0, 0, text="")
             self.titleText = self.canvas.create_text(0, 0, text="")
@@ -214,7 +214,7 @@ class Oscilloscope():
             sys.stderr.write("Dynamic plot function takes too many arguments")
             return lambda inp: 0.0
 
-    def addProbeFunction(self, names, func, functext=None, initVal=0):
+    def add_probeFunction(self, names, func, functext=None, initVal=0):
         numavail = len(self.colors) - len(self.probes)
         if numavail == 0:
             sys.stderr.write("All available probes are in use.  Signal will not be plotted")
@@ -226,21 +226,21 @@ class Oscilloscope():
             for i in range(numprobes):
                 text = functext if functext else str(func)
                 text = text+"["+str(i)+"]"
-                self.addProbe(names[i], self.makeFunc(func, i), text, initVal)
+                self.add_probe(names[i], self.makeFunc(func, i), text, initVal)
         else:
-            self.addProbe(names, self.makeFunc(func), 
+            self.add_probe(names, self.makeFunc(func), 
                           functext if functext else str(func), initVal)
         self.setStaticObjects()
 
-    def addProbe(self, name, functext, initVal=0):
+    def add_probe(self, name, functext, initVal=0):
         func = lambda: eval(functext)
-        self.addProbeFunction(name, func, functext, initVal)
+        self.add_probeFunction(name, func, functext, initVal)
 
     def setProbeText(self, probeidx, name, functext):
         func = lambda: eval(functext)
         self.setProbe(probeidx, name, func, functext)
 
-    def addProbe(self, name, func, functext, initVal=0):
+    def add_probe(self, name, func, functext, initVal=0):
         self.probes.append(Probe(name, func, functext, self.numelems,
                                  self.samplesPerElem, initVal))
         self.setStaticObjects()
@@ -280,14 +280,14 @@ class Oscilloscope():
             def f():
                 self.setCanvasText(self.yminText, x_gapl/2, c_height-y_gap, 
                                    text=round(smin,3))
-                self.setCanvasText(self.ymaxText, x_gapl/2, y_gap, 
+                self.setCanvasText(self.ymax_text, x_gapl/2, y_gap, 
                                    text=round(smax,3))
             text_funcs.append(f)
         def f():
             # x scale labels
             self.setCanvasText(self.xminText, x_gapl, c_height-y_gap/2, 
                                text=self.xrange)
-            self.setCanvasText(self.xmaxText, c_width-x_gapr, c_height-y_gap/2, 
+            self.setCanvasText(self.xmax_text, c_width-x_gapr, c_height-y_gap/2, 
                                text="0")
             # axes labels
             self.setCanvasText(self.yLabelText, x_gapl/2, c_height/2, 
@@ -359,7 +359,7 @@ class Oscilloscope():
                     # update the labels in case they've changed (not very smart)
                     self.setCanvasText(self.yminText, x_gapl/2, c_height-y_gap, 
                                        text=round(smin,3))
-                    self.setCanvasText(self.ymaxText, x_gapl/2, y_gap, 
+                    self.setCanvasText(self.ymax_text, x_gapl/2, y_gap, 
                                        text=round(smax,3))
                 text_funcs.append(f)
             self.ybounds = (smin, smax)

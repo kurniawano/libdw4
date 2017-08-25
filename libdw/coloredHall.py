@@ -242,7 +242,7 @@ def drawBelief(belief, window, numStates, drawNums = True):
                      color = colors.probToPyColor(belief.prob(x), unifP,
                                           (unifP + 0.3) / 1.3))
         if drawNums:
-            window.drawText(x + 0.5, y + 0.5, "%3.2f" % belief.prob(x),
+            window.draw_text(x + 0.5, y + 0.5, "%3.2f" % belief.prob(x),
                             color = 'white')
 
 ######################################################################

@@ -9,22 +9,22 @@ import bayesMap
 reload(bayesMap)
 
 class MapMaker(sm.SM):
-#!    def __init__(self, xMin, xMax, yMin, yMax, gridSquareSize):
+#!    def __init__(self, x_min, x_max, y_min, y_max, gridSquareSize):
     """
     It violates the state machine protocol because it changes the grid
     map by side effect, rather than making a fresh copy each time.
     """
-    def __init__(self, xMin, xMax, yMin, yMax, gridSquareSize,
+    def __init__(self, x_min, x_max, y_min, y_max, gridSquareSize,
                  useClearInfo = False, useCountingMap = False,
                  useBayesMap = True): 
 
         if useCountingMap:
             gm = dynamicCountingGridMap.DynamicCountingGridMap(\
-                                        xMin, xMax, yMin, yMax, gridSquareSize)
+                                        x_min, x_max, y_min, y_max, gridSquareSize)
         elif useBayesMap:
-            gm = bayesMap.BayesGridMap(xMin, xMax, yMin, yMax, gridSquareSize)
+            gm = bayesMap.BayesGridMap(x_min, x_max, y_min, y_max, gridSquareSize)
         else:
-            gm = dynamicGridMap.DynamicGridMap(xMin, xMax, yMin, yMax,
+            gm = dynamicGridMap.DynamicGridMap(x_min, x_max, y_min, y_max,
                                                gridSquareSize)
         self.start_state = gm
         self.useClearInfo = useClearInfo or useBayesMap
@@ -113,14 +113,14 @@ testClearData = [SensorInput([1.0, 5.0, 5.0, 1.0, 1.0, 5.0, 5.0, 1.0],
                              util.Pose(4.0, 2.0, -math.pi))]
 
 def testMapMaker(data):
-    (xMin, xMax, yMin, yMax, gridSquareSize) = (0, 5, 0, 5, 0.1)
-    mapper = MapMaker(xMin, xMax, yMin, yMax, gridSquareSize)
+    (x_min, x_max, y_min, y_max, gridSquareSize) = (0, 5, 0, 5, 0.1)
+    mapper = MapMaker(x_min, x_max, y_min, y_max, gridSquareSize)
     mapper.transduce(data)
     mapper.start_state.drawWorld()
 
 def testMapMakerClear(data):
-    (xMin, xMax, yMin, yMax, gridSquareSize) = (0, 5, 0, 5, 0.1)
-    mapper = MapMaker(xMin, xMax, yMin, yMax, gridSquareSize)
+    (x_min, x_max, y_min, y_max, gridSquareSize) = (0, 5, 0, 5, 0.1)
+    mapper = MapMaker(x_min, x_max, y_min, y_max, gridSquareSize)
     for i in range(50):
         for j in range(50):
             mapper.start_state.setCell((i, j))
@@ -128,8 +128,8 @@ def testMapMakerClear(data):
     mapper.start_state.drawWorld()
 
 def testMapMakerN(n, data):
-    (xMin, xMax, yMin, yMax, gridSquareSize) = (0, 5, 0, 5, 0.1)
-    mapper = MapMaker(xMin, xMax, yMin, yMax, gridSquareSize)
+    (x_min, x_max, y_min, y_max, gridSquareSize) = (0, 5, 0, 5, 0.1)
+    mapper = MapMaker(x_min, x_max, y_min, y_max, gridSquareSize)
     mapper.transduce(data*n)
     mapper.start_state.drawWorld()
 

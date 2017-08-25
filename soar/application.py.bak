@@ -182,7 +182,7 @@ class application(object):
     #                                command = self.reloadWorld)
     #self.reloadWorldButton.pack()
     #self.disableButton(self.reloadWorldButton)
-    self.sonarMonitor = None
+    self.sonar_monitor = None
     self.oscope = None
     self.control = None
     self.output = None
@@ -444,25 +444,25 @@ class application(object):
         pass
 
   def openSonarMonitor(self):
-    if not self.sonarMonitor:
+    if not self.sonar_monitor:
       if self.toolbar.buttons['eBot'].cget('relief') == SUNKEN:
-        self.sonarMonitor = SonarMonitor(soar.outputs.eBot.EBOT_POINTS,
+        self.sonar_monitor = SonarMonitor(soar.outputs.eBot.EBOT_POINTS,
                                            self.sonarmon_geom)
       elif self.toolbar.buttons['Amigosimulator'].cget('relief') == SUNKEN:
-        self.sonarMonitor = AmigoSonarMonitor(soar.outputs.amigo_simulator.ROBOT_POINTS,
+        self.sonar_monitor = AmigoSonarMonitor(soar.outputs.amigo_simulator.ROBOT_POINTS,
                                              self.sonarmon_geom)
       elif self.toolbar.buttons['simulator'].cget('relief') == SUNKEN:
-        self.sonarMonitor = SonarMonitor(soar.outputs.simulator.ROBOT_POINTS,
+        self.sonar_monitor = SonarMonitor(soar.outputs.simulator.ROBOT_POINTS,
                                              self.sonarmon_geom)
       elif self.toolbar.buttons['pioneer'].cget('relief') == SUNKEN:
-        self.sonarMonitor = AmigoSonarMonitor(soar.outputs.amigo_simulator.ROBOT_POINTS,
+        self.sonar_monitor = AmigoSonarMonitor(soar.outputs.amigo_simulator.ROBOT_POINTS,
                                              self.sonarmon_geom)
-    self.sonarMonitor.openWindow()
+    self.sonar_monitor.openWindow()
 
   def closeSonarMonitor(self):
-    if self.sonarMonitor:
-      self.sonarMonitor.closeWindow()
-      self.sonarMonitor = None
+    if self.sonar_monitor:
+      self.sonar_monitor.closeWindow()
+      self.sonar_monitor = None
 
   def openJoystick(self):
     import soar.controls.joystick
@@ -481,10 +481,10 @@ class application(object):
       self.oscope = Oscilloscope(self.scope_geom)
     self.oscope.openWindow()
 
-  def addScopeProbeFunction(self, name, func):
-    self.oscope.addProbeFunction(name, func)
+  def add_scope_probe_function(self, name, func):
+    self.oscope.add_probeFunction(name, func)
 
-  def clearScope(self):
+  def clear_scope(self):
     if self.oscope:
       self.oscope.clearProbes()
       self.oscope.closeWindow()
@@ -613,7 +613,7 @@ class application(object):
     # if the setup function fails, unload the module
     if self.control != None:
       try:
-        self.userfn.callFunctions('setup')
+        self.userfn.call_functions('setup')
         self.loadModule(self.control)
       except:
         self.unloadModule(self.control)
@@ -643,7 +643,7 @@ class application(object):
       self.disableStartStop()
       return 0
 
-  def registerUserFunction(self, type, f):
+  def register_user_function(self, type, f):
     self.userfn.registerFn(type, f)
 
   def initializeNamespace(self):
@@ -657,14 +657,14 @@ class application(object):
     self.namespace["robot"] = common.Container()
     self.namespace["readLog"] = self.setReadLog
     self.namespace["writeLog"] = self.setWriteLog
-    self.namespace["registerUserFunction"] = self.registerUserFunction
+    self.namespace["register_user_function"] = self.register_user_function
 
   def startall(self):
     for i in self.flowtriplets:
       i[0]()
     self.chooseStart()
     try:
-      self.userfn.callFunctions('brainStart')
+      self.userfn.call_functions('brain_start')
       self.control.start()
     except AttributeError:
       pass
@@ -679,7 +679,7 @@ class application(object):
     self.chooseStop()
     try:
       if callUserFn:
-        self.userfn.callFunctions('brainStop')
+        self.userfn.call_functions('brain_stop')
     except AttributeError:
       pass
     try:
@@ -732,9 +732,9 @@ class application(object):
   def step(self, dt):
     if self.output is not None:
       try:
-        self.userfn.callFunctions('step')
-        if self.sonarMonitor:
-          self.sonarMonitor.update(self.output.storedsonars.get())
+        self.userfn.call_functions('step')
+        if self.sonar_monitor:
+          self.sonar_monitor.update(self.output.storedsonars.get())
         if self.oscope: self.oscope.step()
         self.logstep()
         self.control.step(dt)
@@ -749,7 +749,7 @@ class application(object):
     if (obj == None):
       return
     try:
-      self.userfn.callFunctions('shutdown')
+      self.userfn.call_functions('shutdown')
       obj.shutdown()
       self.userfn.clearFunctions()
     except:

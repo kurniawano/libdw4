@@ -435,11 +435,11 @@ class eBot:
         if not enable:
             sys.stderr.write("Can't disable accleration cap on real robot.\n")
 
-    def setMaxVelocities(self, maxTransVel, maxRotVel):
+    def setMaxVelocities(self, max_transVel, maxRotVel):
         global MAX_TRANS, MAX_ROT
-        MAX_TRANS = maxTransVel
+        MAX_TRANS = max_transVel
         MAX_ROT = maxRotVel
-        if maxTransVel > 0.75:
+        if max_transVel > 0.75:
             sys.stderr.write("Trying to set maximum translational velocity too high for real robot\n")
         if maxRotVel > 1.75:
             sys.stderr.write("Trying to set maximum rotational velocity too high for real robot\n")

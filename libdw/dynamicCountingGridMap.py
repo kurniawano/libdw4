@@ -7,21 +7,21 @@ class DynamicCountingGridMap(gridMap.GridMap):
     """
     Implements the ``GridMap`` interface.
     """
-    def __init__(self, xMin, xMax, yMin, yMax, gridSquareSize):
+    def __init__(self, x_min, x_max, y_min, y_max, gridSquareSize):
         """
         :param fixMe
         """
-        self.xMin = xMin
+        self.x_min = x_min
         """X coordinate of left edge"""
-        self.xMax = xMax
+        self.x_max = x_max
         """X coordinate of right edge"""
-        self.yMin = yMin
+        self.y_min = y_min
         """Y coordinate of bottom edge"""
-        self.yMax = yMax
+        self.y_max = y_max
         """Y coordinate of top edge"""
-        self.xN = int(math.ceil(self.xMax / gridSquareSize))
+        self.xN = int(math.ceil(self.x_max / gridSquareSize))
         """number of cells in x dimension"""
-        self.yN = int(math.ceil(self.yMax / gridSquareSize))
+        self.yN = int(math.ceil(self.y_max / gridSquareSize))
         """number of cells in y dimension"""
         self.xStep = gridSquareSize
         """size of a side of a cell in the x dimension"""
@@ -30,8 +30,8 @@ class DynamicCountingGridMap(gridMap.GridMap):
 
         ## Readjust the max dimensions to handle the fact that we need
         ## to have a discrete numer of grid cells
-        self.xMax = gridSquareSize * self.xN
-        self.yMax = gridSquareSize * self.yN
+        self.x_max = gridSquareSize * self.xN
+        self.y_max = gridSquareSize * self.yN
 
         self.grid = util.make_2d_array(self.xN, self.yN, 0)
         """values stored in the grid cells"""
@@ -77,12 +77,12 @@ class DynamicCountingGridMap(gridMap.GridMap):
         for dx in range(0, self.growRadiusInCells + 1):
             for dy in range(0, self.growRadiusInCells + 1):
                 xPlus = util.clip(xIndex+dx, 0, self.xN-1)
-                xMinus = util.clip(xIndex-dx, 0, self.xN-1)
+                x_minus = util.clip(xIndex-dx, 0, self.xN-1)
                 yPlus = util.clip(yIndex+dy, 0, self.yN-1)
-                yMinus = util.clip(yIndex-dy, 0, self.yN-1)
+                y_minus = util.clip(yIndex-dy, 0, self.yN-1)
                 if self.grid[xPlus][yPlus] > 2 or \
-                   self.grid[xPlus][yMinus] > 2 or \
-                   self.grid[xMinus][yPlus] > 2 or \
-                   self.grid[xMinus][yMinus] > 2:
+                   self.grid[xPlus][y_minus] > 2 or \
+                   self.grid[x_minus][yPlus] > 2 or \
+                   self.grid[x_minus][y_minus] > 2:
                     return False
         return True

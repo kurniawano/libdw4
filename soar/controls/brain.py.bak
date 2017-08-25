@@ -32,11 +32,11 @@ class Brain(object):
     if len(self.file) == 0:
       raise CancelGUIAction
     self.parent = app.soar
-    self.brainStarted = False
+    self.brain_started = False
     envin = self.parent.namespace
     # pop off the functions that are defined in the brain file
     # (in case we're loading a new brain file that doesn't define them all)
-    for name in ["setup", "brainStart", "step", "brainStop", "shutdown"]:
+    for name in ["setup", "brain_start", "step", "brain_stop", "shutdown"]:
       if envin.has_key(name): envin.pop(name)
     if not reload:
       self.clearmodules(envin)
@@ -52,28 +52,28 @@ class Brain(object):
     except:
       self.setup = skip
       
-    def brainStartedFalse():
-      self.brainStarted = False
-    def brainStartedTrue():
-      self.brainStarted = True
+    def brain_startedFalse():
+      self.brain_started = False
+    def brain_startedTrue():
+      self.brain_started = True
     def checkStarted():
-      if not self.brainStarted:
+      if not self.brain_started:
         self.startFn()
 
     try:
-      self.stop = self.makewrapper(envin["brainStop"],
+      self.stop = self.makewrapper(envin["brain_stop"],
                                    "\nError running stopBrain function.\n",
-                                   afterfunc=brainStartedFalse)
+                                   afterfunc=brain_startedFalse)
     except:
-      self.stop = brainStartedFalse
+      self.stop = brain_startedFalse
       
     try:
       self.start = skip
-      self.startFn = self.makewrapper(envin["brainStart"],
+      self.startFn = self.makewrapper(envin["brain_start"],
                                       "\nError running startBrain function.\n",
-                                      afterfunc=brainStartedTrue)
+                                      afterfunc=brain_startedTrue)
     except:
-      self.startFn = brainStartedTrue
+      self.startFn = brain_startedTrue
       
     try:
       self.shutdown = self.makewrapper(envin["shutdown"],

@@ -10,11 +10,11 @@ from . import soarWorld
 ###      Compute ideal readings
 ######################################################################
 
-def computeIdealReadings(worldPath, xMin, xMax, y, numStates, numObs):
+def computeIdealReadings(worldPath, x_min, x_max, y, numStates, numObs):
     """
     :param worldPath: string naming file to read the world description from
-    :param xMin: minimum x coordinate for center of robot
-    :param xMax: maximum x coordinate for center of robot
+    :param x_min: minimum x coordinate for center of robot
+    :param x_max: maximum x coordinate for center of robot
     :param y: constant y coordinate for center of robot
     :param numStates: number of discrete states into which to divide
      the range of x coordinates
@@ -28,10 +28,10 @@ def computeIdealReadings(worldPath, xMin, xMax, y, numStates, numObs):
     # read obstacles from the map
     world = soarWorld.SoarWorld(worldPath)
 
-    xStep = (xMax - xMin) / float(numStates)
+    xStep = (x_max - x_min) / float(numStates)
     readings = []
     # Start in the middle of the first box
-    x = xMin + (xStep / 2.0)  
+    x = x_min + (xStep / 2.0)  
     for ix in range(numStates):
         # left-hand sonar reading assuming we're heading to the right
         readings.append(discreteSonarValue(\

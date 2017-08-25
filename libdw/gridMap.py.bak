@@ -12,7 +12,7 @@ robotRadius = 0.22
 defaultWindowWidth = 400
 
 class GridMap:
-    def __init__(self, xMin, xMax, yMin, yMax, gridSquareSize,
+    def __init__(self, x_min, x_max, y_min, y_max, gridSquareSize,
                  windowWidth = defaultWindowWidth):
         """
         Basic initializer that determines the number of cells, and
@@ -20,26 +20,26 @@ class GridMap:
         provide, to get the initial values.  Makes a window and draws
         the initial world state in it.
         
-        :param xMin: least real x coordinate
-        :param xMax: greatest real x coordinate
-        :param yMin: least real y coordinate
-        :param yMax: greatest real y coordinate
+        :param x_min: least real x coordinate
+        :param x_max: greatest real x coordinate
+        :param y_min: least real y coordinate
+        :param y_max: greatest real y coordinate
         :param gridSquareSize: size, in world coordinates, of a grid
         square
         :param windowWidth: size, in pixels, to make the window for
         drawing this map  
         """
-        self.xMin = xMin
+        self.x_min = x_min
         """X coordinate of left edge"""
-        self.xMax = xMax
+        self.x_max = x_max
         """X coordinate of right edge"""
-        self.yMin = yMin
+        self.y_min = y_min
         """Y coordinate of bottom edge"""
-        self.yMax = yMax
+        self.y_max = y_max
         """Y coordinate of top edge"""
-        self.xN = int(math.ceil((self.xMax - self.xMin) / gridSquareSize))
+        self.xN = int(math.ceil((self.x_max - self.x_min) / gridSquareSize))
         """number of cells in x dimension"""
-        self.yN = int(math.ceil((self.yMax - self.yMin) / gridSquareSize))
+        self.yN = int(math.ceil((self.y_max - self.y_min) / gridSquareSize))
         """number of cells in y dimension"""
         self.xStep = gridSquareSize
         """size of a side of a cell in the x dimension"""
@@ -48,8 +48,8 @@ class GridMap:
 
         ## Readjust the max dimensions to handle the fact that we need
         ## to have a discrete numer of grid cells
-        self.xMax = gridSquareSize * self.xN + self.xMin
-        self.yMax = gridSquareSize * self.yN + self.yMin
+        self.x_max = gridSquareSize * self.xN + self.x_min
+        self.y_max = gridSquareSize * self.yN + self.y_min
 
         self.grid = self.makeStartingGrid()
         """values stored in the grid cells"""
@@ -64,15 +64,15 @@ class GridMap:
         Create a window of the right dimensions representing the grid map.
         Store in ``self.window``.
         """
-        dx = self.xMax - self.xMin
-        dy = self.yMax - self.yMin
+        dx = self.x_max - self.x_min
+        dy = self.y_max - self.y_min
         maxWorldDim = float(max(dx, dy))
         margin = 0.01*maxWorldDim
         margin = 0.0*maxWorldDim
         self.window = dw.DrawingWindow(int(windowWidth*dx/maxWorldDim),
                                 int(windowWidth*dy/maxWorldDim),
-                                self.xMin - margin, self.xMax + margin,
-                                self.yMin - margin, self.yMax + margin, 
+                                self.x_min - margin, self.x_max + margin,
+                                self.y_min - margin, self.y_max + margin, 
                                 title)
         windows.windowList.append(self.window)
 
@@ -82,7 +82,7 @@ class GridMap:
         :return: x grid index it maps into
         """
         shiftedX = x - self.xStep/2.0
-        return util.clip(int(round((shiftedX-self.xMin)/self.xStep)),
+        return util.clip(int(round((shiftedX-self.x_min)/self.xStep)),
                          0, self.xN-1)
     
     def yToIndex(self, y):
@@ -91,7 +91,7 @@ class GridMap:
         :return: y grid index it maps into
         """
         shiftedY = y - self.yStep/2.0
-        return util.clip(int(round((shiftedY-self.yMin)/self.yStep)),
+        return util.clip(int(round((shiftedY-self.y_min)/self.yStep)),
                          0, self.yN-1)
 
     def indexToX(self, ix):
@@ -99,14 +99,14 @@ class GridMap:
         :param ix: grid index in the x dimension
         :return: the real x coordinate of the center of that grid cell
         """
-        return self.xMin + float(ix)*self.xStep + self.xStep/2.0
+        return self.x_min + float(ix)*self.xStep + self.xStep/2.0
 
     def indexToY(self, iy):
         """
         :param iy: grid index in the y dimension
         :return: the real y coordinate of the center of that grid cell
         """
-        return self.yMin + float(iy)*self.yStep + self.yStep/2.0
+        return self.y_min + float(iy)*self.yStep + self.yStep/2.0
 
     def pointToIndices(self, point):
         """

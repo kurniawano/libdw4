@@ -75,7 +75,7 @@ def discreteAction(oldPose, newPose, stateWidth):
 #!
 
 
-def makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations):
+def makeRobotNavModel(ideal, x_min, x_max, numStates, numObservations):
     
 #!    startDistribution = None    # redefine this
     """
@@ -83,8 +83,8 @@ def makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations):
     a single sonar.
 
     :param ideal: list of ideal sonar readings
-    :param xMin: minimum x coordinate for center of robot
-    :param xMax: maximum x coordinate for center of robot
+    :param x_min: minimum x coordinate for center of robot
+    :param x_max: maximum x coordinate for center of robot
     :param numStates: number of discrete states into which to divide
      the range of x coordinates
     :param numObservations: number of discrete observations into which to
@@ -130,7 +130,7 @@ def makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations):
     transTriangleWidth = odoStDev * 3
     transDiscTriangleWidth = max(2,
                                  int(transTriangleWidth *
-                                     (numStates / (xMax-xMin))))
+                                     (numStates / (x_max-x_min))))
     transDiscTriangleWidth = 2
     teleportProb = 0
 
@@ -160,7 +160,7 @@ def makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations):
                             observationModel)
 
 # Main procedure
-def makeLineLocalizer(numObservations, numStates, ideal, xMin, xMax, robotY):
+def makeLineLocalizer(numObservations, numStates, ideal, x_min, x_max, robotY):
 #!    pass
     
     """
@@ -172,26 +172,26 @@ def makeLineLocalizer(numObservations, numStates, ideal, xMin, xMax, robotY):
     :param numStates: number of discrete states into which to divide
      the range of x coordinates
     :param ideal: list of ideal sonar readings
-    :param xMin: minimum x coordinate for center of robot
-    :param xMax: maximum x coordinate for center of robot
+    :param x_min: minimum x coordinate for center of robot
+    :param x_max: maximum x coordinate for center of robot
     :param robotY: constant y coordinate for center of robot
 
     :returns: an instance of {\tt sm.SM} that implements the behavior
     """
 
     # Size of a state in meters
-    stateWidthMeters = (xMax - xMin) / float(numStates)
+    stateWidthMeters = (x_max - x_min) / float(numStates)
 
     preprocessor = PreProcess(numObservations, stateWidthMeters)
-    navModel = makeRobotNavModel(ideal, xMin, xMax, numStates, numObservations)
+    navModel = makeRobotNavModel(ideal, x_min, x_max, numStates, numObservations)
     estimator = seGraphics.StateEstimator(navModel)
-    driver = move.MoveToFixedPose(util.Pose(xMax, robotY, 0.0), maxVel = 0.5)
+    driver = move.MoveToFixedPose(util.Pose(x_max, robotY, 0.0), maxVel = 0.5)
     
     return sm.Cascade(sm.Parallel(sm.Cascade(preprocessor, estimator),
                                   driver),
                       sm.Select(1))
 
-#     metric = makeMetricMachine(xMin, xMax, robotY, numStates)
+#     metric = makeMetricMachine(x_min, x_max, robotY, numStates)
 #     sensor = corruptInput.SensorCorrupter(sonarStDev, odoStDev)
 #     return sm.Cascade(sm.Parallel(sm.Cascade(sm.Parallel(sm.Wire(),
 #                                              sm.Cascade(sensor,
@@ -205,10 +205,10 @@ def makeLineLocalizer(numObservations, numStates, ideal, xMin, xMax, robotY):
 ###      Assess the quality of localization
 ######################################################################
 
-def makeMetricMachine(xMin, xMax, y, numStates):
+def makeMetricMachine(x_min, x_max, y, numStates):
     """
-    :param xMin: minimum x coordinate for center of robot
-    :param xMax: maximum x coordinate for center of robot
+    :param x_min: minimum x coordinate for center of robot
+    :param x_max: maximum x coordinate for center of robot
     :param y: constant y coordinate for center of robot
     :param numStates: number of discrete states into which to divide
      the range of x coordinates
@@ -222,10 +222,10 @@ def makeMetricMachine(xMin, xMax, y, numStates):
     """
 
     probRange = 0.1
-    stateWidth =  (xMax - xMin) / float(numStates)
+    stateWidth =  (x_max - x_min) / float(numStates)
 
     def xToState(x):
-        return util.clip(int(round(numStates * (x - xMin) / (xMax - xMin))),
+        return util.clip(int(round(numStates * (x - x_min) / (x_max - x_min))),
                          0, numStates-1)
 
     class Metric(sm.SM):

@@ -1,15 +1,15 @@
 class UserFunctionIF():
     def __init__(self):
         self.fn = {'setup': [],
-                   'brainStart': [],
+                   'brain_start': [],
                    'step': [],
-                   'brainStop': [],
+                   'brain_stop': [],
                    'shutdown': []}
 
     def registerFn(self, type, f):
         self.fn[type].append(f)
 
-    def callFunctions(self, type):
+    def call_functions(self, type):
         for f in self.fn[type]:
             f()
 

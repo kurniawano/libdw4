@@ -209,7 +209,7 @@ class amigo_simulator(object):
     self.initCanvas()
     debug("drawing area initialized", 2)	
     self.drawWorld()
-    self.drawRobot()
+    self.draw_robot()
     debug("updating sonars...", 2)	
     self.updateSonars() 
     debug("...updated!", 2)	
@@ -276,7 +276,7 @@ class amigo_simulator(object):
       self.cxpxoffset = self.pxmin-self.cxmin*self.cxtopx
       self.cypyoffset = self.pymin-self.cymin*self.cytopy
     else:
-      self.drawRobot()
+      self.draw_robot()
       self.updateSonars()
     self.inrobot = False
     self.stalled = SharedVar(False)
@@ -367,7 +367,7 @@ class amigo_simulator(object):
     return (cx+self.pxtocx*r*cos(th), cy+self.pytocy*r*sin(th))
          
   # Draw the Pioneer robot at its current position
-  def drawRobot(self):
+  def draw_robot(self):
     points = list(map(self.map_robot_point, ROBOT_POINTS))
     def tk_update_robot():
       for item in self.canvas.find_withtag("robot"):
@@ -416,9 +416,9 @@ class amigo_simulator(object):
     global CAP_ACC
     CAP_ACC = enable
 
-  def setMaxVelocities(self, maxTransVel, maxRotVel):
+  def setMaxVelocities(self, max_transVel, maxRotVel):
     global MAX_TRANS, MAX_ROT
-    MAX_TRANS = maxTransVel
+    MAX_TRANS = max_transVel
     MAX_ROT = maxRotVel
 
   def enableTeleportation(self, perStepProbability, poseDist):
@@ -539,7 +539,7 @@ class amigo_simulator(object):
       self.uncache()
       self.stalled.set(True)
     self.drawObstacles(dt)
-    self.drawRobot()
+    self.draw_robot()
     self.updateSonars() 
 
   def perp(self, coordinates):
@@ -605,7 +605,7 @@ class amigo_simulator(object):
       self.abspose.set((x, y, self.abspose.get()[2]))
       if DRAG_UPDATES_ROBOT_ODOMETRY: 
         self.odpose.set((x, y, self.odpose.get()[2]))
-      self.drawRobot()
+      self.draw_robot()
       self.updateSonars()
 
   # Respond to releasing left mouse button
@@ -634,7 +634,7 @@ class amigo_simulator(object):
       if DRAG_UPDATES_ROBOT_ODOMETRY: 
         odx, ody, odth = self.odpose.get()
         self.odpose.set((odx, ody, odth+(dy+dx)*DRAG_ROT_SPEED))
-      self.drawRobot()
+      self.draw_robot()
       self.updateSonars()
       self.lasteventx, self.lasteventy = event.x, event.y 
 

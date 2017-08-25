@@ -33,7 +33,7 @@ sourceVoltage = 10
 xtruescaleflag = True
 
 plotno = 1   # global counter for plot window title bar
-plotWindows = []
+plot_windows = []
 
 ## Extensions to layout
 # Impossible connections
@@ -994,7 +994,7 @@ def plotInputs(inValues, parent):
             inp.plot(end = nplot, color = 'blue', parent = parent,
                        newWindow = "Input "+title+str(plotno),
                        xmaxlabel = naxis) # bkph
-            plotWindows.append(inp._Signal__w)
+            plot_windows.append(inp._Signal__w)
 
 def plotAnalogOutputs(inValues, parent):
     (subsample, nplot, naxis)=plotparams(Tsim, Tplot, len(inValues))
@@ -1007,7 +1007,7 @@ def plotAnalogOutputs(inValues, parent):
             inp.plot(end = nplot, color = 'blue', parent = parent,
                      newWindow = '%s output voltage '%inp+str(plotno),
                      xmaxlabel = naxis) # bkph
-            plotWindows.append(inp._Signal__w)
+            plot_windows.append(inp._Signal__w)
 
 def plotProbes(probes, sols, parent):
     if not probes:
@@ -1021,7 +1021,7 @@ def plotProbes(probes, sols, parent):
     probe.plot(end = nplot, color = 'green', parent = parent,
         newWindow = 'Probe voltage '+str(plotno),
         xmaxlabel = naxis) # bkph
-    plotWindows.append(probe._Signal__w)
+    plot_windows.append(probe._Signal__w)
 
 def plotAnalogInputs(inputs, sols, parent):
     if not inputs:
@@ -1036,7 +1036,7 @@ def plotAnalogInputs(inputs, sols, parent):
         inp.plot(end = nplot, color = 'green', parent = parent,
             newWindow = 'Analog input %s voltage '%(pin+1)+str(plotno),
             xmaxlabel = naxis) # bkph
-        plotWindows.append(inp._Signal__w)
+        plot_windows.append(inp._Signal__w)
 
 ###########
 
@@ -1049,7 +1049,7 @@ def plotMotorVelocity(outValues, parent):
     vel.plot(end = nplot, color = 'red', parent = parent,
             newWindow = 'Motor rotational velocity '+str(plotno),
             xmaxlabel = naxis) # bkph
-    plotWindows.append(vel._Signal__w)
+    plot_windows.append(vel._Signal__w)
 
 def plotMotorPotAlpha(outValues, parent):
     (subsample, nplot, naxis)=plotparams(Tsim, Tplot, len(outValues))
@@ -1060,7 +1060,7 @@ def plotMotorPotAlpha(outValues, parent):
     alpha.plot(end = nplot, color = 'red', parent = parent,
                    newWindow = 'Motor pot alpha '+str(plotno),
                    xmaxlabel = naxis) # bkph
-    plotWindows.append(alpha._Signal__w)
+    plot_windows.append(alpha._Signal__w)
 
 ###########
 
@@ -1076,7 +1076,7 @@ def runRealCircuit(icircuit, sigIn, parent = None, nsteps = 50):
     sys.stdout.flush() # force out any verification error messages
 
     if plotno > 1:
-        for w in plotWindows: 
+        for w in plot_windows: 
             if w: w.destroy()
         plotno = 1
 

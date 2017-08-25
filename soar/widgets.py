@@ -89,7 +89,7 @@ class DrawingFrame(Frame):
     self.wrap_and_add_task(make)
     return returnid
 
-  def drawText(self, x, y, text, color = "blue"):
+  def draw_text(self, x, y, text, color = "blue"):
     returnid, nexttag = self.tagpair()
     cx, cy = int(self.px_to_cx(x)), int(self.py_to_cy(y))
     def make():
@@ -121,9 +121,9 @@ class DrawingFrame(Frame):
       endY = int(self.py_to_cy(self.y_max))
     else:
       startX = int(self.px_to_cx(self.x_min))
-      startY = int(self.py_to_cy(- (a * self.xMin + c) / b))
+      startY = int(self.py_to_cy(- (a * self.x_min + c) / b))
       endX = int(self.px_to_cx(self.x_max))
-      endY = int(self.py_to_cy(- (a * self.xMax + c) / b))
+      endY = int(self.py_to_cy(- (a * self.x_max + c) / b))
     returnid, nexttag = self.tagpair()
     def make():
       self.canvas.create_line(startX, startY, endX, endY,
@@ -131,7 +131,7 @@ class DrawingFrame(Frame):
     self.wrap_and_add_task(make)
     return returnid
 
-  def drawLineSeg(self, x1, y1, x2, y2, color = "black", width = 2):
+  def draw_line_seg(self, x1, y1, x2, y2, color = "black", width = 2):
     returnid, nexttag = self.tagpair()
     cx1, cy1 = int(self.px_to_cx(x1)), int(self.py_to_cy(y1))
     cx2, cy2 = int(self.px_to_cx(x2)), int(self.py_to_cy(y2))
@@ -164,7 +164,7 @@ class DrawingFrame(Frame):
     self.wrap_and_add_task(make)
     return returnid
 
-  def drawRobot(self, x, y, noseX, noseY,color = "blue", size = 8):
+  def draw_robot(self, x, y, noseX, noseY,color = "blue", size = 8):
     windowX, windowY = int(self.px_to_cx(x)), int(self.py_to_cy(y))
     windowNX, windowNY = int(self.px_to_cx(noseX)), int(self.py_to_cy(noseY))
     hsize = int(size)/2   # For once, we want the int division!
@@ -188,13 +188,13 @@ class DrawingFrame(Frame):
   def recolorLine(self, itemnumber, color):
     self.canvas.itemconfig(itemnumber, fill = color)
 
-  def drawRobotWithNose(self, x, y, theta, color = "blue", size = 6):
+  def draw_robotWithNose(self, x, y, theta, color = "blue", size = 6):
     rawx = math.cos(theta)
     rawy = math.sin(theta)
     hx, hy = 0.15, 0.0
     noseX = x+rawx*hx-rawy*hy
     noseY = y+rawy*hx+rawx*hy
-    return self.drawRobot(x, y, noseX, noseY, color = color, size = size)
+    return self.draw_robot(x, y, noseX, noseY, color = color, size = size)
 
   def postscript(self, filename):
     self.canvas.update()
@@ -228,14 +228,14 @@ class DrawingWindow(Toplevel):
     self.close = self.destroy
 
     self.drawPoint = self.drawingframe.drawPoint
-    self.drawText = self.drawingframe.drawText
+    self.draw_text = self.drawingframe.draw_text
     self.drawRect = self.drawingframe.drawRect
     self.drawLine = self.drawingframe.drawLine
-    self.drawLineSeg = self.drawingframe.drawLineSeg
+    self.draw_line_seg = self.drawingframe.draw_line_seg
     self.drawUnscaledLineSeg = self.drawingframe.drawUnscaledLineSeg
     self.drawUnscaledRect = self.drawingframe.drawUnscaledRect
-    self.drawRobot = self.drawingframe.drawRobot
-    self.drawRobotWithNose = self.drawingframe.drawRobotWithNose
+    self.draw_robot = self.drawingframe.draw_robot
+    self.draw_robotWithNose = self.drawingframe.draw_robotWithNose
     self.pdf = self.drawingframe.pdf
     self.recolorRectangle = self.drawingframe.recolorRectangle
     self.recolorLine = self.drawingframe.recolorLine

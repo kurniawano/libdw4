@@ -144,11 +144,11 @@ class GraphingWindow:
 
     def graphContinuous(self, f, color="black"):
         self.canvas.graphFunc(f, CONTINUOUS, color)
-    def graphContinuousSet(self, xset, yset, color="black"):
+    def graph_continuous_set(self, xset, yset, color="black"):
         self.canvas.graphFunc((xset, yset), CONTINUOUS_SET, color)
     def graphDiscrete(self, f, color="black"):
         self.canvas.graphFunc(f, DISCRETE_TIME, color)
-    def graphPointSet(self, xset, yset, color="black"):
+    def graph_point_set(self, xset, yset, color="black"):
         self.canvas.graphFunc((xset, yset), POINT_SET, color)
     def graphSlopefield(self, f, color="black"):
         self.canvas.graphFunc(f, SLOPE_FIELD, color)
@@ -214,9 +214,9 @@ class GraphingWindow:
     def getDomain(self):
         return ((self.canvas.xmin, self.canvas.xmax), (self.canvas.ymin, self.canvas.ymax))
 
-    def setDomain(self, xMinMax, yMinMax):
-        (xmin, xmax) = xMinMax
-        (ymin,ymax) = yMinMax
+    def setDomain(self, x_minMax, y_minMax):
+        (xmin, xmax) = x_minMax
+        (ymin,ymax) = y_minMax
         self.xmintext.set(repr(xmin))
         self.xmaxtext.set(repr(xmax))
         self.ymintext.set(repr(ymin))

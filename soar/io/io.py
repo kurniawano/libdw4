@@ -87,14 +87,14 @@ class Action:
         return 'Act: ' + \
                util.pretty_string([self.fvel, self.rvel, self.voltage])
 
-def registerUserFunction(type, f):
-    app.soar.registerUserFunction(type, f)
+def register_user_function(type, f):
+    app.soar.register_user_function(type, f)
 
 def done(donep = True):
     if donep:
         app.soar.stopall()
 
-def sonarMonitor(on=True):
+def sonar_monitor(on=True):
     if on:
         app.soar.openSonarMonitor()
     else:
@@ -106,12 +106,12 @@ def oscilloscope(on=True):
     else:
         app.soar.closeOscillo()
             
-def addScopeProbeFunction(name, func):
+def add_scope_probe_function(name, func):
     app.soar.openOscillo()
-    app.soar.addScopeProbeFunction(name, func)
+    app.soar.add_scope_probe_function(name, func)
 
-def clearScope():
-    app.soar.clearScope()
+def clear_scope():
+    app.soar.clear_scope()
     
 #def beep(beepFreq = 440, beepDuration = 0.5):
 #    app.soar.output.cmdSay(beepFreq, beepDuration)

@@ -164,21 +164,21 @@ mySM.name = 'brainSM'
 ###
 ######################################################################
 
-def plotSonar(sonarNum):
-    robot.gfx.addDynamicPlotFunction(y=('sonar'+str(sonarNum),
+def plot_sonar(sonarNum):
+    robot.gfx.add_dynamic_plot_function(y=('sonar'+str(sonarNum),
                                         lambda: 
                                         io.SensorInput().sonars[sonarNum]))
 
 # this function is called when the brain is (re)loaded
 def setup():
-    robot.gfx = gfx.RobotGraphics(drawSlimeTrail=False, # slime trails
-                                  sonarMonitor=False) # sonar monitor widget
+    robot.gfx = gfx.RobotGraphics(draw_slime_trail=False, # slime trails
+                                  sonar_monitor=False) # sonar monitor widget
     
     # set robot's behavior
     robot.behavior = mySM
 
 # this function is called when the start button is pushed
-def brainStart():
+def brain_start():
     robot.behavior.start(trace_tasks = robot.gfx.tasks())
 
 # this function is called 10 times per second
@@ -189,7 +189,7 @@ def step():
     io.done(robot.behavior.is_done())
 
 # called when the stop button is pushed
-def brainStop():
+def brain_stop():
     pass
 
 # called when brain or world is reloaded (before setup)
