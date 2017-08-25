@@ -406,7 +406,7 @@ class eBot:
 
         sleep(.01)
         try:
-            self.port.write('A')
+            self.port.write('A'.encode("utf-8"))
         except:
             sys.stderr.write("Could not write to serial port.\n")
             self.serialReady = False
@@ -663,7 +663,7 @@ class eBot:
         #chk = self.calcChecksum(pkt)
         #pkt[len(pkt)-2] = (chk>>8)
         #pkt[len(pkt)-1] = (chk&0xFF)
-        s = reduce(lambda x, y: x + chr(y), pkt, "")
+        s = reduce(lambda x, y: x + chr(int(y)), pkt, "")
         try:
             self.port.write(s.encode("utf-8"))
         except:
