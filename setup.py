@@ -27,6 +27,7 @@ setup(name='libdw',
       ],
       keywords='simulation library package',
       packages = find_packages(exclude=['contrib','docs','tests']),
+      python_requires='>=3',
       package_data={
           'soar':['media/*','worlds/*'],
       },
