@@ -201,13 +201,13 @@ class Serial(SerialBase):
                 if n > 0:
                     rc, buf = win32file.ReadFile(self.hComPort, win32file.AllocateReadBuffer(n), self._overlappedRead)
                     win32event.WaitForSingleObject(self._overlappedRead.hEvent, win32event.INFINITE)
-                    read = str(buf).decode("utf-8")
+                    read = str(buf)
                 else:
                     read = ''
             else:
                 rc, buf = win32file.ReadFile(self.hComPort, win32file.AllocateReadBuffer(size), self._overlappedRead)
                 n = win32file.GetOverlappedResult(self.hComPort, self._overlappedRead, 1)
-                read = str(buf[:n]).decode("utf-8")
+                read = str(buf[:n])
         else:
             read = ''
         return read

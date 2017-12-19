@@ -278,19 +278,7 @@ class eBot:
             This Function Returns a list of tuples with the port number and its description. Used for Windows only
         """
         path = 'HARDWARE\\DEVICEMAP\\SERIALCOMM'
-        try:
-            key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path)
-        except FileNotFoundError:
-            import platform
-            bitness = platform.architecture()[0]
-            if bitness=='32bit':
-                other_view_flag=winreg.KEY_WOW64_64KEY
-            elif bitness=='64bit':
-                other_view_flag=winreg.KEY_WOW64_32KEY
-            try:
-                key=winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path,access=winreg.KEY_READ | other_view_flag)
-            except FileNotFoundError:
-                print("We really could not find the key register for serial com.")
+        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path)
         ports = []
         #maximum 256 entries, will break anyways
         for i in range(256):

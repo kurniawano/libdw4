@@ -9,7 +9,7 @@ class FirebaseApplication():
 		json_url=self.url+root+node
 		opener = urllib.request.build_opener(urllib.request.HTTPHandler)
 		request = urllib.request.Request(json_url+'.json?auth='+self.firebaseToken, 
-			data=json.dumps(data))
+			data=json.dumps(data).encode('utf-8'))
 
 		request.add_header('Content-Type', 'your/contenttype')
 		request.get_method = lambda: 'PUT'
@@ -23,7 +23,7 @@ class FirebaseApplication():
 		json_url=self.url+newnode		
 		opener = urllib.request.build_opener(urllib.request.HTTPHandler)
 		request = urllib.request.Request(json_url+'.json?auth='+self.firebaseToken, 
-			data=json.dumps(data))
+			data=json.dumps(data).encode('utf-8'))
 
 		request.add_header('Content-Type', 'your/contenttype')
 		request.get_method = lambda: 'POST'
