@@ -10,7 +10,7 @@ with open(path.join(here,'README.rst'), encoding='utf-8') as f:
     long_description=f.read()
 
 setup(name='libdw',
-      version='4.0.0',
+      version='4.1.0',
       description='The Digital World Code Distribution',
       long_description=long_description,
       author='Oka Kurniawan',
@@ -28,13 +28,4 @@ setup(name='libdw',
       keywords='simulation library package',
       packages = find_packages(exclude=['contrib','docs','tests']),
       python_requires='>=3',
-      package_data={
-          'soar':['media/*','worlds/*'],
-      },
-      install_requires=['numpy'],
-      entry_points={
-        'console_scripts':[
-            'soar=soar.runsoar:main',
-        ],
-      },
       )
