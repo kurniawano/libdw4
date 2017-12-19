@@ -39,4 +39,4 @@ class FirebaseApplication():
 		request = urllib.request.Request(json_url+'.json?auth='+self.firebaseToken)
 		request.get_method = lambda: 'GET'
 		result = opener.open(request)
-		return json.loads(result.read())
+		return json.loads(result.read().decode('utf-8'))
