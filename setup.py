@@ -10,7 +10,7 @@ with open(path.join(here,'README.rst'), encoding='utf-8') as f:
     long_description=f.read()
 
 setup(name='libdw',
-      version='4.2.0',
+      version='4.2.1',
       description='The Digital World Code Distribution',
       long_description=long_description,
       author='Oka Kurniawan',
