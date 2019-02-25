@@ -34,5 +34,6 @@ setup(name='libdw',
         'oauth2client',
         'requests_toolbelt',
         'python_jwt',
+        'sseclient',
       ], 
       )
